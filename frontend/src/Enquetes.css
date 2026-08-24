@@ -1,0 +1,201 @@
+.enquetes {
+    width: 100%;
+}
+
+.enquetes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--cor-verde-claro);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.enquetes-titulo {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--cor-preto);
+    margin: 0;
+}
+
+.enq-botao-novo {
+    padding: 10px 25px;
+    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.enq-botao-novo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(91, 169, 137, 0.3);
+}
+
+.enq-form {
+    background: white;
+    border: 2px solid var(--cor-verde-claro);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.enq-form-opcoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.enq-botao-submit {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.enq-botao-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(91, 169, 137, 0.3);
+}
+
+.enquetes-lista {
+    display: grid;
+    gap: 15px;
+}
+
+.enquete-card {
+    background: white;
+    border: 2px solid var(--cor-verde-claro);
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.3s;
+}
+
+.enquete-card:hover {
+    box-shadow: 0 6px 20px rgba(91, 169, 137, 0.15);
+    border-color: var(--cor-verde-principal);
+}
+
+.enquete-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.enquete-assunto {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cor-preto);
+    margin: 0 0 5px 0;
+}
+
+.enquete-data {
+    font-size: 12px;
+    color: var(--cor-verde-principal);
+    margin: 0;
+}
+
+.enq-botao-remover {
+    padding: 6px 12px;
+    background: rgba(211, 47, 47, 0.1);
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.enq-botao-remover:hover {
+    background: rgba(211, 47, 47, 0.2);
+}
+
+.enquete-opcoes {
+    display: grid;
+    gap: 12px;
+}
+
+.enquete-opcao {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.opcao-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.opcao-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cor-preto);
+}
+
+.opcao-porcentagem {
+    font-size: 13px;
+    color: var(--cor-verde-principal);
+    font-weight: 600;
+}
+
+.opcao-barra-fundo {
+    height: 10px;
+    background: var(--cor-verde-claro);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.opcao-barra-progresso {
+    height: 100%;
+    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.opcao-votar {
+    padding: 8px 20px;
+    align-self: flex-start;
+    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.opcao-votar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(91, 169, 137, 0.3);
+}
+
+@media (max-width: 768px) {
+    .enquetes-titulo {
+        font-size: 22px;
+    }
+
+    .enq-form-opcoes {
+        grid-template-columns: 1fr;
+    }
+
+    .enquete-card-header {
+        flex-direction: column;
+    }
+}

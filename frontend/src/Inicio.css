@@ -1,0 +1,115 @@
+.inicio {
+    width: 100%;
+}
+
+.inicio-titulo {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--cor-preto);
+    margin-bottom: 10px;
+}
+
+.inicio-tipo {
+    font-size: 14px;
+    color: var(--cor-verde-principal);
+    margin-bottom: 30px;
+}
+
+.avisos-secao {
+    width: 100%;
+}
+
+.avisos-titulo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cor-preto);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--cor-verde-claro);
+}
+
+.avisos-lista {
+    display: grid;
+    gap: 15px;
+}
+
+.aviso-card {
+    background: var(--cor-branco);
+    border: 2px solid var(--cor-verde-claro);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.aviso-card:hover {
+    box-shadow: 0 6px 20px rgba(91, 169, 137, 0.15);
+    border-color: var(--cor-verde-principal);
+    transform: translateY(-2px);
+}
+
+.aviso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.aviso-assunto {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cor-preto);
+    flex: 1;
+}
+
+.aviso-data {
+    font-size: 12px;
+    color: var(--cor-verde-principal);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.aviso-texto {
+    font-size: 14px;
+    color: var(--cor-preto);
+    line-height: 1.5;
+    opacity: 0.8;
+}
+
+.mensagem-info {
+    text-align: center;
+    padding: 30px;
+    color: var(--cor-verde-principal);
+    font-size: 14px;
+    background: rgba(168, 230, 215, 0.1);
+    border-radius: 10px;
+    border: 2px dashed var(--cor-verde-claro);
+}
+
+.mensagem-erro {
+    text-align: center;
+    padding: 30px;
+    color: #d32f2f;
+    font-size: 14px;
+    background: rgba(211, 47, 47, 0.1);
+    border-radius: 10px;
+    border: 2px dashed #d32f2f;
+}
+
+@media (max-width: 768px) {
+    .inicio-titulo {
+        font-size: 24px;
+    }
+
+    .avisos-titulo {
+        font-size: 18px;
+    }
+
+    .aviso-card {
+        padding: 15px;
+    }
+
+    .aviso-assunto {
+        font-size: 14px;
+    }
+}

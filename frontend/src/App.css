@@ -1,0 +1,29 @@
+:root {
+  --cor-verde-principal: #5BA989;
+  --cor-verde-claro: #A8E6D7;
+  --cor-verde-escuro: #466B65;
+  --cor-dourado: #D4A760;
+  --cor-dourado-escuro: #B89A3D;
+  --cor-preto: #373108;
+  --cor-branco: #FFFFFF;
+  --cor-fundo: #F5F5F0;
+  --cor-borda: #E0E0D0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-preto);
+}
+
+button,
+input,
+select {
+  font-family: 'Poppins', sans-serif;
+}
