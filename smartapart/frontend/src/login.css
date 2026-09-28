@@ -1,0 +1,206 @@
+/* Faz o container do React ocupar a largura toda (o body é flex-row) */
+#root {
+  flex: 1;
+  width: 100%;
+}
+
+/* ================= DESKTOP ================= */
+
+/* Box principal: cantos bem arredondados, dividida ao meio */
+#Login_Box {
+  width: 90vw;
+  max-width: 1100px;
+  min-height: 70vh;
+  margin: 6vh auto;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  border-radius: 110px;
+  overflow: hidden; /* respeita o arredondamento nas pontas da barra */
+  font-size: 1.25rem;
+}
+
+/* Metade esquerda: logo */
+#Login_Logo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+#Login_Logo img {
+  width: 100%;
+  max-width: 380px;
+  max-height: 55vh;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Barra preta separadora, de ponta a ponta */
+#Login_Divisor {
+  width: 5px;
+  align-self: stretch;
+  background: #000;
+}
+
+/* Metade direita: texto + formulário */
+#Login_Conteudo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 70px;
+  padding: 60px;
+  text-align: left;
+}
+
+/* O título LOGIN só aparece no celular */
+#Login_Titulo {
+  display: none;
+}
+
+#Login_Conteudo p {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+#Login_Form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+#Login_Form label {
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.6rem;
+  margin-top: 10px;
+}
+
+#Login_Form input {
+  height: 52px;
+  font-size: 1.1rem;
+  border-width: 4px;
+}
+
+#button_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 50px;
+}
+
+#button_container a {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+#Botao_Login {
+  font-size: 1.7rem;
+  padding: 22px 56px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+#erro {
+  color: #8b1a1a;
+  font-weight: 700;
+}
+
+/* ================= CELULAR ================= */
+/* Logo sobre o fundo bege; painel verde embaixo com o topo arredondado */
+@media screen and (max-width: 760px) {
+  #Login_Box {
+    background-color: transparent; /* o verde passa a ser só do painel */
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    overflow: visible;
+    flex-direction: column;
+    font-size: 1rem;
+  }
+
+  #Login_Logo {
+    flex: 0 0 26vh;
+    padding: 20px;
+  }
+
+  #Login_Logo img {
+    max-height: 50vh;
+    max-width: 200px;
+  }
+
+  #Login_Divisor {
+    display: none;
+  }
+
+  #Login_Conteudo {
+    flex: 1;
+    background-color: var(--cor-verde-principal);
+    border-radius: 90px 90px 0 0;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 30px 30px 40px;
+    text-align: center;
+  }
+
+  #Login_Titulo {
+    display: block;
+    margin: 0;
+    font-size: 44px;
+  }
+
+  #Login_Conteudo p {
+    font-size: 1.1rem;
+  }
+
+  #Login_Form {
+    gap: 6px;
+  }
+
+  #Login_Form label {
+    font-family: "Fredoka";
+    font-size: 1.1rem;
+    text-align: left;
+    text-transform: lowercase;
+    margin-top: 0;
+  }
+
+  /* espaço maior entre o campo de cpf e o label de senha */
+  #Login_Form input + label {
+    margin-top: 30px;
+  }
+
+  #Login_Form input {
+    height: 48px;
+    font-size: 1rem;
+  }
+
+  #button_container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  #button_container a {
+    align-self: flex-start;
+    font-weight: normal;
+    font-size: 1rem;
+  }
+
+  #Botao_Login {
+    align-self: center;
+    font-size: 1.6rem;
+    padding: 20px 50px;
+  }
+}
