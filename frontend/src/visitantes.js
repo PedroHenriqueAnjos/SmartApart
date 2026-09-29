@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Visitantes.css';
-import { Users, RefreshCw, X, Plus, Search, CheckCircle, User, Home, Wrench, Check } from 'lucide-react';
+import { ArrowLeft, RefreshCw, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
 
-function Visitantes({ usuario }) {
+function Visitantes({ usuario, aoNavegar }) {
     const [visitantes, setVisitantes] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
@@ -72,6 +72,20 @@ function Visitantes({ usuario }) {
         } finally {
             setBuscandoApto(false);
         }
+    };
+
+    const abrirForm = () => {
+        setMostrarForm(true);
+        setErro('');
+        setSucesso('');
+        setApartamentoInfo(null);
+        setIdApartamento('');
+        setFormData({ nome: '', cpf: '', prestador: false });
+    };
+
+    const fecharForm = () => {
+        setMostrarForm(false);
+        setErro('');
     };
 
     const handleSolicitar = async (e) => {
@@ -145,91 +159,149 @@ function Visitantes({ usuario }) {
         return '#999';
     };
 
-    return (
-        <div className="visitantes">
-            <div className="visitantes-header">
-                <h2 className="visitantes-titulo">
-                    <Users size={22} /> {ehGerenciador ? 'Visitantes Pendentes' : 'Meus Visitantes'}
-                </h2>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className="visitantes-novo" onClick={carregarVisitantes}>
-                        <RefreshCw size={16} />
-                    </button>
-                    {(ehGerenciador || ehMorador) && (
-                        <button className="visitantes-novo" onClick={() => {
-                            setMostrarForm(!mostrarForm);
-                            setErro('');
-                            setSucesso('');
-                            setApartamentoInfo(null);
-                            setIdApartamento('');
-                            setFormData({ nome: '', cpf: '', prestador: false });
-                        }}>
-                            {mostrarForm ? <><X size={14} /> Cancelar</> : <><Plus size={14} /> Novo Visitante</>}
-                        </button>
-                    )}
-                </div>
-            </div>
+    // Coluna do meio da lista (o modelo mostra "data", mas o visitante
+    // não tinha campo de data no código anterior)
+    const detalheDoVisitante = (v) => {
+        if (v.prestador) return 'Prestador de serviço';
+        if (v.cpf) return `CPF: ${v.cpf}`;
+        return '-';
+    };
 
-            {erro && <p className="mensagem-erro">{erro}</p>}
+    const apartamentoDoVisitante = (v) =>
+        [v.idInquilino && `Inquilino ID: ${v.idInquilino}`, v.idDono && `Dono ID: ${v.idDono}`]
+            .filter(Boolean)
+            .join(' · ');
+
+    return (
+        <div id="Visitantes_Pagina">
+
+            <button id="Visitantes_Voltar" onClick={() => aoNavegar('inicio')}
+                title="Voltar para o início" aria-label="Voltar para o início">
+                <ArrowLeft size={44} strokeWidth={1.5} />
+            </button>
+
+            <button id="Visitantes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+                <User size={28} />
+            </button>
+
+            <h1 id="Visitantes_Titulo">{ehGerenciador ? 'VISITANTES PENDENTES' : 'SEUS VISITANTES'}</h1>
+
+            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
             {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
 
-            {mostrarForm && (
-                <form onSubmit={handleSolicitar} className="vis-form">
+            {carregando && <p className="mensagem-info">Carregando...</p>}
+            {!carregando && visitantes.length === 0 && !erro && (
+                <p className="mensagem-info">Nenhum visitante encontrado</p>
+            )}
 
-                    {ehGerenciador && (
-                        <>
-                            <div className="form-group">
-                                <label>ID Apartamento *</label>
-                                <input
-                                    type="number"
-                                    placeholder="Ex: 1"
-                                    value={idApartamento}
-                                    onChange={(e) => { setIdApartamento(e.target.value); setApartamentoInfo(null); setErro(''); }}
-                                    onBlur={() => { if (idApartamento) buscarApartamento(idApartamento); }}
-                                />
-                                <span className="vis-campo-dica">Saia do campo para buscar automaticamente</span>
-                            </div>
+            <div id="Visitantes_Lista">
+                {visitantes.map((v) => (
+                    <div key={v.idVisitante} className="vis-linha">
+                        <div className="vis-avatar"><User size={28} /></div>
 
-                            {buscandoApto && <p className="vis-buscando"><Search size={14} /> Buscando apartamento...</p>}
-
-                            {apartamentoInfo && (
-                                <div className="vis-apartamento-info">
-                                    <h4 className="vis-info-titulo"><CheckCircle size={14} /> Apartamento {apartamentoInfo.apto.idApartamento} encontrado</h4>
-                                    <div className="vis-info-grid">
-                                        {apartamentoInfo.inquilino ? (
-                                            <div className="vis-info-item">
-                                                <span className="vis-info-label"><User size={12} /> Inquilino</span>
-                                                <span className="vis-info-valor">{apartamentoInfo.inquilino.nome}</span>
-                                                <span className="vis-info-id">ID: {apartamentoInfo.inquilino.idInquilino}</span>
-                                            </div>
-                                        ) : (
-                                            <div className="vis-info-item vazio">
-                                                <span className="vis-info-label"><User size={12} /> Inquilino</span>
-                                                <span className="vis-info-valor">Sem inquilino</span>
-                                            </div>
-                                        )}
-                                        {apartamentoInfo.dono ? (
-                                            <div className="vis-info-item">
-                                                <span className="vis-info-label"><Home size={12} /> Dono</span>
-                                                <span className="vis-info-valor">{apartamentoInfo.dono.nome}</span>
-                                                <span className="vis-info-id">ID: {apartamentoInfo.dono.idDono}</span>
-                                            </div>
-                                        ) : (
-                                            <div className="vis-info-item vazio">
-                                                <span className="vis-info-label"><Home size={12} /> Dono</span>
-                                                <span className="vis-info-valor">Sem dono</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                        <div className="vis-nome-bloco">
+                            <span className="vis-nome">{v.nome}</span>
+                            {ehGerenciador && apartamentoDoVisitante(v) && (
+                                <span className="vis-sub">{apartamentoDoVisitante(v)}</span>
                             )}
-                        </>
-                    )}
+                        </div>
 
-                    <div className="vis-form-campos">
-                        <div className="form-group">
-                            <label>Nome do Visitante *</label>
+                        <span className="vis-detalhe">{detalheDoVisitante(v)}</span>
+
+                        <span className="vis-status">
+                            <i className="vis-status-ponto" style={{ backgroundColor: getStatusCor(v.status) }} />
+                            {v.status}
+                        </span>
+
+                        <div className="vis-acoes">
+                            {ehGerenciador && v.status === 'Pendente' && (
+                                <button className="vis-acao Green_Button_Full" onClick={() => handleConfirmar(v.idVisitante)}
+                                    title="Liberar entrada" aria-label="Liberar entrada">
+                                    <Check size={20} />
+                                </button>
+                            )}
+                            {(ehGerenciador || (ehMorador && v.status === 'Pendente')) && (
+                                <button className="vis-acao Green_Button_Empty" onClick={() => handleCancelar(v.idVisitante)}
+                                    title="Cancelar visitante" aria-label="Cancelar visitante">
+                                    <X size={20} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div id="Visitantes_Botoes">
+                <button id="Visitantes_Atualizar" className="Green_Button_Empty" onClick={carregarVisitantes}
+                    title="Atualizar lista" aria-label="Atualizar lista">
+                    <RefreshCw size={22} />
+                </button>
+                {(ehGerenciador || ehMorador) && (
+                    <button id="Visitantes_Novo" className="Green_Button_Full" onClick={abrirForm}
+                        title="Novo visitante" aria-label="Novo visitante">
+                        <Plus size={30} strokeWidth={3} />
+                    </button>
+                )}
+            </div>
+
+            {mostrarForm && (
+                <div id="Visitantes_Modal" role="dialog" aria-modal="true">
+                    <form id="Visitantes_Form" className="Empty_Box" onSubmit={handleSolicitar}>
+                        <h2 id="Visitantes_Form_Titulo">NOVO VISITANTE</h2>
+
+                        {erro && <p className="mensagem-erro">{erro}</p>}
+
+                        {ehGerenciador && (
+                            <>
+                                <div className="vis-campo">
+                                    <label htmlFor="Visitantes_Apto">ID do apartamento *</label>
+                                    <input
+                                        id="Visitantes_Apto"
+                                        className="Green_Input"
+                                        type="number"
+                                        placeholder="Ex: 1"
+                                        value={idApartamento}
+                                        onChange={(e) => { setIdApartamento(e.target.value); setApartamentoInfo(null); setErro(''); }}
+                                        onBlur={() => { if (idApartamento) buscarApartamento(idApartamento); }}
+                                    />
+                                    <span className="vis-dica">Saia do campo para buscar automaticamente</span>
+                                </div>
+
+                                {buscandoApto && <p className="vis-buscando"><Search size={14} /> Buscando apartamento...</p>}
+
+                                {apartamentoInfo && (
+                                    <div className="vis-apto-info Green_Box_Full">
+                                        <h4 className="vis-apto-titulo">
+                                            <CheckCircle size={16} /> Apartamento {apartamentoInfo.apto.idApartamento} encontrado
+                                        </h4>
+                                        <div className="vis-apto-grid">
+                                            <div>
+                                                <span className="vis-apto-label"><User size={12} /> Inquilino</span>
+                                                <span className="vis-apto-valor">
+                                                    {apartamentoInfo.inquilino
+                                                        ? `${apartamentoInfo.inquilino.nome} (ID ${apartamentoInfo.inquilino.idInquilino})`
+                                                        : 'Sem inquilino'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className="vis-apto-label"><Home size={12} /> Dono</span>
+                                                <span className="vis-apto-valor">
+                                                    {apartamentoInfo.dono
+                                                        ? `${apartamentoInfo.dono.nome} (ID ${apartamentoInfo.dono.idDono})`
+                                                        : 'Sem dono'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        <div className="vis-campo">
+                            <label htmlFor="Visitantes_Nome">Nome do visitante *</label>
                             <input
+                                id="Visitantes_Nome"
+                                className="Green_Input"
                                 type="text"
                                 placeholder="Nome completo"
                                 value={formData.nome}
@@ -237,71 +309,44 @@ function Visitantes({ usuario }) {
                                 required
                             />
                         </div>
-                        <div className="form-group">
-                            <label>CPF (opcional)</label>
+
+                        <div className="vis-campo">
+                            <label htmlFor="Visitantes_Cpf">CPF (opcional)</label>
                             <input
+                                id="Visitantes_Cpf"
+                                className="Green_Input"
                                 type="text"
                                 placeholder="000.000.000-00"
                                 value={formData.cpf}
                                 onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
                             />
                         </div>
-                    </div>
 
-                    <label className="vis-checkbox-label">
-                        <input
-                            type="checkbox"
-                            checked={formData.prestador}
-                            onChange={(e) => setFormData({ ...formData, prestador: e.target.checked })}
-                        />
-                        Prestador de serviço?
-                    </label>
+                        <label className="vis-checkbox" htmlFor="Visitantes_Prestador">
+                            <input
+                                id="Visitantes_Prestador"
+                                type="checkbox"
+                                checked={formData.prestador}
+                                onChange={(e) => setFormData({ ...formData, prestador: e.target.checked })}
+                            />
+                            Prestador de serviço?
+                        </label>
 
-                    <button
-                        type="submit"
-                        className="vis-botao-submit"
-                        disabled={ehGerenciador && (!apartamentoInfo || buscandoApto)}
-                    >
-                        <Check size={14} /> Solicitar Visitante
-                    </button>
-                </form>
-            )}
-
-            {carregando && <p className="mensagem-info">Carregando...</p>}
-            {!carregando && visitantes.length === 0 && !erro && (
-                <p className="mensagem-info">Nenhum visitante encontrado</p>
-            )}
-
-            <div className="visitantes-lista">
-                {visitantes.map((v) => (
-                    <div key={v.idVisitante} className="visitante-card">
-                        <div className="visitante-header">
-                            <div className="visitante-info">
-                                <h4 className="visitante-nome">{v.nome}</h4>
-                                {v.cpf && <p className="visitante-detalhe">CPF: {v.cpf}</p>}
-                                {v.idInquilino && <p className="visitante-detalhe"><User size={12} /> Inquilino ID: {v.idInquilino}</p>}
-                                {v.idDono && <p className="visitante-detalhe"><Home size={12} /> Dono ID: {v.idDono}</p>}
-                                {v.prestador && <p className="visitante-detalhe"><Wrench size={12} /> Prestador de serviço</p>}
-                            </div>
-                            <span className="visitante-status" style={{ backgroundColor: getStatusCor(v.status) }}>
-                                {v.status}
-                            </span>
+                        <div id="Visitantes_Form_Botoes">
+                            <button type="button" className="Green_Button_Empty" onClick={fecharForm}>
+                                CANCELAR
+                            </button>
+                            <button
+                                type="submit"
+                                className="Green_Button_Full"
+                                disabled={ehGerenciador && (!apartamentoInfo || buscandoApto)}
+                            >
+                                SOLICITAR
+                            </button>
                         </div>
-                        <div className="vis-acoes">
-                            {ehGerenciador && v.status === 'Pendente' && (
-                                <button className="vis-botao verde" onClick={() => handleConfirmar(v.idVisitante)}>
-                                    <Check size={14} /> Liberar Entrada
-                                </button>
-                            )}
-                            {(ehGerenciador || (ehMorador && v.status === 'Pendente')) && (
-                                <button className="vis-botao vermelho" onClick={() => handleCancelar(v.idVisitante)}>
-                                    <X size={14} /> Cancelar
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }

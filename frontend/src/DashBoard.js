@@ -17,16 +17,20 @@ function Dashboard({ usuario, setUsuarioLogado }) {
     const ehSindico = usuario.tipo === 'SINDICO';
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
 
+    // Nestas telas não há menu superior: a navegação é feita pelo ícone de
+    // perfil, pela seta de voltar e pelos atalhos da própria tela
+    const semMenu = ['inicio', 'encomendas', 'chat', 'visitantes', 'perfil', 'enquetes', 'salao'].includes(abaAtiva);
+
     const renderizarAba = () => {
         switch (abaAtiva) {
-            case 'inicio': return <Inicio usuario={usuario} />;
-            case 'encomendas': return <Encomendas usuario={usuario} />;
-            case 'visitantes': return <Visitantes usuario={usuario} />;
-            case 'chat': return <Chat usuario={usuario} />;
-            case 'enquetes': return <Enquetes usuario={usuario} />;
-            case 'salao': return <Salao usuario={usuario} />;
-            case 'perfil': return <Perfil usuario={usuario} />;
-            default: return <Inicio usuario={usuario} />;
+            case 'inicio': return <Inicio usuario={usuario} aoNavegar={navegarPara} ehPorteiro={ehPorteiro} />;
+            case 'encomendas': return <Encomendas usuario={usuario} aoNavegar={navegarPara} />;
+            case 'visitantes': return <Visitantes usuario={usuario} aoNavegar={navegarPara} />;
+            case 'chat': return <Chat usuario={usuario} aoNavegar={navegarPara} />;
+            case 'enquetes': return <Enquetes usuario={usuario} aoNavegar={navegarPara} />;
+            case 'salao': return <Salao usuario={usuario} aoNavegar={navegarPara} />;
+            case 'perfil': return <Perfil usuario={usuario} aoNavegar={navegarPara} aoSair={() => setUsuarioLogado(null)} />;
+            default: return <Inicio usuario={usuario} aoNavegar={navegarPara} ehPorteiro={ehPorteiro} />;
         }
     };
 
@@ -37,86 +41,88 @@ function Dashboard({ usuario, setUsuarioLogado }) {
 
     return (
         <div className="dashboard">
-            <header className="dashboard-header">
-                <nav className="dashboard-nav">
+            {!semMenu && (
+                <header className="dashboard-header">
+                    <nav className="dashboard-nav">
 
-                    <button className="hamburger-botao" onClick={() => setMenuAberto(!menuAberto)}>
-                        {menuAberto ? <X size={22} /> : <Menu size={22} />}
-                    </button>
-
-                    <div className="nav-botoes-desktop">
-                        <button className={`nav-botao ${abaAtiva === 'inicio' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('inicio')}>início</button>
-
-                        <button className={`nav-botao ${abaAtiva === 'encomendas' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('encomendas')}>encomendas</button>
-
-                        <button className={`nav-botao ${abaAtiva === 'visitantes' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('visitantes')}>visitantes</button>
-
-                        {!ehPorteiro && (
-                            <button className={`nav-botao ${abaAtiva === 'chat' ? 'ativo' : ''}`}
-                                onClick={() => navegarPara('chat')}>chat</button>
-                        )}
-
-                        {(ehSindico || ehMorador) && (
-                            <button className={`nav-botao ${abaAtiva === 'enquetes' ? 'ativo' : ''}`}
-                                onClick={() => navegarPara('enquetes')}>enquetes</button>
-                        )}
-
-                        {ehMorador && (
-                            <button className={`nav-botao ${abaAtiva === 'salao' ? 'ativo' : ''}`}
-                                onClick={() => navegarPara('salao')}>salão</button>
-                        )}
-                    </div>
-
-                    <div className="nav-acoes">
-                        <button className={`nav-botao perfil-botao ${abaAtiva === 'perfil' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('perfil')} title="Perfil">
-                            <User size={18} />
+                        <button className="hamburger-botao" onClick={() => setMenuAberto(!menuAberto)}>
+                            {menuAberto ? <X size={22} /> : <Menu size={22} />}
                         </button>
-                        <button className="logout-botao" onClick={() => setUsuarioLogado(null)} title="Sair">
-                            <LogOut size={18} />
-                        </button>
-                    </div>
-                </nav>
 
-                {menuAberto && (
-                    <div className="menu-mobile">
-                        <button className={`menu-mobile-item ${abaAtiva === 'inicio' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('inicio')}>início</button>
+                        <div className="nav-botoes-desktop">
+                            <button className={`nav-botao ${abaAtiva === 'inicio' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('inicio')}>início</button>
 
-                        <button className={`menu-mobile-item ${abaAtiva === 'encomendas' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('encomendas')}>encomendas</button>
+                            <button className={`nav-botao ${abaAtiva === 'encomendas' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('encomendas')}>encomendas</button>
 
-                        <button className={`menu-mobile-item ${abaAtiva === 'visitantes' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('visitantes')}>visitantes</button>
+                            <button className={`nav-botao ${abaAtiva === 'visitantes' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('visitantes')}>visitantes</button>
 
-                        {!ehPorteiro && (
-                            <button className={`menu-mobile-item ${abaAtiva === 'chat' ? 'ativo' : ''}`}
-                                onClick={() => navegarPara('chat')}>chat</button>
-                        )}
+                            {!ehPorteiro && (
+                                <button className={`nav-botao ${abaAtiva === 'chat' ? 'ativo' : ''}`}
+                                    onClick={() => navegarPara('chat')}>chat</button>
+                            )}
 
-                        {(ehSindico || ehMorador) && (
-                            <button className={`menu-mobile-item ${abaAtiva === 'enquetes' ? 'ativo' : ''}`}
-                                onClick={() => navegarPara('enquetes')}>enquetes</button>
-                        )}
+                            {(ehSindico || ehMorador) && (
+                                <button className={`nav-botao ${abaAtiva === 'enquetes' ? 'ativo' : ''}`}
+                                    onClick={() => navegarPara('enquetes')}>enquetes</button>
+                            )}
 
-                        {ehMorador && (
-                            <button className={`menu-mobile-item ${abaAtiva === 'salao' ? 'ativo' : ''}`}
-                                onClick={() => navegarPara('salao')}>salão</button>
-                        )}
+                            {ehMorador && (
+                                <button className={`nav-botao ${abaAtiva === 'salao' ? 'ativo' : ''}`}
+                                    onClick={() => navegarPara('salao')}>salão</button>
+                            )}
+                        </div>
 
-                        <button className={`menu-mobile-item ${abaAtiva === 'perfil' ? 'ativo' : ''}`}
-                            onClick={() => navegarPara('perfil')}>perfil</button>
+                        <div className="nav-acoes">
+                            <button className={`nav-botao perfil-botao ${abaAtiva === 'perfil' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('perfil')} title="Perfil">
+                                <User size={18} />
+                            </button>
+                            <button className="logout-botao" onClick={() => setUsuarioLogado(null)} title="Sair">
+                                <LogOut size={18} />
+                            </button>
+                        </div>
+                    </nav>
 
-                        <button className="menu-mobile-item logout"
-                            onClick={() => setUsuarioLogado(null)}>sair</button>
-                    </div>
-                )}
-            </header>
+                    {menuAberto && (
+                        <div className="menu-mobile">
+                            <button className={`menu-mobile-item ${abaAtiva === 'inicio' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('inicio')}>início</button>
 
-            <main className="dashboard-conteudo">
+                            <button className={`menu-mobile-item ${abaAtiva === 'encomendas' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('encomendas')}>encomendas</button>
+
+                            <button className={`menu-mobile-item ${abaAtiva === 'visitantes' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('visitantes')}>visitantes</button>
+
+                            {!ehPorteiro && (
+                                <button className={`menu-mobile-item ${abaAtiva === 'chat' ? 'ativo' : ''}`}
+                                    onClick={() => navegarPara('chat')}>chat</button>
+                            )}
+
+                            {(ehSindico || ehMorador) && (
+                                <button className={`menu-mobile-item ${abaAtiva === 'enquetes' ? 'ativo' : ''}`}
+                                    onClick={() => navegarPara('enquetes')}>enquetes</button>
+                            )}
+
+                            {ehMorador && (
+                                <button className={`menu-mobile-item ${abaAtiva === 'salao' ? 'ativo' : ''}`}
+                                    onClick={() => navegarPara('salao')}>salão</button>
+                            )}
+
+                            <button className={`menu-mobile-item ${abaAtiva === 'perfil' ? 'ativo' : ''}`}
+                                onClick={() => navegarPara('perfil')}>perfil</button>
+
+                            <button className="menu-mobile-item logout"
+                                onClick={() => setUsuarioLogado(null)}>sair</button>
+                        </div>
+                    )}
+                </header>
+            )}
+
+            <main className={`dashboard-conteudo ${semMenu ? 'dashboard-conteudo-inicio' : ''}`}>
                 {renderizarAba()}
             </main>
         </div>

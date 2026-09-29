@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Encomendas.css';
-import { Package, X, Plus, Search, CheckCircle, User, Home, MapPin, Check } from 'lucide-react';
+import { ArrowLeft, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
 
-function Encomendas({ usuario }) {
+function Encomendas({ usuario, aoNavegar }) {
     const [encomendas, setEncomendas] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
@@ -130,17 +130,46 @@ function Encomendas({ usuario }) {
         return new Date(data).toLocaleDateString('pt-BR');
     };
 
+    // Agrupa as encomendas (mais recentes primeiro) em faixas de tempo
+    const agruparPorSemana = (lista) => {
+        const agora = Date.now();
+        const tempo = (e) => (e.dataRecebimento ? new Date(e.dataRecebimento).getTime() : 0);
+        const grupos = { 'essa semana': [], 'há uma semana': [], 'mais antigas': [] };
+
+        [...lista].sort((a, b) => tempo(b) - tempo(a)).forEach((enc) => {
+            const dias = enc.dataRecebimento ? Math.floor((agora - tempo(enc)) / 86400000) : 999;
+            if (dias < 7) grupos['essa semana'].push(enc);
+            else if (dias < 14) grupos['há uma semana'].push(enc);
+            else grupos['mais antigas'].push(enc);
+        });
+
+        return Object.entries(grupos).filter(([, itens]) => itens.length > 0);
+    };
+
+    const grupos = agruparPorSemana(encomendas);
+
     return (
-        <div className="encomendas">
-            <div className="encomendas-header">
-                <h2 className="encomendas-titulo"><Package size={22} /> Encomendas</h2>
-                {ehGerenciador && (
+        <div id="Encomendas_Pagina">
+
+            <button id="Encomendas_Voltar" onClick={() => aoNavegar('inicio')}
+                title="Voltar para o início" aria-label="Voltar para o início">
+                <ArrowLeft size={44} strokeWidth={1.5} />
+            </button>
+
+            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+                <User size={28} />
+            </button>
+
+            <h1 id="Encomendas_Titulo">ENCOMENDAS</h1>
+
+            {ehGerenciador && (
+                <div id="Encomendas_Acoes">
                     <button className="enc-botao-novo"
                         onClick={() => { setMostrarForm(!mostrarForm); setErro(''); setSucesso(''); setApartamentoInfo(null); setIdApartamento(''); }}>
                         {mostrarForm ? <><X size={14} /> Cancelar</> : <><Plus size={14} /> Registrar Encomenda</>}
                     </button>
-                )}
-            </div>
+                </div>
+            )}
 
             {erro && <p className="mensagem-erro">{erro}</p>}
             {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
@@ -207,31 +236,35 @@ function Encomendas({ usuario }) {
                 <p className="mensagem-info">Nenhuma encomenda encontrada</p>
             )}
 
-            <div className="encomendas-lista">
-                {encomendas.map((enc) => (
-                    <div key={enc.idEncomenda} className="encomenda-card">
-                        <div className="encomenda-header">
-                            <div className="encomenda-info">
-                                <h4 className="encomenda-numero">Encomenda #{enc.idEncomenda}</h4>
-                                <p className="encomenda-data">{formatarData(enc.dataRecebimento)}</p>
+            {grupos.map(([titulo, itens]) => (
+                <section key={titulo} className="enc-grupo">
+                    <h2 className="enc-grupo-titulo">{titulo}</h2>
+
+                    {itens.map((enc) => (
+                        <div key={enc.idEncomenda} className="enc-card Green_Box_Full">
+                            <div className="enc-card-topo">
+                                <div className="enc-avatar"><User size={28} /></div>
+                                <h3 className="enc-card-titulo">ENCOMENDA #{enc.idEncomenda}</h3>
                             </div>
-                            <span className="encomenda-status" style={{ backgroundColor: getStatusCor(enc.status) }}>
-                                {enc.status}
-                            </span>
+
+                            <div className="enc-card-colunas">
+                                <span>{formatarData(enc.dataRecebimento)}</span>
+                                <span>Apto {enc.idApartamento}</span>
+                                <span className="enc-status">
+                                    <i className="enc-status-ponto" style={{ backgroundColor: getStatusCor(enc.status) }} />
+                                    {enc.status}
+                                </span>
+                            </div>
+
+                            {enc.status !== 'Retirada' && (
+                                <button className="enc-botao-acao verde" onClick={() => handleRetirar(enc.idEncomenda)}>
+                                    <Check size={14} /> Marcar como Retirada
+                                </button>
+                            )}
                         </div>
-                        <div className="encomenda-detalhes">
-                            <p><MapPin size={12} /> Apartamento: <strong>{enc.idApartamento}</strong></p>
-                            {enc.idInquilino && <p><User size={12} /> Inquilino ID: <strong>{enc.idInquilino}</strong></p>}
-                            {enc.idDono && <p><Home size={12} /> Dono ID: <strong>{enc.idDono}</strong></p>}
-                        </div>
-                        {enc.status !== 'Retirada' && (
-                            <button className="enc-botao-acao verde" onClick={() => handleRetirar(enc.idEncomenda)}>
-                                <Check size={14} /> Marcar como Retirada
-                            </button>
-                        )}
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </section>
+            ))}
         </div>
     );
 }

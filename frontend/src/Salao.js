@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Salao.css';
-import { Building2, X, Plus, Check, Calendar, Home, Trash2 } from 'lucide-react';
+import { ArrowLeft, User, Plus, Check, Calendar, Building2 } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
 
-function Salao({ usuario }) {
+function Salao({ usuario, aoNavegar }) {
     const [saloes, setSaloes] = useState([]);
     const [reservas, setReservas] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -33,6 +33,17 @@ function Salao({ usuario }) {
         } finally {
             setCarregando(false);
         }
+    };
+
+    const abrirForm = () => {
+        setMostrarForm(true);
+        setErro('');
+        setFormData({ idSalao: '', dataPrevista: '' });
+    };
+
+    const fecharForm = () => {
+        setMostrarForm(false);
+        setErro('');
     };
 
     const getNomeSalao = (idSalao) => {
@@ -81,15 +92,15 @@ function Salao({ usuario }) {
         }
     };
 
-    const getStatusSalaoCor = (status) => {
-        if (status === 'Disponível' || status === 'Livre' || status === 'DISPONIVEL') return '#5BA989';
-        return '#d32f2f';
+    const classeStatusSalao = (status) => {
+        if (status === 'Disponível' || status === 'Livre' || status === 'DISPONIVEL') return 'status-ok';
+        return 'status-ocupado';
     };
 
-    const getStatusReservaCor = (status) => {
-        if (status === 'PENDENTE') return '#D4A760';
-        if (status === 'CANCELADA') return '#999';
-        return '#5BA989';
+    const classeStatusReserva = (status) => {
+        if (status === 'PENDENTE') return 'status-pendente';
+        if (status === 'CANCELADA') return 'status-cancelada';
+        return 'status-ok';
     };
 
     const formatarData = (data) => {
@@ -100,77 +111,123 @@ function Salao({ usuario }) {
     const hoje = new Date().toISOString().split('T')[0];
 
     return (
-        <div className="salao">
-            <div className="salao-header">
-                <h2 className="salao-titulo"><Building2 size={22} /> Salão de Festas</h2>
-                <button className="salao-botao-novo" onClick={() => { setMostrarForm(!mostrarForm); setErro(''); }}>
-                    {mostrarForm ? <><X size={14} /> Cancelar</> : <><Plus size={14} /> Fazer Reserva</>}
-                </button>
-            </div>
+        <div id="Salao_Pagina">
 
-            {erro && <p className="mensagem-erro">{erro}</p>}
+            <button id="Salao_Voltar" onClick={() => aoNavegar('inicio')}
+                title="Voltar para o início" aria-label="Voltar para o início">
+                <ArrowLeft size={44} strokeWidth={1.5} />
+            </button>
+
+            <button id="Salao_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+                <User size={28} />
+            </button>
+
+            <h1 id="Salao_Titulo">SALÃO</h1>
+
             {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
 
-            <div className="salao-cards">
+            {/* ---------- Salões disponíveis ---------- */}
+            <div id="Salao_Lista">
                 {saloes.map((s) => (
-                    <div key={s.idSalao} className="salao-card">
-                        <h4 className="salao-nome"><Home size={16} /> {s.nome}</h4>
-                        <span className="salao-status" style={{ backgroundColor: getStatusSalaoCor(s.status) }}>
+                    <div key={s.idSalao} className="salao-card Green_Box_Full">
+                        <div className="salao-avatar"><Building2 size={26} /></div>
+                        <h2 className="salao-nome">{s.nome}</h2>
+                        <span className={`salao-status Gold_Pill_Full ${classeStatusSalao(s.status)}`}>
                             {s.status}
                         </span>
                     </div>
                 ))}
             </div>
 
+            <hr className="salao-divisor" />
+
+            {/* ---------- Minhas reservas ---------- */}
+            <h1 id="Salao_Subtitulo">MINHAS RESERVAS</h1>
+
+            {carregando && <p className="mensagem-info">Carregando...</p>}
+            {!carregando && reservas.length === 0 && !erro && (
+                <p className="mensagem-info">Você não tem reservas</p>
+            )}
+
+            <div id="Salao_Reservas">
+                {reservas.map((r) => (
+                    <div key={r.idReserva} className="reserva-card Green_Box_Full">
+                        <div className="reserva-cabecalho">
+                            <div className="salao-avatar"><Calendar size={26} /></div>
+                            <div className="reserva-corpo">
+                                <h2 className="reserva-titulo">RESERVA #{r.idReserva}</h2>
+                                <p className="reserva-info">
+                                    {formatarData(r.dataPrevista)} · {getNomeSalao(r.idSalao)}
+                                </p>
+                            </div>
+                            <span className={`reserva-status Gold_Pill_Full ${classeStatusReserva(r.status)}`}>
+                                {r.status}
+                            </span>
+                        </div>
+
+                        {r.status === 'PENDENTE' && (
+                            <button className="reserva-cancelar Gold_Button_Empty"
+                                onClick={() => handleCancelar(r.idReserva)}>
+                                CANCELAR RESERVA
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            <button id="Salao_Novo" className="Green_Button_Full" onClick={abrirForm}
+                title="Fazer reserva" aria-label="Fazer reserva">
+                <Plus size={30} strokeWidth={3} />
+            </button>
+
             {mostrarForm && (
-                <form onSubmit={handleReservar} className="salao-form">
-                    <div className="salao-form-campos">
-                        <div className="form-group">
-                            <label>Salão *</label>
-                            <select value={formData.idSalao}
-                                onChange={(e) => setFormData({ ...formData, idSalao: e.target.value })} required>
+                <div id="Salao_Modal" role="dialog" aria-modal="true">
+                    <form id="Salao_Form" className="Empty_Box" onSubmit={handleReservar}>
+                        <h2 id="Salao_Form_Titulo">NOVA RESERVA</h2>
+
+                        {erro && <p className="mensagem-erro">{erro}</p>}
+
+                        <div className="salao-campo">
+                            <label htmlFor="Salao_Select">Salão *</label>
+                            <select
+                                id="Salao_Select"
+                                className="Green_Input"
+                                value={formData.idSalao}
+                                onChange={(e) => setFormData({ ...formData, idSalao: e.target.value })}
+                                required
+                            >
                                 <option value="">Selecione...</option>
                                 {saloes.map((s) => (
                                     <option key={s.idSalao} value={s.idSalao}>{s.nome}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="form-group">
-                            <label>Data *</label>
-                            <input type="date" min={hoje} value={formData.dataPrevista}
-                                onChange={(e) => setFormData({ ...formData, dataPrevista: e.target.value })} required />
+
+                        <div className="salao-campo">
+                            <label htmlFor="Salao_Data">Data *</label>
+                            <input
+                                id="Salao_Data"
+                                className="Green_Input"
+                                type="date"
+                                min={hoje}
+                                value={formData.dataPrevista}
+                                onChange={(e) => setFormData({ ...formData, dataPrevista: e.target.value })}
+                                required
+                            />
                         </div>
-                    </div>
-                    <button type="submit" className="salao-botao-submit"><Check size={14} /> Solicitar Reserva</button>
-                </form>
-            )}
 
-            <h3 className="salao-subtitulo"><Calendar size={18} /> Minhas Reservas</h3>
-
-            {carregando && <p className="mensagem-info">Carregando...</p>}
-            {!carregando && reservas.length === 0 && <p className="mensagem-info">Você não tem reservas</p>}
-
-            <div className="reservas-lista">
-                {reservas.map((r) => (
-                    <div key={r.idReserva} className="reserva-card">
-                        <div className="reserva-header">
-                            <div>
-                                <h4 className="reserva-titulo">Reserva #{r.idReserva}</h4>
-                                <p className="reserva-data"><Calendar size={12} /> {formatarData(r.dataPrevista)}</p>
-                                <p className="reserva-salao"><Building2 size={12} /> {getNomeSalao(r.idSalao)}</p>
-                            </div>
-                            <span className="reserva-status" style={{ backgroundColor: getStatusReservaCor(r.status) }}>
-                                {r.status}
-                            </span>
-                        </div>
-                        {r.status === 'PENDENTE' && (
-                            <button className="salao-botao-cancelar" onClick={() => handleCancelar(r.idReserva)}>
-                                <Trash2 size={14} /> Cancelar Reserva
+                        <div id="Salao_Form_Botoes">
+                            <button type="button" className="Gold_Button_Empty" onClick={fecharForm}>
+                                CANCELAR
                             </button>
-                        )}
-                    </div>
-                ))}
-            </div>
+                            <button type="submit" className="Gold_Button_Full">
+                                <Check size={16} /> SOLICITAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }

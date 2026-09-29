@@ -9,6 +9,9 @@ export const loginAPI = async (cpf, senha) => {
     return response.json();
 };
 
+
+
+
 export const getAvisosRecentes = async () => {
     const response = await fetch(`${API_URL}/avisos/recentes`);
     return response.json();

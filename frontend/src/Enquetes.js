@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Enquetes.css';
-import { BarChart2, X, Plus, Check, ClipboardList, Trash2 } from 'lucide-react';
+import { ArrowLeft, User, X, Plus, Check, Trash2 } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
 
-function Enquetes({ usuario }) {
+function Enquetes({ usuario, aoNavegar }) {
     const [enquetes, setEnquetes] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
@@ -28,6 +28,17 @@ function Enquetes({ usuario }) {
         } finally {
             setCarregando(false);
         }
+    };
+
+    const abrirForm = () => {
+        setMostrarForm(true);
+        setErro('');
+        setFormData({ assunto: '', op1: '', op2: '', op3: '', op4: '' });
+    };
+
+    const fecharForm = () => {
+        setMostrarForm(false);
+        setErro('');
     };
 
     const handleCriar = async (e) => {
@@ -89,11 +100,11 @@ function Enquetes({ usuario }) {
         }
     };
 
-    const totalVotos = (e) => e.op1 + e.op2 + e.op3 + e.op4;
+    const totalVotos = (e) => (e.op1 || 0) + (e.op2 || 0) + (e.op3 || 0) + (e.op4 || 0);
 
     const porcentagem = (votos, total) => {
         if (total === 0) return 0;
-        return Math.round((votos / total) * 100);
+        return Math.round(((votos || 0) / total) * 100);
     };
 
     const formatarData = (data) => {
@@ -102,56 +113,28 @@ function Enquetes({ usuario }) {
     };
 
     return (
-        <div className="enquetes">
-            <div className="enquetes-header">
-                <h2 className="enquetes-titulo"><BarChart2 size={22} /> Enquetes</h2>
-                {ehSindico && (
-                    <button className="enq-botao-novo" onClick={() => { setMostrarForm(!mostrarForm); setErro(''); }}>
-                        {mostrarForm ? <><X size={14} /> Cancelar</> : <><Plus size={14} /> Nova Enquete</>}
-                    </button>
-                )}
-            </div>
+        <div id="Enquetes_Pagina">
 
-            {erro && <p className="mensagem-erro">{erro}</p>}
+            <button id="Enquetes_Voltar" onClick={() => aoNavegar('inicio')}
+                title="Voltar para o início" aria-label="Voltar para o início">
+                <ArrowLeft size={44} strokeWidth={1.5} />
+            </button>
+
+            <button id="Enquetes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+                <User size={28} />
+            </button>
+
+            <h1 id="Enquetes_Titulo">ENQUETES</h1>
+
             {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-
-            {ehSindico && mostrarForm && (
-                <form onSubmit={handleCriar} className="enq-form">
-                    <div className="form-group">
-                        <label>Assunto *</label>
-                        <input type="text" placeholder="Ex: Reforma da piscina" value={formData.assunto}
-                            onChange={(e) => setFormData({ ...formData, assunto: e.target.value })} required />
-                    </div>
-                    <div className="enq-form-opcoes">
-                        <div className="form-group">
-                            <label>Opção 1 *</label>
-                            <input type="text" placeholder="Ex: Sim" value={formData.op1}
-                                onChange={(e) => setFormData({ ...formData, op1: e.target.value })} required />
-                        </div>
-                        <div className="form-group">
-                            <label>Opção 2 *</label>
-                            <input type="text" placeholder="Ex: Não" value={formData.op2}
-                                onChange={(e) => setFormData({ ...formData, op2: e.target.value })} required />
-                        </div>
-                        <div className="form-group">
-                            <label>Opção 3 (opcional)</label>
-                            <input type="text" placeholder="Ex: Talvez" value={formData.op3}
-                                onChange={(e) => setFormData({ ...formData, op3: e.target.value })} />
-                        </div>
-                        <div className="form-group">
-                            <label>Opção 4 (opcional)</label>
-                            <input type="text" placeholder="Ex: Não sei" value={formData.op4}
-                                onChange={(e) => setFormData({ ...formData, op4: e.target.value })} />
-                        </div>
-                    </div>
-                    <button type="submit" className="enq-botao-submit"><Check size={14} /> Criar Enquete</button>
-                </form>
-            )}
+            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
-            {!carregando && enquetes.length === 0 && <p className="mensagem-info">Nenhuma enquete disponível</p>}
+            {!carregando && enquetes.length === 0 && !erro && (
+                <p className="mensagem-info">Nenhuma enquete disponível</p>
+            )}
 
-            <div className="enquetes-lista">
+            <div id="Enquetes_Lista">
                 {enquetes.map((enq) => {
                     const total = totalVotos(enq);
                     const opcoes = [
@@ -159,45 +142,135 @@ function Enquetes({ usuario }) {
                         { texto: enq.textoOp2, votos: enq.op2, num: 2 },
                         { texto: enq.textoOp3, votos: enq.op3, num: 3 },
                         { texto: enq.textoOp4, votos: enq.op4, num: 4 },
-                    ].filter(op => op.texto);
+                    ].filter((op) => op.texto);
 
                     return (
-                        <div key={enq.idEnquete} className="enquete-card">
-                            <div className="enquete-card-header">
-                                <div>
-                                    <h4 className="enquete-assunto"><ClipboardList size={16} /> {enq.assunto}</h4>
-                                    <p className="enquete-data">{formatarData(enq.data)} · {total} voto{total !== 1 ? 's' : ''}</p>
+                        <div key={enq.idEnquete} className="enquete-card Green_Box_Full">
+                            <div className="enquete-cabecalho">
+                                <div className="card-avatar"><User size={28} /></div>
+                                <div className="card-corpo">
+                                    <h2 className="card-titulo">{enq.assunto}</h2>
+                                    <p className="enquete-info">
+                                        {formatarData(enq.data)} · {total} voto{total !== 1 ? 's' : ''}
+                                    </p>
                                 </div>
                                 {ehSindico && (
-                                    <button className="enq-botao-remover" onClick={() => handleRemover(enq.idEnquete)}>
-                                        <Trash2 size={14} />
+                                    <button className="enquete-remover" onClick={() => handleRemover(enq.idEnquete)}
+                                        title="Remover enquete" aria-label="Remover enquete">
+                                        <Trash2 size={18} />
                                     </button>
                                 )}
                             </div>
 
-                            <div className="enquete-opcoes">
-                                {opcoes.map((op) => (
-                                    <div key={op.num} className="enquete-opcao">
-                                        <div className="opcao-info">
-                                            <span className="opcao-label">{op.texto}</span>
-                                            <span className="opcao-porcentagem">{porcentagem(op.votos, total)}% ({op.votos})</span>
-                                        </div>
-                                        <div className="opcao-barra-fundo">
-                                            <div className="opcao-barra-progresso"
-                                                style={{ width: `${porcentagem(op.votos, total)}%` }} />
-                                        </div>
-                                        {!ehSindico && (
-                                            <button className="opcao-votar" onClick={() => handleVotar(enq.idEnquete, op.num)}>
-                                                Votar
-                                            </button>
-                                        )}
+                            {opcoes.map((op) => (
+                                <div key={op.num} className="enquete-opcao">
+                                    <div className="opcao-trilho">
+                                        <div className="Gold_Pill_Full opcao-preenchimento"
+                                            style={{ width: `${porcentagem(op.votos, total)}%` }} />
                                     </div>
-                                ))}
-                            </div>
+                                    <span className="opcao-texto">
+                                        {op.texto} · {porcentagem(op.votos, total)}% ({op.votos || 0})
+                                    </span>
+                                    {!ehSindico && (
+                                        <button className="opcao-votar Green_Button_Full"
+                                            onClick={() => handleVotar(enq.idEnquete, op.num)}>
+                                            VOTAR
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     );
                 })}
             </div>
+
+            {ehSindico && (
+                <button id="Enquetes_Novo" className="Green_Button_Full" onClick={abrirForm}
+                    title="Nova enquete" aria-label="Nova enquete">
+                    <Plus size={30} strokeWidth={3} />
+                </button>
+            )}
+
+            {mostrarForm && (
+                <div id="Enquetes_Modal" role="dialog" aria-modal="true">
+                    <form id="Enquetes_Form" className="Empty_Box" onSubmit={handleCriar}>
+                        <h2 id="Enquetes_Form_Titulo">NOVA ENQUETE</h2>
+
+                        {erro && <p className="mensagem-erro">{erro}</p>}
+
+                        <div className="enq-campo">
+                            <label htmlFor="Enquetes_Assunto">Assunto *</label>
+                            <input
+                                id="Enquetes_Assunto"
+                                className="Green_Input"
+                                type="text"
+                                placeholder="Ex: Reforma da piscina"
+                                value={formData.assunto}
+                                onChange={(e) => setFormData({ ...formData, assunto: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <div id="Enquetes_Form_Opcoes">
+                            <div className="enq-campo">
+                                <label htmlFor="Enquetes_Op1">Opção 1 *</label>
+                                <input
+                                    id="Enquetes_Op1"
+                                    className="Green_Input"
+                                    type="text"
+                                    placeholder="Ex: Sim"
+                                    value={formData.op1}
+                                    onChange={(e) => setFormData({ ...formData, op1: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div className="enq-campo">
+                                <label htmlFor="Enquetes_Op2">Opção 2 *</label>
+                                <input
+                                    id="Enquetes_Op2"
+                                    className="Green_Input"
+                                    type="text"
+                                    placeholder="Ex: Não"
+                                    value={formData.op2}
+                                    onChange={(e) => setFormData({ ...formData, op2: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div className="enq-campo">
+                                <label htmlFor="Enquetes_Op3">Opção 3 (opcional)</label>
+                                <input
+                                    id="Enquetes_Op3"
+                                    className="Green_Input"
+                                    type="text"
+                                    placeholder="Ex: Talvez"
+                                    value={formData.op3}
+                                    onChange={(e) => setFormData({ ...formData, op3: e.target.value })}
+                                />
+                            </div>
+                            <div className="enq-campo">
+                                <label htmlFor="Enquetes_Op4">Opção 4 (opcional)</label>
+                                <input
+                                    id="Enquetes_Op4"
+                                    className="Green_Input"
+                                    type="text"
+                                    placeholder="Ex: Não sei"
+                                    value={formData.op4}
+                                    onChange={(e) => setFormData({ ...formData, op4: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+                        <div id="Enquetes_Form_Botoes">
+                            <button type="button" className="Gold_Button_Empty" onClick={fecharForm}>
+                                CANCELAR
+                            </button>
+                            <button type="submit" className="Gold_Button_Full">
+                                <Check size={16} /> CRIAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }

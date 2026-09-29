@@ -1,205 +1,378 @@
-.salao {
-    width: 100%;
+/* ================= PÁGINA ================= */
+#Salao_Pagina {
+  position: relative;
+  width: 100%;
+  max-width: 625px;
+  margin: 0 auto;
+  padding: 24px 20px 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.salao-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--cor-verde-claro);
-    flex-wrap: wrap;
-    gap: 10px;
+#Salao_Titulo,
+#Salao_Subtitulo {
+  text-align: center;
+  font-size: 44px;
+  margin: 0 0 14px;
 }
 
-.salao-titulo {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--cor-preto);
-    margin: 0;
+#Salao_Subtitulo {
+  font-size: 34px;
 }
 
-.salao-botao-novo {
-    padding: 10px 25px;
-    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
-    color: white;
-    border: none;
-    border-radius: 25px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
+#Salao_Pagina .mensagem-info {
+  text-align: center;
+  margin: 10px 0;
 }
 
-.salao-botao-novo:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(91, 169, 137, 0.3);
+#Salao_Pagina .mensagem-erro {
+  text-align: center;
+  padding: 30px;
+  color: #d32f2f;
+  font-size: 14px;
+  background: rgba(211, 47, 47, 0.1);
+  border-radius: 10px;
+  border: 2px dashed #d32f2f;
+  box-sizing: border-box;
 }
 
-.salao-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 25px;
+#Salao_Pagina .mensagem-sucesso {
+  text-align: center;
+  padding: 14px;
+  color: var(--cor-verde-escuro);
+  font-size: 14px;
+  background: rgba(125, 182, 167, 0.25);
+  border-radius: 10px;
+  border: 2px dashed var(--cor-verde-principal);
+  box-sizing: border-box;
+}
+
+/* Seta de voltar, canto superior esquerdo */
+#Salao_Voltar {
+  position: fixed;
+  top: 22px;
+  left: 30px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--cor-preto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#Salao_Voltar:hover {
+  transform: translateX(-3px);
+}
+
+/* Ícone de perfil, canto superior direito */
+#Salao_Perfil {
+  position: fixed;
+  top: 30px;
+  right: 40px;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: var(--cor-preto);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#Salao_Perfil:hover {
+  transform: scale(1.08);
+}
+
+/* ================= AVATAR (compartilhado pelos cards) ================= */
+.salao-avatar {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--cor-preto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= SALÕES ================= */
+#Salao_Lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .salao-card {
-    background: white;
-    border: 2px solid var(--cor-verde-claro);
-    border-radius: 15px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
+  border-radius: 45px;
+  padding: 18px 26px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .salao-nome {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--cor-preto);
-    margin: 0;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  color: var(--cor-preto);
+  overflow-wrap: anywhere;
 }
 
-.salao-status {
-    padding: 6px 16px;
-    border-radius: 20px;
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
+/* Etiquetas de status (salão e reserva) */
+.salao-status,
+.reserva-status {
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--cor-bege);
+  font-weight: 400;
 }
 
-.salao-form {
-    background: white;
-    border: 2px solid var(--cor-verde-claro);
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
+.status-ok {
+  background: linear-gradient(0deg, var(--cor-verde-escuro), var(--cor-verde-principal), var(--cor-verde-claro));
+  color: var(--cor-preto);
 }
 
-.salao-form-campos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
+.status-ocupado {
+  background: #d32f2f;
 }
 
-.salao-botao-submit {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
+.status-pendente {
+  /* mantém o degradê dourado da classe Gold_Pill_Full */
 }
 
-.salao-botao-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(91, 169, 137, 0.3);
+.status-cancelada {
+  background: #999;
 }
 
-.salao-subtitulo {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--cor-preto);
-    margin: 0 0 20px 0;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--cor-verde-claro);
+/* ================= DIVISOR ================= */
+.salao-divisor {
+  width: 52%;
+  max-width: 410px;
+  border: 0;
+  border-top: 1px solid var(--cor-preto);
+  margin: 26px auto 22px;
 }
 
-.reservas-lista {
-    display: grid;
-    gap: 15px;
+/* ================= RESERVAS ================= */
+#Salao_Reservas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .reserva-card {
-    background: white;
-    border: 2px solid var(--cor-verde-claro);
-    border-radius: 15px;
-    padding: 20px;
-    transition: all 0.3s;
+  border-radius: 45px;
+  padding: 20px 26px;
+  box-sizing: border-box;
 }
 
-.reserva-card:hover {
-    box-shadow: 0 6px 20px rgba(91, 169, 137, 0.15);
-    border-color: var(--cor-verde-principal);
-    transform: translateY(-2px);
+.reserva-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-.reserva-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    gap: 15px;
+.reserva-corpo {
+  flex: 1;
+  min-width: 0;
 }
 
 .reserva-titulo {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--cor-preto);
-    margin: 0 0 5px 0;
+  margin: 0;
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  color: var(--cor-preto);
+  overflow-wrap: anywhere;
 }
 
-.reserva-data,
-.reserva-salao {
-    font-size: 13px;
-    color: var(--cor-verde-principal);
-    margin: 3px 0;
+.reserva-info {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
 }
 
-.reserva-status {
-    padding: 6px 16px;
-    border-radius: 20px;
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
+.reserva-cancelar {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-.salao-botao-cancelar {
-    width: 100%;
-    padding: 10px;
-    background: rgba(211, 47, 47, 0.1);
-    color: #d32f2f;
-    border: 1px solid #d32f2f;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
+/* ================= BOTÃO "+" FLUTUANTE ================= */
+#Salao_Novo {
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
 }
 
-.salao-botao-cancelar:hover {
-    background: rgba(211, 47, 47, 0.2);
+#Salao_Novo:hover {
+  transform: scale(1.08);
 }
 
+/* ================= MODAL / FORMULÁRIO ================= */
+#Salao_Modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(55, 49, 8, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+#Salao_Form {
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px 30px;
+  border-radius: 30px;
+  box-sizing: border-box;
+}
+
+#Salao_Form_Titulo {
+  margin: 0 0 18px;
+  text-align: center;
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.8rem;
+  color: var(--cor-preto);
+}
+
+.salao-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.salao-campo label {
+  font-size: 0.95rem;
+  padding-left: 6px;
+}
+
+#Salao_Select,
+#Salao_Data {
+  height: 48px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+#Salao_Form_Botoes {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+#Salao_Form_Botoes button {
+  flex: 1;
+  padding: 12px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ================= CELULAR ================= */
 @media (max-width: 768px) {
-    .salao-titulo {
-        font-size: 22px;
-    }
+  #Salao_Pagina {
+    padding: 72px 18px 110px;
+  }
 
-    .salao-form-campos {
-        grid-template-columns: 1fr;
-    }
+  #Salao_Titulo {
+    font-size: 32px;
+  }
 
-    .salao-cards {
-        grid-template-columns: 1fr;
-    }
+  #Salao_Subtitulo {
+    font-size: 26px;
+  }
 
-    .reserva-header {
-        flex-direction: column;
-    }
+  #Salao_Voltar {
+    top: 14px;
+    left: 14px;
+    width: 46px;
+    height: 46px;
+  }
 
-    .reserva-status {
-        width: 100%;
-        text-align: center;
-    }
+  #Salao_Perfil {
+    top: 18px;
+    right: 18px;
+    width: 46px;
+    height: 46px;
+  }
+
+  #Salao_Novo {
+    right: 20px;
+    bottom: 20px;
+    width: 58px;
+    height: 58px;
+  }
+
+  .salao-card,
+  .reserva-card {
+    border-radius: 40px;
+    padding: 18px 20px;
+  }
+
+  .salao-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .salao-nome {
+    font-size: 1.4rem;
+  }
+
+  .reserva-cabecalho {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .reserva-titulo {
+    font-size: 1.3rem;
+  }
+
+  .salao-divisor {
+    width: 60%;
+  }
+
+  #Salao_Form {
+    padding: 24px 20px;
+  }
 }

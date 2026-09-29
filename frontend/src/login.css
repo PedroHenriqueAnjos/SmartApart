@@ -1,164 +1,206 @@
-.login-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #5BA989 0%, #466B65 100%);
-    padding: 20px;
+/* Faz o container do React ocupar a largura toda (o body é flex-row) */
+#root {
+  flex: 1;
+  width: 100%;
 }
 
-.login-card {
-    display: flex;
-    background: var(--cor-fundo);
-    border-radius: 20px;
-    overflow: hidden;
-    max-width: 900px;
+/* ================= DESKTOP ================= */
+
+/* Box principal: cantos bem arredondados, dividida ao meio */
+#Login_Box {
+  width: 90vw;
+  max-width: 1100px;
+  min-height: 70vh;
+  margin: 6vh auto;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  border-radius: 110px;
+  overflow: hidden; /* respeita o arredondamento nas pontas da barra */
+  font-size: 1.25rem;
+}
+
+/* Metade esquerda: logo */
+#Login_Logo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+#Login_Logo img {
+  width: 100%;
+  max-width: 380px;
+  max-height: 55vh;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Barra preta separadora, de ponta a ponta */
+#Login_Divisor {
+  width: 5px;
+  align-self: stretch;
+  background: #000;
+}
+
+/* Metade direita: texto + formulário */
+#Login_Conteudo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 70px;
+  padding: 60px;
+  text-align: left;
+}
+
+/* O título LOGIN só aparece no celular */
+#Login_Titulo {
+  display: none;
+}
+
+#Login_Conteudo p {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+#Login_Form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+#Login_Form label {
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.6rem;
+  margin-top: 10px;
+}
+
+#Login_Form input {
+  height: 52px;
+  font-size: 1.1rem;
+  border-width: 4px;
+}
+
+#button_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 50px;
+}
+
+#button_container a {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+#Botao_Login {
+  font-size: 1.7rem;
+  padding: 22px 56px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+#erro {
+  color: #8b1a1a;
+  font-weight: 700;
+}
+
+/* ================= CELULAR ================= */
+/* Logo sobre o fundo bege; painel verde embaixo com o topo arredondado */
+@media screen and (max-width: 760px) {
+  #Login_Box {
+    background-color: transparent; /* o verde passa a ser só do painel */
     width: 100%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-}
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    overflow: visible;
+    flex-direction: column;
+    font-size: 1rem;
+  }
 
-.login-icone {
+  #Login_Logo {
+    flex: 0 0 26vh;
+    padding: 20px;
+  }
+
+  #Login_Logo img {
+    max-height: 50vh;
+    max-width: 200px;
+  }
+
+  #Login_Divisor {
+    display: none;
+  }
+
+  #Login_Conteudo {
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--cor-fundo);
-    padding: 40px 20px;
-    border-right: 3px solid var(--cor-preto);
-}
+    background-color: var(--cor-verde-principal);
+    border-radius: 90px 90px 0 0;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 30px 30px 40px;
+    text-align: center;
+  }
 
-.login-form-container {
-    flex: 1;
-    padding: 60px 40px;
-    display: flex;
+  #Login_Titulo {
+    display: block;
+    margin: 0;
+    font-size: 44px;
+  }
+
+  #Login_Conteudo p {
+    font-size: 1.1rem;
+  }
+
+  #Login_Form {
+    gap: 6px;
+  }
+
+  #Login_Form label {
+    font-family: "Fredoka";
+    font-size: 1.1rem;
+    text-align: left;
+    text-transform: lowercase;
+    margin-top: 0;
+  }
+
+  /* espaço maior entre o campo de cpf e o label de senha */
+  #Login_Form input + label {
+    margin-top: 30px;
+  }
+
+  #Login_Form input {
+    height: 48px;
+    font-size: 1rem;
+  }
+
+  #button_container {
     flex-direction: column;
-    justify-content: center;
-}
+    align-items: stretch;
+    gap: 24px;
+    margin-top: 40px;
+  }
 
-.login-titulo {
-    font-size: 36px;
-    font-weight: 800;
-    color: var(--cor-preto);
-    margin-bottom: 10px;
-}
+  #button_container a {
+    align-self: flex-start;
+    font-weight: normal;
+    font-size: 1rem;
+  }
 
-.login-subtitulo {
-    font-size: 13px;
-    color: var(--cor-preto);
-    margin-bottom: 30px;
-    opacity: 0.7;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--cor-preto);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.form-group input {
-    padding: 12px 18px;
-    border: 2px solid var(--cor-verde-principal);
-    border-radius: 25px;
-    font-size: 13px;
-    background: white;
-    color: var(--cor-preto);
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.form-group input::placeholder {
-    color: #999;
-    font-size: 12px;
-}
-
-.form-group input:focus {
-    border-color: var(--cor-verde-escuro);
-}
-
-.form-group input:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.login-erro {
-    color: #d32f2f;
-    font-size: 12px;
-    margin-bottom: 15px;
-    padding: 10px;
-    background: rgba(211, 47, 47, 0.1);
-    border-radius: 8px;
-    border-left: 3px solid #d32f2f;
-}
-
-.login-footer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.login-esqueceu {
-    font-size: 11px;
-    color: var(--cor-preto);
-    text-decoration: none;
-    opacity: 0.6;
-    transition: opacity 0.3s;
-}
-
-.login-esqueceu:hover {
-    opacity: 1;
-}
-
-.login-botao {
-    padding: 12px 40px;
-    background: linear-gradient(135deg, var(--cor-verde-principal) 0%, var(--cor-verde-escuro) 100%);
-    color: white;
-    border: none;
-    border-radius: 25px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.login-botao:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(91, 169, 137, 0.3);
-}
-
-.login-botao:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-    .login-card {
-        flex-direction: column;
-    }
-
-    .login-icone {
-        border-right: none;
-        border-bottom: 3px solid var(--cor-preto);
-        padding: 30px 20px;
-    }
-
-    .login-form-container {
-        padding: 40px 25px;
-    }
-
-    .login-titulo {
-        font-size: 28px;
-    }
+  #Botao_Login {
+    align-self: center;
+    font-size: 1.6rem;
+    padding: 20px 50px;
+  }
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getMessagens, enviarMensagem } from './api';
 import './Chat.css';
-import { MessageCircle, Send } from 'lucide-react';
+import { ArrowLeft, Send } from 'lucide-react';
 
-function Chat({ usuario }) {
+function Chat({ usuario, aoNavegar }) {
     const [mensagens, setMensagens] = useState([]);
     const [novaMsg, setNovaMsg] = useState('');
     const [carregando, setCarregando] = useState(true);
@@ -51,11 +51,17 @@ function Chat({ usuario }) {
     };
 
     return (
-        <div className="chat">
-            <h2 className="chat-titulo"><MessageCircle size={22} /> Chat do Condomínio</h2>
+        <div id="Chat_Pagina">
 
-            <div className="chat-container">
-                <div className="chat-mensagens">
+            <button id="Chat_Voltar" onClick={() => aoNavegar('inicio')}
+                title="Voltar para o início" aria-label="Voltar para o início">
+                <ArrowLeft size={44} strokeWidth={1.5} />
+            </button>
+
+            <h1 id="Chat_Titulo">CHAT</h1>
+
+            <div id="Chat_Container" className="Empty_Box">
+                <div id="Chat_Mensagens">
                     {carregando && <p className="mensagem-info">Carregando mensagens...</p>}
                     {erro && <p className="mensagem-erro">{erro}</p>}
 
@@ -70,7 +76,7 @@ function Chat({ usuario }) {
                                 key={msg.idMensagem}
                                 className={`chat-mensagem ${ehDoUsuario ? 'propria' : 'outro'}`}
                             >
-                                <div className="msg-bubble">
+                                <div className={`msg-bubble ${ehDoUsuario ? 'Green_Box_Full' : 'Empty_Box'}`}>
                                     <p className="msg-nome">{msg.nomeRemetente}</p>
                                     <p className="msg-tipo">{msg.tipoRemetente}</p>
                                     <p className="msg-texto">{msg.texto}</p>
@@ -83,16 +89,17 @@ function Chat({ usuario }) {
                     <div ref={messagesEndRef} />
                 </div>
 
-                <form onSubmit={handleEnviar} className="chat-formulario">
+                <form onSubmit={handleEnviar} id="Chat_Formulario">
                     <input
+                        id="Chat_Input"
+                        className="Green_Input"
                         type="text"
                         placeholder="Digite sua mensagem..."
                         value={novaMsg}
                         onChange={(e) => setNovaMsg(e.target.value)}
-                        className="chat-input"
                     />
-                    <button type="submit" className="chat-botao">
-                        <Send size={18} />
+                    <button type="submit" id="Chat_Botao" className="Green_Button_Full" title="Enviar">
+                        <Send size={20} />
                     </button>
                 </form>
             </div>

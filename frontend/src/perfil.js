@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { atualizarPerfilInquilino } from './api';
 import './perfil.css';
-import { User, Pencil, Check, X, Camera, Trash2 } from 'lucide-react';
+import { ArrowLeft, User, Pencil, Check, X, Camera, Trash2, LogOut } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
 
-function Perfil({ usuario }) {
+function Perfil({ usuario, aoNavegar, aoSair }) {
     const [nomeEditado, setNomeEditado] = useState(usuario.nome);
     const [editando, setEditando] = useState(false);
     const [carregando, setCarregando] = useState(false);
@@ -120,100 +120,110 @@ function Perfil({ usuario }) {
         }
     };
 
-    const getTipoCor = (tipo) => {
-        if (tipo === 'SINDICO') return '#D4A760';
-        if (tipo === 'DONO') return '#5BA989';
-        if (tipo === 'PORTEIRO') return '#466B65';
-        return '#5BA989';
-    };
-
     return (
-        <div className="perfil">
-            <h2 className="perfil-titulo"><User size={22} /> Meu Perfil</h2>
+        <div id="Perfil_Pagina">
 
-            <div className="perfil-card">
-                <div className="perfil-avatar-wrapper">
-                    <div className="perfil-avatar">
+            <button id="Perfil_Voltar" onClick={() => aoNavegar('inicio')}
+                title="Voltar para o início" aria-label="Voltar para o início">
+                <ArrowLeft size={44} strokeWidth={1.5} />
+            </button>
+
+            <h1 id="Perfil_Titulo">MEU PERFIL</h1>
+
+            {mensagem && (
+                <p className={mensagemTipo === 'sucesso' ? 'mensagem-sucesso' : 'mensagem-erro'}>{mensagem}</p>
+            )}
+
+            <div id="Perfil_Card" className="Green_Box_Full">
+
+                <div id="Perfil_Avatar_Bloco">
+                    <div id="Perfil_Avatar">
                         {foto
-                            ? <img src={foto} alt="Foto de perfil" className="perfil-foto" />
-                            : <User size={50} color="white" />
+                            ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />
+                            : <User size={64} />
                         }
                     </div>
-                    <div className="perfil-avatar-acoes">
+
+                    <div id="Perfil_Foto_Botoes">
                         <button
-                            className="perfil-foto-botao"
+                            id="Perfil_Camera"
+                            className="Green_Button_Full perfil-botao-icone"
                             onClick={() => inputFotoRef.current.click()}
                             disabled={carregandoFoto}
                             title="Alterar foto"
+                            aria-label="Alterar foto"
                         >
-                            <Camera size={16} />
+                            <Camera size={18} />
                         </button>
                         {foto && (
                             <button
-                                className="perfil-foto-botao remover"
+                                id="Perfil_Remover"
+                                className="Green_Button_Empty perfil-botao-icone"
                                 onClick={handleRemoverFoto}
                                 disabled={carregandoFoto}
                                 title="Remover foto"
+                                aria-label="Remover foto"
                             >
-                                <Trash2 size={16} />
+                                <Trash2 size={18} />
                             </button>
                         )}
                     </div>
+
                     <input
+                        id="Perfil_Foto_Input"
                         ref={inputFotoRef}
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
                         style={{ display: 'none' }}
                         onChange={handleSelecionarFoto}
                     />
-                    {carregandoFoto && <p className="perfil-carregando">Enviando...</p>}
+                    {carregandoFoto && <p id="Perfil_Enviando">Enviando...</p>}
                 </div>
 
-                <div className="perfil-info">
+                <div id="Perfil_Dados">
                     <div className="perfil-campo">
-                        <label>ID</label>
-                        <p className="perfil-valor">{usuario.id}</p>
-                    </div>
-
-                    <div className="perfil-campo">
-                        <label>Nome</label>
+                        <label htmlFor="Perfil_Nome_Input">NOME</label>
                         {editando ? (
-                            <div className="perfil-nome-edit">
+                            <div className="perfil-nome-linha">
                                 <input
+                                    id="Perfil_Nome_Input"
+                                    className="Gold_Input"
                                     type="text"
                                     value={nomeEditado}
                                     onChange={(e) => setNomeEditado(e.target.value)}
-                                    className="perfil-input"
                                 />
-                                <button className="perfil-icone-botao verde" onClick={handleSalvarNome} disabled={carregando}>
-                                    <Check size={16} />
+                                <button className="Green_Button_Full perfil-botao-icone" onClick={handleSalvarNome}
+                                    disabled={carregando} title="Salvar" aria-label="Salvar nome">
+                                    <Check size={18} />
                                 </button>
-                                <button className="perfil-icone-botao vermelho" onClick={() => { setEditando(false); setNomeEditado(usuario.nome); }}>
-                                    <X size={16} />
+                                <button className="Green_Button_Empty perfil-botao-icone"
+                                    onClick={() => { setEditando(false); setNomeEditado(usuario.nome); }}
+                                    title="Cancelar" aria-label="Cancelar edição">
+                                    <X size={18} />
                                 </button>
                             </div>
                         ) : (
-                            <div className="perfil-nome-edit">
-                                <p className="perfil-valor">{usuario.nome}</p>
-                                <button className="perfil-icone-botao" onClick={() => { setEditando(true); setMensagem(''); }}>
-                                    <Pencil size={16} />
+                            <div className="perfil-nome-linha">
+                                <p id="Perfil_Nome_Valor">{usuario.nome}</p>
+                                <button className="Green_Button_Empty perfil-botao-icone"
+                                    onClick={() => { setEditando(true); setMensagem(''); }}
+                                    title="Editar nome" aria-label="Editar nome">
+                                    <Pencil size={18} />
                                 </button>
                             </div>
                         )}
                     </div>
 
                     <div className="perfil-campo">
-                        <label>Tipo de Usuário</label>
-                        <div className="perfil-tipo" style={{ backgroundColor: getTipoCor(usuario.tipo) }}>
-                            {usuario.tipo}
-                        </div>
+                        <span className="perfil-rotulo">TIPO DE USUÁRIO</span>
+                        <span id="Perfil_Tipo" className="Gold_Pill_Full">{usuario.tipo}</span>
                     </div>
                 </div>
             </div>
 
-            {mensagem && (
-                <p className={`perfil-mensagem ${mensagemTipo}`}>{mensagem}</p>
-            )}
+            <button id="Perfil_Sair" className="Green_Button_Full" onClick={aoSair}>
+                <LogOut size={20} /> SAIR
+            </button>
         </div>
     );
 }

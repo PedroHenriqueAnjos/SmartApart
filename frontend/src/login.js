@@ -1,27 +1,13 @@
 import React, { useState } from 'react';
+import "./login.css"
 import { loginAPI } from './api';
-import './login.css';
-import LockIcon from './LockIcon';
-import { Eye, EyeOff } from 'lucide-react';
+
 
 function Login({ setUsuarioLogado }) {
     const [cpf, setCpf] = useState('');
     const [senha, setSenha] = useState('');
     const [erro, setErro] = useState('');
     const [carregando, setCarregando] = useState(false);
-    const [mostrarSenha, setMostrarSenha] = useState(false);
-
-    const formatarCPF = (valor) => {
-        const numeros = valor.replace(/\D/g, '').slice(0, 11);
-        return numeros
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d)/, '$1.$2')
-            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    };
-
-    const handleCPF = (e) => {
-        setCpf(formatarCPF(e.target.value));
-    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -49,62 +35,55 @@ function Login({ setUsuarioLogado }) {
     };
 
     return (
-        <div className="login-container">
-            <div className="login-card">
-                <div className="login-icone">
-                    <LockIcon />
-                </div>
+        <>
+        <main className='Green_Box_Full' id="Login_Box">
 
-                <div className="login-form-container">
-                    <h1 className="login-titulo">LOGIN</h1>
-                    <p className="login-subtitulo">não possui cadastro? fale com o administrador</p>
-
-                    <form onSubmit={handleLogin}>
-                        <div className="form-group">
-                            <label>CPF</label>
-                            <input
-                                type="text"
-                                placeholder="000.000.000-00"
-                                value={cpf}
-                                onChange={handleCPF}
-                                disabled={carregando}
-                                maxLength={14}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>SENHA</label>
-                            <div className="senha-wrapper">
-                                <input
-                                    type={mostrarSenha ? 'text' : 'password'}
-                                    placeholder="sua senha aqui..."
-                                    value={senha}
-                                    onChange={(e) => setSenha(e.target.value)}
-                                    disabled={carregando}
-                                />
-                                <button
-                                    type="button"
-                                    className="senha-olho"
-                                    onClick={() => setMostrarSenha(!mostrarSenha)}
-                                    tabIndex={-1}
-                                >
-                                    {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        {erro && <p className="login-erro">{erro}</p>}
-
-                        <div className="login-footer">
-                            <a href="#" className="login-esqueceu">esqueceu sua senha? fale com o administrador</a>
-                            <button type="submit" className="login-botao" disabled={carregando}>
-                                {carregando ? 'ENTRANDO...' : 'FINALIZAR'}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            <div id="Login_Logo">
+                <img src={`${process.env.PUBLIC_URL}/logo.svg`} alt="Logo SmartApart" />
             </div>
-        </div>
+
+            <div id="Login_Divisor"></div>
+
+            <section id="Login_Conteudo">
+                <h1 id="Login_Titulo">LOGIN</h1>
+                <p>não possui cadastro? <strong>fale com o admin</strong></p>
+
+                <form onSubmit={handleLogin} id="Login_Form">
+                    <label htmlFor="CPF">CPF</label>
+                    <input className='Gold_Input'
+                        id="CPF"
+                        name="CPF"
+                        type="text"
+                        value={cpf}
+                        onChange={(e) => setCpf(e.target.value)}
+                        disabled={carregando}
+                        placeholder='000.000.000-00'
+                        maxLength={14}
+                    />
+                    <label htmlFor="senha">SENHA</label>
+                    <input className='Gold_Input'
+                        id="senha"
+                        name='senha'
+                        type="password"
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                        disabled={carregando}
+                        placeholder='sua senha aqui...'
+                    />
+
+                    <div id="button_container">
+                        <a>esqueceu a senha?</a>
+                        <button type="submit" disabled={carregando} className='Green_Button_Full' id="Botao_Login">
+                            {carregando ? 'ENTRANDO...' : 'ENTRAR'}
+                        </button>
+                    </div>
+                </form>
+
+                {erro && <p id='erro'>{erro}</p>}
+            </section>
+
+        </main>
+        </>
     );
 }
 
