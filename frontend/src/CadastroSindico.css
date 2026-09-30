@@ -1,0 +1,95 @@
+#CadastroSindico_Pagina {
+    padding: 40px 24px 80px;
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#CadastroSindico_Voltar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--cor-preto);
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}
+
+#CadastroSindico_Perfil {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--cor-preto);
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+
+#CadastroSindico_Titulo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#CadastroSindico_Abas {
+    display: flex;
+    justify-content: space-around;
+    padding: 12px;
+    margin-bottom: 24px;
+    gap: 8px;
+}
+
+.cs-aba {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--cor-preto);
+    opacity: 0.6;
+    padding: 8px;
+    border-radius: 12px;
+    font-family: 'Fredoka';
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.cs-aba.ativa {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+#CadastroSindico_Form {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.cs-form-titulo {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.cs-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cs-campo label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--cor-preto);
+}
+
+.cs-campo input,
+.cs-campo select {
+    height: 42px;
+    width: 100%;
+    font-size: 13px;
+}

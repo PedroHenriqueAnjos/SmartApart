@@ -4,6 +4,11 @@ import { ArrowLeft, RefreshCw, X, Plus, Search, CheckCircle, User, Home, Check }
 
 const API_URL = "http://localhost:8080";
 
+const CAMPO_BLOCO = 'bloco';
+const CAMPO_NUMERO = 'numero';
+
+const normalizar = (v) => String(v ?? '').trim().toLowerCase();
+
 function Visitantes({ usuario, aoNavegar }) {
     const [visitantes, setVisitantes] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -11,7 +16,10 @@ function Visitantes({ usuario, aoNavegar }) {
     const [sucesso, setSucesso] = useState('');
     const [mostrarForm, setMostrarForm] = useState(false);
     const [formData, setFormData] = useState({ nome: '', cpf: '', prestador: false });
-    const [idApartamento, setIdApartamento] = useState('');
+
+    const [apartamentos, setApartamentos] = useState([]);
+    const [bloco, setBloco] = useState('');
+    const [numero, setNumero] = useState('');
     const [apartamentoInfo, setApartamentoInfo] = useState(null);
     const [buscandoApto, setBuscandoApto] = useState(false);
 
@@ -19,6 +27,7 @@ function Visitantes({ usuario, aoNavegar }) {
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
 
     useEffect(() => { carregarVisitantes(); }, []);
+    useEffect(() => { if (ehGerenciador) carregarApartamentos(); }, [ehGerenciador]);
 
     const carregarVisitantes = async () => {
         try {
@@ -42,16 +51,32 @@ function Visitantes({ usuario, aoNavegar }) {
         }
     };
 
-    const buscarApartamento = async (id) => {
-        if (!id) { setApartamentoInfo(null); return; }
+    const carregarApartamentos = async () => {
+        try {
+            const res = await fetch(`${API_URL}/apartamentos`);
+            if (!res.ok) throw new Error();
+            const dados = await res.json();
+            setApartamentos(Array.isArray(dados) ? dados : []);
+        } catch {
+            setErro('Erro ao carregar apartamentos');
+        }
+    };
+
+    // ---------- Busca de apartamento por bloco + número ----------
+    const apartamentoPreenchido = bloco.trim() && numero.trim();
+
+    const buscarApartamento = async () => {
+        if (!apartamentoPreenchido) { setApartamentoInfo(null); return; }
         try {
             setBuscandoApto(true);
             setApartamentoInfo(null);
             setErro('');
 
-            const resApto = await fetch(`${API_URL}/apartamentos/${id}`);
-            if (!resApto.ok) { setErro('Apartamento não encontrado'); return; }
-            const apto = await resApto.json();
+            const apto = apartamentos.find((a) =>
+                normalizar(a[CAMPO_BLOCO]) === normalizar(bloco) &&
+                normalizar(a[CAMPO_NUMERO]) === normalizar(numero));
+
+            if (!apto) { setErro('Apartamento não encontrado'); return; }
 
             let inquilino = null;
             let dono = null;
@@ -79,7 +104,8 @@ function Visitantes({ usuario, aoNavegar }) {
         setErro('');
         setSucesso('');
         setApartamentoInfo(null);
-        setIdApartamento('');
+        setBloco('');
+        setNumero('');
         setFormData({ nome: '', cpf: '', prestador: false });
     };
 
@@ -121,7 +147,8 @@ function Visitantes({ usuario, aoNavegar }) {
             if (!res.ok) throw new Error();
             setSucesso('Visitante solicitado com sucesso!');
             setFormData({ nome: '', cpf: '', prestador: false });
-            setIdApartamento('');
+            setBloco('');
+            setNumero('');
             setApartamentoInfo(null);
             setMostrarForm(false);
             carregarVisitantes();
@@ -159,8 +186,6 @@ function Visitantes({ usuario, aoNavegar }) {
         return '#999';
     };
 
-    // Coluna do meio da lista (o modelo mostra "data", mas o visitante
-    // não tinha campo de data no código anterior)
     const detalheDoVisitante = (v) => {
         if (v.prestador) return 'Prestador de serviço';
         if (v.cpf) return `CPF: ${v.cpf}`;
@@ -253,26 +278,40 @@ function Visitantes({ usuario, aoNavegar }) {
 
                         {ehGerenciador && (
                             <>
-                                <div className="vis-campo">
-                                    <label htmlFor="Visitantes_Apto">ID do apartamento *</label>
-                                    <input
-                                        id="Visitantes_Apto"
-                                        className="Green_Input"
-                                        type="number"
-                                        placeholder="Ex: 1"
-                                        value={idApartamento}
-                                        onChange={(e) => { setIdApartamento(e.target.value); setApartamentoInfo(null); setErro(''); }}
-                                        onBlur={() => { if (idApartamento) buscarApartamento(idApartamento); }}
-                                    />
-                                    <span className="vis-dica">Saia do campo para buscar automaticamente</span>
+                                <div className="vis-linha-apto">
+                                    <div className="vis-campo">
+                                        <label htmlFor="Visitantes_Bloco">Bloco *</label>
+                                        <input
+                                            id="Visitantes_Bloco"
+                                            className="Green_Input"
+                                            type="text"
+                                            placeholder="Ex: A"
+                                            value={bloco}
+                                            onChange={(e) => { setBloco(e.target.value); setApartamentoInfo(null); setErro(''); }}
+                                            onBlur={buscarApartamento}
+                                        />
+                                    </div>
+                                    <div className="vis-campo">
+                                        <label htmlFor="Visitantes_Numero">Número *</label>
+                                        <input
+                                            id="Visitantes_Numero"
+                                            className="Green_Input"
+                                            type="text"
+                                            placeholder="Ex: 101"
+                                            value={numero}
+                                            onChange={(e) => { setNumero(e.target.value); setApartamentoInfo(null); setErro(''); }}
+                                            onBlur={buscarApartamento}
+                                        />
+                                    </div>
                                 </div>
+                                <span className="vis-dica">Saia dos campos para buscar automaticamente</span>
 
                                 {buscandoApto && <p className="vis-buscando"><Search size={14} /> Buscando apartamento...</p>}
 
                                 {apartamentoInfo && (
                                     <div className="vis-apto-info Green_Box_Full">
                                         <h4 className="vis-apto-titulo">
-                                            <CheckCircle size={16} /> Apartamento {apartamentoInfo.apto.idApartamento} encontrado
+                                            <CheckCircle size={16} /> Bloco {apartamentoInfo.apto[CAMPO_BLOCO]} · Apto {apartamentoInfo.apto[CAMPO_NUMERO]} encontrado
                                         </h4>
                                         <div className="vis-apto-grid">
                                             <div>

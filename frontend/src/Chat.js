@@ -12,7 +12,7 @@ function Chat({ usuario, aoNavegar }) {
 
     useEffect(() => {
         carregarMensagens();
-        const intervalo = setInterval(carregarMensagens, 3000);
+        const intervalo = setInterval(carregarMensagens, 500);
         return () => clearInterval(intervalo);
     }, []);
 

@@ -68,21 +68,21 @@
   font-size: 1.6rem;
 }
 
-#Login_Form {
+#Cadastro_Form {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin: 0;
 }
 
-#Login_Form label {
+#Cadastro_Form label {
   font-family: "Energy";
   font-weight: normal;
   font-size: 1.6rem;
   margin-top: 10px;
 }
 
-#Login_Form input {
+#Cadastro_Form input {
   height: 52px;
   font-size: 1.1rem;
   border-width: 4px;
@@ -163,11 +163,11 @@
     font-size: 1.1rem;
   }
 
-  #Login_Form {
+  #Cadastro_Form {
     gap: 6px;
   }
 
-  #Login_Form label {
+  #Cadastro_Form label {
     font-family: "Fredoka";
     font-size: 1.1rem;
     text-align: left;
@@ -176,11 +176,11 @@
   }
 
   /* espaço maior entre o campo de cpf e o label de senha */
-  #Login_Form input + label {
+  #Cadastro_Form input + label {
     margin-top: 30px;
   }
 
-  #Login_Form input {
+  #Cadastro_Form input {
     height: 48px;
     font-size: 1rem;
   }

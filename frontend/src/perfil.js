@@ -5,7 +5,7 @@ import { ArrowLeft, User, Pencil, Check, X, Camera, Trash2, LogOut } from 'lucid
 
 const API_URL = "http://localhost:8080";
 
-function Perfil({ usuario, aoNavegar, aoSair }) {
+function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
     const [nomeEditado, setNomeEditado] = useState(usuario.nome);
     const [editando, setEditando] = useState(false);
     const [carregando, setCarregando] = useState(false);
@@ -40,6 +40,7 @@ function Perfil({ usuario, aoNavegar, aoSair }) {
         setCarregando(true);
         try {
             await atualizarPerfilInquilino(usuario.id, nomeEditado);
+            aoAtualizarUsuario({ nome: nomeEditado.trim() });
             setMensagem('Nome atualizado com sucesso!');
             setMensagemTipo('sucesso');
             setEditando(false);

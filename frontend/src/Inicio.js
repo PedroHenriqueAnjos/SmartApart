@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAvisosRecentes } from './api';
 import './Inicio.css';
-import { User, Package, MessageCircle, Users, BarChart2, CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Package, MessageCircle, Users, BarChart2, CalendarDays, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
 
@@ -165,26 +165,21 @@ const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.
 
     // ---------- Slides ----------
     const renderAviso = (aviso) => {
-        const lido = lidos.includes(aviso.idAvisos);
-        return (
-            <div className="aviso-bloco">
-                <div className={`aviso-card Green_Box_Full ${lido ? 'lido' : ''} ${podeVerEnquetes ? 'clicavel' : ''}`}
-                    {...propsClique}>
-                    <div className="card-avatar"><User size={28} /></div>
-                    <div className="card-corpo">
-                        <h2 className="card-titulo">{aviso.assunto}</h2>
-                        <p className="aviso-texto">{aviso.texto}</p>
-                        <span className="card-data">{formatarData(aviso.data)}</span>
-                    </div>
+    const lido = lidos.includes(aviso.idAvisos);
+    return (
+        <div className="aviso-bloco">
+            <div className={`aviso-card Green_Box_Full ${lido ? 'lido' : ''} ${podeVerEnquetes ? 'clicavel' : ''}`}
+                {...propsClique}>
+                <div className="card-avatar"><User size={28} /></div>
+                <div className="card-corpo">
+                    <h2 className="card-titulo">{aviso.assunto}</h2>
+                    <p className="aviso-texto">{aviso.texto}</p>
+                    <span className="card-data">{formatarData(aviso.data)}</span>
                 </div>
-
-                <label className="aviso-lido">
-                    <input type="checkbox" checked={lido} onChange={() => alternarLido(aviso.idAvisos)} />
-                    <span>Marcar como lido</span>
-                </label>
             </div>
-        );
-    };
+        </div>
+    );
+};
 
     const renderEnquete = (enq) => {
         const total = totalVotos(enq);
@@ -221,16 +216,17 @@ const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.
             </div>
         );
     };
-
+const ehSindico = usuario.tipo === 'SINDICO';
     // ---------- Atalhos clicáveis (imagem em cima, texto embaixo) ----------
     // Para usar imagem de verdade: coloque o arquivo em public/ e troque
     // o <Icone /> por <img src={`${process.env.PUBLIC_URL}/arquivo.png`} alt="" />
     const atalhos = [
-    { aba: ehPorteiro ? 'encomendasPorteiro' : 'encomendas', rotulo: 'encomendas', Icone: Package },,
+    { aba: ehPorteiro ? 'encomendasPorteiro' : 'encomendas', rotulo: 'encomendas', Icone: Package },
     { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },
     { aba: 'visitantes', rotulo: 'visitantes', Icone: Users },
     { aba: 'enquetes', rotulo: 'enquetes', Icone: BarChart2, oculto: !podeVerEnquetes },
     { aba: ehPorteiro ? 'salaoPorteiro' : 'salao', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
+    { aba: 'cadastroSindico', rotulo: 'Cadastrar', Icone: UserPlus, oculto: !ehSindico } // Novo Atalho
 ].filter((a) => !a.oculto);
 
     return (

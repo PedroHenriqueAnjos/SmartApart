@@ -294,6 +294,15 @@
   cursor: not-allowed;
 }
 
+.vis-linha-apto {
+    display: flex;
+    gap: 12px;
+}
+
+.vis-linha-apto .vis-campo {
+    flex: 1;
+}
+
 /* ================= CELULAR ================= */
 @media (max-width: 768px) {
   #Visitantes_Pagina {
