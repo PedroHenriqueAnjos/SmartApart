@@ -33,4 +33,14 @@ public class ReservaController {
     public Reserva cancelar(@PathVariable int id) {
         return ReservaService.cancelar(id);
     }
+    
+    @GetMapping
+    public List<Reserva> listarTodas() {
+        return ReservaService.listarTodas();
+    }
+
+    @PutMapping("/{id}/confirmar")
+    public Reserva confirmar(@PathVariable int id, @RequestParam String nomePorteiro) {
+        return ReservaService.confirmar(id, nomePorteiro);
+    }
 }

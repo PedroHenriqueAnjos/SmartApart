@@ -91,9 +91,8 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     // Só síndico e morador/dono acessam a tela de enquetes
     const podeVerEnquetes = ['SINDICO', 'MORADOR', 'DONO'].includes(usuario.tipo);
 
-    // Só morador/dono acessam a tela de reserva de salão
-    const podeVerSalao = ['MORADOR', 'DONO'].includes(usuario.tipo);
-
+    // Morador/dono reservam; porteiro só consulta
+const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.tipo);
     useEffect(() => {
         carregarAvisos();
         carregarEnquetes();
@@ -227,12 +226,12 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     // Para usar imagem de verdade: coloque o arquivo em public/ e troque
     // o <Icone /> por <img src={`${process.env.PUBLIC_URL}/arquivo.png`} alt="" />
     const atalhos = [
-        { aba: 'encomendas', rotulo: 'encomendas', Icone: Package },
-        { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },
-        { aba: 'visitantes', rotulo: 'visitantes', Icone: Users },
-        { aba: 'enquetes', rotulo: 'enquetes', Icone: BarChart2, oculto: !podeVerEnquetes },
-        { aba: 'salao', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
-    ].filter((a) => !a.oculto);
+    { aba: ehPorteiro ? 'encomendasPorteiro' : 'encomendas', rotulo: 'encomendas', Icone: Package },,
+    { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },
+    { aba: 'visitantes', rotulo: 'visitantes', Icone: Users },
+    { aba: 'enquetes', rotulo: 'enquetes', Icone: BarChart2, oculto: !podeVerEnquetes },
+    { aba: ehPorteiro ? 'salaoPorteiro' : 'salao', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
+].filter((a) => !a.oculto);
 
     return (
         <div id="Inicio_Pagina">

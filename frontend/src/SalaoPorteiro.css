@@ -1,0 +1,348 @@
+/* ================= PÁGINA ================= */
+#SalaoPorteiro_Pagina {
+  position: relative;
+  width: 100%;
+  max-width: 625px;
+  margin: 0 auto;
+  padding: 24px 20px 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+#SalaoPorteiro_Titulo,
+#SalaoPorteiro_Subtitulo {
+  text-align: center;
+  font-size: 44px;
+  margin: 0 0 14px;
+}
+
+#SalaoPorteiro_Subtitulo {
+  font-size: 34px;
+}
+
+/* ================= MENSAGENS ================= */
+#SalaoPorteiro_Pagina .mensagem-info {
+  text-align: center;
+  margin: 10px 0;
+}
+
+#SalaoPorteiro_Pagina .mensagem-erro {
+  text-align: center;
+  padding: 30px;
+  color: #d32f2f;
+  font-size: 14px;
+  background: rgba(211, 47, 47, 0.1);
+  border-radius: 10px;
+  border: 2px dashed #d32f2f;
+  box-sizing: border-box;
+}
+
+#SalaoPorteiro_Pagina .mensagem-sucesso {
+  text-align: center;
+  padding: 14px;
+  color: var(--cor-verde-escuro);
+  font-size: 14px;
+  background: rgba(125, 182, 167, 0.25);
+  border-radius: 10px;
+  border: 2px dashed var(--cor-verde-principal);
+  box-sizing: border-box;
+}
+
+/* ================= SETA E PERFIL ================= */
+#SalaoPorteiro_Voltar {
+  position: fixed;
+  top: 22px;
+  left: 30px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--cor-preto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#SalaoPorteiro_Voltar:hover {
+  transform: translateX(-3px);
+}
+
+#SalaoPorteiro_Perfil {
+  position: fixed;
+  top: 30px;
+  right: 40px;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--cor-preto);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#SalaoPorteiro_Perfil:hover {
+  transform: scale(1.08);
+}
+
+/* ================= LISTAS ================= */
+#SalaoPorteiro_Lista,
+#SalaoPorteiro_Reservas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sp-card {
+  border-radius: 45px;
+  padding: 18px 26px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sp-card-reserva {
+  flex-wrap: wrap;
+}
+
+.sp-avatar {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--cor-preto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sp-corpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-nome {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  color: var(--cor-preto);
+  overflow-wrap: anywhere;
+}
+
+.sp-corpo .sp-nome {
+  flex: none;
+}
+
+.sp-info {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* ================= STATUS ================= */
+.sp-status {
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--cor-bege);
+  font-weight: 400;
+}
+
+.sp-status-ok {
+  background: linear-gradient(0deg, var(--cor-verde-escuro), var(--cor-verde-principal), var(--cor-verde-claro));
+  color: var(--cor-preto);
+}
+
+.sp-status-ocupado {
+  background: #d32f2f;
+}
+
+.sp-status-cancelada {
+  background: #999;
+}
+
+/* ================= DIVISOR ================= */
+.sp-divisor {
+  width: 52%;
+  max-width: 410px;
+  border: 0;
+  border-top: 1px solid var(--cor-preto);
+  margin: 26px auto 22px;
+}
+
+/* ================= AÇÕES DA RESERVA ================= */
+.sp-acoes {
+  flex: 0 0 100%;
+  display: flex;
+  gap: 14px;
+}
+
+.sp-acao {
+  flex: 1;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ================= BOTÃO "+" FLUTUANTE ================= */
+#SalaoPorteiro_Novo {
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#SalaoPorteiro_Novo:hover {
+  transform: scale(1.08);
+}
+
+/* ================= MODAL / FORMULÁRIO ================= */
+#SalaoPorteiro_Modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(55, 49, 8, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+#SalaoPorteiro_Form {
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px 30px;
+  border-radius: 30px;
+  box-sizing: border-box;
+}
+
+#SalaoPorteiro_Form_Titulo {
+  margin: 0 0 18px;
+  text-align: center;
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.8rem;
+  color: var(--cor-preto);
+}
+
+.sp-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.sp-campo label {
+  font-size: 0.95rem;
+  padding-left: 6px;
+}
+
+#SalaoPorteiro_Nome {
+  height: 48px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+#SalaoPorteiro_Form_Botoes {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+#SalaoPorteiro_Form_Botoes button {
+  flex: 1;
+  padding: 12px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ================= CELULAR ================= */
+@media (max-width: 768px) {
+  #SalaoPorteiro_Pagina {
+    padding: 72px 18px 110px;
+  }
+
+  #SalaoPorteiro_Titulo {
+    font-size: 32px;
+  }
+
+  #SalaoPorteiro_Subtitulo {
+    font-size: 26px;
+  }
+
+  #SalaoPorteiro_Voltar {
+    top: 14px;
+    left: 14px;
+    width: 46px;
+    height: 46px;
+  }
+
+  #SalaoPorteiro_Perfil {
+    top: 18px;
+    right: 18px;
+    width: 46px;
+    height: 46px;
+  }
+
+  #SalaoPorteiro_Novo {
+    right: 20px;
+    bottom: 20px;
+    width: 58px;
+    height: 58px;
+  }
+
+  .sp-card {
+    border-radius: 40px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .sp-nome {
+    font-size: 1.3rem;
+  }
+
+  .sp-divisor {
+    width: 60%;
+  }
+
+  #SalaoPorteiro_Form {
+    padding: 24px 20px;
+  }
+}

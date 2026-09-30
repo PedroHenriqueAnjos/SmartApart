@@ -7,6 +7,8 @@ import Chat from './Chat';
 import Perfil from './perfil';
 import Enquetes from './Enquetes';
 import Salao from './Salao';
+import SalaoPorteiro from './SalaoPorteiro';
+import EncomendasPorteiro from './EncomendasPorteiro';
 import { User, LogOut, Menu, X } from 'lucide-react';
 
 function Dashboard({ usuario, setUsuarioLogado }) {
@@ -19,17 +21,18 @@ function Dashboard({ usuario, setUsuarioLogado }) {
 
     // Nestas telas não há menu superior: a navegação é feita pelo ícone de
     // perfil, pela seta de voltar e pelos atalhos da própria tela
-    const semMenu = ['inicio', 'encomendas', 'chat', 'visitantes', 'perfil', 'enquetes', 'salao'].includes(abaAtiva);
-
+    const semMenu = ['inicio', 'encomendas', 'chat', 'visitantes', 'perfil', 'enquetes', 'salao', 'salaoPorteiro','encomendasPorteiro'].includes(abaAtiva);
     const renderizarAba = () => {
         switch (abaAtiva) {
             case 'inicio': return <Inicio usuario={usuario} aoNavegar={navegarPara} ehPorteiro={ehPorteiro} />;
-            case 'encomendas': return <Encomendas usuario={usuario} aoNavegar={navegarPara} />;
+        case 'encomendas': return <Encomendas usuario={usuario} aoNavegar={navegarPara} />;
+        case 'encomendasPorteiro': return <EncomendasPorteiro usuario={usuario} aoNavegar={navegarPara} />;
             case 'visitantes': return <Visitantes usuario={usuario} aoNavegar={navegarPara} />;
             case 'chat': return <Chat usuario={usuario} aoNavegar={navegarPara} />;
             case 'enquetes': return <Enquetes usuario={usuario} aoNavegar={navegarPara} />;
             case 'salao': return <Salao usuario={usuario} aoNavegar={navegarPara} />;
             case 'perfil': return <Perfil usuario={usuario} aoNavegar={navegarPara} aoSair={() => setUsuarioLogado(null)} />;
+            case 'salaoPorteiro': return <SalaoPorteiro usuario={usuario} aoNavegar={navegarPara} />;
             default: return <Inicio usuario={usuario} aoNavegar={navegarPara} ehPorteiro={ehPorteiro} />;
         }
     };

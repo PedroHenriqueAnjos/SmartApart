@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Encomendas.css';
+import EncomendasPorteiro from './EncomendasPorteiro';
 import { ArrowLeft, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";

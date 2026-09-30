@@ -34,4 +34,16 @@ public class ReservaService {
 
         return reserva;
     }
+    public List<Reserva> listarTodas() {
+        return reservaRepository.findAll();
+    }
+
+    public Reserva confirmar(int id, String nomePorteiro) {
+        Reserva reserva = reservaRepository.findById(id).orElse(null);
+        if (reserva == null) {
+            return null;
+        }
+        reserva.setStatus("CONFIRMADA");
+        return reservaRepository.save(reserva);
+    }
 }
