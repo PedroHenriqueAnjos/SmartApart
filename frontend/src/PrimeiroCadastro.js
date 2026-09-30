@@ -71,9 +71,9 @@ function PrimeiroCadastro({ aoCadastrar }) {
                 <div id="Cadastro_Divisor"></div>
 
                 <section id="Cadastro_Conteudo">
-                    <h1 id="Cadastro_Titulo">CADASTRO</h1>
-                    <p>Nenhum síndico cadastrado ainda. Cadastre o primeiro síndico para começar.</p>
 
+                    <h1>CADASTRO</h1>
+                    <p>Nenhum síndico cadastrado ainda.</p>
                     <form onSubmit={handleCadastro} id="Cadastro_Form">
                         <label htmlFor="nome">NOME COMPLETO</label>
                         <input className='Gold_Input'
