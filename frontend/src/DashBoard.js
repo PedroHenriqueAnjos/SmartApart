@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DashBoard.css';
 import Inicio from './Inicio';
 import Encomendas from './Encomendas';
@@ -11,11 +11,28 @@ import SalaoPorteiro from './SalaoPorteiro';
 import EncomendasPorteiro from './EncomendasPorteiro';
 import CadastroSindico from './CadastroSindico';
 import { User, LogOut, Menu, X } from 'lucide-react';
-
+const API_URL = "http://localhost:8080";
 function Dashboard({ usuario, setUsuarioLogado, aoAtualizarUsuario }) {
     const [abaAtiva, setAbaAtiva] = useState('inicio');
     const [menuAberto, setMenuAberto] = useState(false);
-
+    const [foto, setFoto] = useState(null);
+    
+        useEffect(() => {
+                carregarFoto();
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, []);
+        
+            const carregarFoto = async () => {
+                try {
+                    const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+                    if (res.ok && res.status !== 204) {
+                        const dados = await res.json();
+                        setFoto(dados.foto || null);
+                    }
+                } catch {
+                    // sem foto ou backend indisponível: mantém o ícone padrão
+                }
+            };
     const ehPorteiro = usuario.tipo === 'PORTEIRO';
     const ehSindico = usuario.tipo === 'SINDICO';
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
@@ -94,7 +111,7 @@ const renderizarAba = () => {
                         <div className="nav-acoes">
                             <button className={`nav-botao perfil-botao ${abaAtiva === 'perfil' ? 'ativo' : ''}`}
                                 onClick={() => navegarPara('perfil')} title="Perfil">
-                                <User size={18} />
+                            {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={18} />}
                             </button>
                             <button className="logout-botao" onClick={() => setUsuarioLogado(null)} title="Sair">
                                 <LogOut size={18} />

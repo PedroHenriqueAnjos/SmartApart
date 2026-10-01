@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './Visitantes.css';
+import { supabase } from './supabaseClient';
 import { ArrowLeft, RefreshCw, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
+const BUCKET = 'avatars';
+
 
 const CAMPO_BLOCO = 'bloco';
 const CAMPO_NUMERO = 'numero';
@@ -22,7 +25,24 @@ function Visitantes({ usuario, aoNavegar }) {
     const [numero, setNumero] = useState('');
     const [apartamentoInfo, setApartamentoInfo] = useState(null);
     const [buscandoApto, setBuscandoApto] = useState(false);
+    const [foto, setFoto] = useState(null);
 
+    useEffect(() => {
+        carregarFoto();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const carregarFoto = async () => {
+        try {
+            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+            if (res.ok && res.status !== 204) {
+                const dados = await res.json();
+                setFoto(dados.foto || null);
+            }
+        } catch {
+            // sem foto ou backend indisponível: mantém o ícone padrão
+        }
+    };
     const ehGerenciador = usuario.tipo === 'PORTEIRO' || usuario.tipo === 'SINDICO';
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
 
@@ -206,7 +226,7 @@ function Visitantes({ usuario, aoNavegar }) {
             </button>
 
             <button id="Visitantes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
             </button>
 
             <h1 id="Visitantes_Titulo">{ehGerenciador ? 'VISITANTES PENDENTES' : 'SEUS VISITANTES'}</h1>
@@ -222,7 +242,9 @@ function Visitantes({ usuario, aoNavegar }) {
             <div id="Visitantes_Lista">
                 {visitantes.map((v) => (
                     <div key={v.idVisitante} className="vis-linha">
-                        <div className="vis-avatar"><User size={28} /></div>
+                        <div className="vis-avatar">
+                            {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
+                        </div>
 
                         <div className="vis-nome-bloco">
                             <span className="vis-nome">{v.nome}</span>
@@ -315,7 +337,7 @@ function Visitantes({ usuario, aoNavegar }) {
                                         </h4>
                                         <div className="vis-apto-grid">
                                             <div>
-                                                <span className="vis-apto-label"><User size={12} /> Inquilino</span>
+                                                <span className="vis-apto-label">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={12} /> Inquilino</span>
                                                 <span className="vis-apto-valor">
                                                     {apartamentoInfo.inquilino
                                                         ? `${apartamentoInfo.inquilino.nome} (ID ${apartamentoInfo.inquilino.idInquilino})`

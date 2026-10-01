@@ -7,7 +7,7 @@ import {
     cadastrarSalao
 } from './api';
 import { ArrowLeft, User, UserPlus, Building2, Home, CalendarDays, Check } from 'lucide-react';
-
+const API_URL = "http://localhost:8080";
 const ABAS = [
     { id: 'usuario', rotulo: 'usuário', Icone: UserPlus },
     { id: 'bloco', rotulo: 'bloco', Icone: Building2 },
@@ -24,7 +24,25 @@ function CadastroSindico({ usuario, aoNavegar }) {
     const [blocos, setBlocos] = useState([]);
     const [donos, setDonos] = useState([]);
     const [inquilinos, setInquilinos] = useState([]);
+    const [foto, setFoto] = useState(null);
 
+    useEffect(() => {
+            carregarFoto();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+    
+        const carregarFoto = async () => {
+            try {
+                const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+                if (res.ok && res.status !== 204) {
+                    const dados = await res.json();
+                    setFoto(dados.foto || null);
+                }
+            } catch {
+                // sem foto ou backend indisponível: mantém o ícone padrão
+            }
+        };
+    
     useEffect(() => {
         carregarBlocos();
         carregarDonos();
@@ -185,7 +203,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
             </button>
 
             <button id="CadastroSindico_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="CadastroSindico_Titulo">CADASTROS</h1>

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAvisosRecentes } from './api';
 import './Inicio.css';
+import { supabase } from './supabaseClient';
 import { User, Package, MessageCircle, Users, BarChart2, CalendarDays, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
+const BUCKET = 'avatars';
+
 
 // Carrossel horizontal: um item por vez, com setas, pontos e arrastar/deslizar
 function Carrossel({ id, itens, renderItem, rotulo }) {
@@ -72,6 +75,24 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     const [avisos, setAvisos] = useState([]);
     const [carregandoAvisos, setCarregandoAvisos] = useState(true);
     const [erroAvisos, setErroAvisos] = useState('');
+    const [foto, setFoto] = useState(null);
+
+    useEffect(() => {
+        carregarFoto();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const carregarFoto = async () => {
+        try {
+            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+            if (res.ok && res.status !== 204) {
+                const dados = await res.json();
+                setFoto(dados.foto || null);
+            }
+        } catch {
+            // sem foto ou backend indisponível: mantém o ícone padrão
+        }
+    };
 
     // "Marcar como lido" fica salvo só neste navegador (não vai para o backend)
     const chaveLidos = `avisosLidos_${usuario.id}`;
@@ -92,10 +113,12 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     const podeVerEnquetes = ['SINDICO', 'MORADOR', 'DONO'].includes(usuario.tipo);
 
     // Morador/dono reservam; porteiro só consulta
-const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.tipo);
+    const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO', 'SINDICO'].includes(usuario.tipo);
+
     useEffect(() => {
         carregarAvisos();
         carregarEnquetes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const carregarAvisos = async () => {
@@ -165,21 +188,23 @@ const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.
 
     // ---------- Slides ----------
     const renderAviso = (aviso) => {
-    const lido = lidos.includes(aviso.idAvisos);
-    return (
-        <div className="aviso-bloco">
-            <div className={`aviso-card Green_Box_Full ${lido ? 'lido' : ''} ${podeVerEnquetes ? 'clicavel' : ''}`}
-                {...propsClique}>
-                <div className="card-avatar"><User size={28} /></div>
-                <div className="card-corpo">
-                    <h2 className="card-titulo">{aviso.assunto}</h2>
-                    <p className="aviso-texto">{aviso.texto}</p>
-                    <span className="card-data">{formatarData(aviso.data)}</span>
+        const lido = lidos.includes(aviso.idAvisos);
+        return (
+            <div className="aviso-bloco">
+                <div className={`aviso-card Green_Box_Full ${lido ? 'lido' : ''} ${podeVerEnquetes ? 'clicavel' : ''}`}
+                    {...propsClique}>
+                    <div className="card-avatar">
+                        {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
+                    </div>
+                    <div className="card-corpo">
+                        <h2 className="card-titulo">{aviso.assunto}</h2>
+                        <p className="aviso-texto">{aviso.texto}</p>
+                        <span className="card-data">{formatarData(aviso.data)}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-};
+        );
+    };
 
     const renderEnquete = (enq) => {
         const total = totalVotos(enq);
@@ -193,7 +218,9 @@ const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.
         return (
             <div className={`enquete-card Green_Box_Full ${podeVerEnquetes ? 'clicavel' : ''}`} {...propsClique}>
                 <div className="enquete-cabecalho">
-                    <div className="card-avatar"><User size={28} /></div>
+                    <div className="card-avatar">
+                        {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
+                    </div>
                     <div className="card-corpo">
                         <h2 className="card-titulo">{enq.assunto}</h2>
                         <p className="enquete-info">
@@ -216,24 +243,26 @@ const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO','SINDICO'].includes(usuario.
             </div>
         );
     };
-const ehSindico = usuario.tipo === 'SINDICO';
+
+    const ehSindico = usuario.tipo === 'SINDICO';
+
     // ---------- Atalhos clicáveis (imagem em cima, texto embaixo) ----------
     // Para usar imagem de verdade: coloque o arquivo em public/ e troque
     // o <Icone /> por <img src={`${process.env.PUBLIC_URL}/arquivo.png`} alt="" />
     const atalhos = [
-    { aba: ehPorteiro ? 'encomendasPorteiro' : 'encomendas', rotulo: 'encomendas', Icone: Package },
-    { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },
-    { aba: 'visitantes', rotulo: 'visitantes', Icone: Users },
-    { aba: 'enquetes', rotulo: 'enquetes', Icone: BarChart2, oculto: !podeVerEnquetes },
-    { aba: ehPorteiro ? 'salaoPorteiro' : 'salao', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
-    { aba: 'cadastroSindico', rotulo: 'Cadastrar', Icone: UserPlus, oculto: !ehSindico } // Novo Atalho
-].filter((a) => !a.oculto);
+        { aba: ehPorteiro ? 'encomendasPorteiro' : 'encomendas', rotulo: 'encomendas', Icone: Package },
+        { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },
+        { aba: 'visitantes', rotulo: 'visitantes', Icone: Users },
+        { aba: 'enquetes', rotulo: 'enquetes', Icone: BarChart2, oculto: !podeVerEnquetes },
+        { aba: ehPorteiro ? 'salaoPorteiro' : 'salao', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
+        { aba: 'cadastroSindico', rotulo: 'Cadastrar', Icone: UserPlus, oculto: !ehSindico }
+    ].filter((a) => !a.oculto);
 
     return (
         <div id="Inicio_Pagina">
 
             <button id="Inicio_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <div id="Aviso_Container">

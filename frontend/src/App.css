@@ -65,7 +65,9 @@ body {
     font-weight: 100;
 }
 
-
+img {
+  border-radius: 100%;
+}
 
 .Green_Input {
   border: 3px solid transparent;

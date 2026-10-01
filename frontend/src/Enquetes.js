@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Enquetes.css';
 import { ArrowLeft, User, X, Plus, Check, Trash2 } from 'lucide-react';
+import { supabase } from './supabaseClient';
 
 const API_URL = "http://localhost:8080";
+const BUCKET = 'avatars';
 
 function Enquetes({ usuario, aoNavegar }) {
     const [enquetes, setEnquetes] = useState([]);
@@ -11,7 +13,24 @@ function Enquetes({ usuario, aoNavegar }) {
     const [sucesso, setSucesso] = useState('');
     const [mostrarForm, setMostrarForm] = useState(false);
     const [formData, setFormData] = useState({ assunto: '', op1: '', op2: '', op3: '', op4: '' });
+    const [foto, setFoto] = useState(null);
 
+    useEffect(() => {
+        carregarFoto();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const carregarFoto = async () => {
+        try {
+            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+            if (res.ok && res.status !== 204) {
+                const dados = await res.json();
+                setFoto(dados.foto || null);
+            }
+        } catch {
+            // sem foto ou backend indisponível: mantém o ícone padrão
+        }
+    };
     const ehSindico = usuario.tipo === 'SINDICO';
 
     useEffect(() => { carregarEnquetes(); }, []);
@@ -121,7 +140,7 @@ function Enquetes({ usuario, aoNavegar }) {
             </button>
 
             <button id="Enquetes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
             </button>
 
             <h1 id="Enquetes_Titulo">ENQUETES</h1>
@@ -147,7 +166,7 @@ function Enquetes({ usuario, aoNavegar }) {
                     return (
                         <div key={enq.idEnquete} className="enquete-card Green_Box_Full">
                             <div className="enquete-cabecalho">
-                                <div className="card-avatar"><User size={28} /></div>
+                                <div className="card-avatar">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} /></div>
                                 <div className="card-corpo">
                                     <h2 className="card-titulo">{enq.assunto}</h2>
                                     <p className="enquete-info">

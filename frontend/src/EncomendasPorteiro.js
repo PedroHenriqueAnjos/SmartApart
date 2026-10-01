@@ -23,7 +23,25 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
     const [sucesso, setSucesso] = useState('');
     const [mostrarForm, setMostrarForm] = useState(false);
     const [formData, setFormData] = useState(FORM_VAZIO);
-
+    const [foto, setFoto] = useState(null);
+    
+        useEffect(() => {
+                carregarFoto();
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, []);
+        
+            const carregarFoto = async () => {
+                try {
+                    const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+                    if (res.ok && res.status !== 204) {
+                        const dados = await res.json();
+                        setFoto(dados.foto || null);
+                    }
+                } catch {
+                    // sem foto ou backend indisponível: mantém o ícone padrão
+                }
+            };
+            
     useEffect(() => {
         carregarDados();
     }, []);
@@ -194,7 +212,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
             </button>
 
             <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="Encomendas_Titulo">ENCOMENDAS</h1>
@@ -219,7 +237,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                     {grupo.itens.map((enc) => (
                         <div key={enc.idEncomenda} className="enc-card Green_Box_Full">
                             <div className="enc-card-topo">
-                                <div className="enc-avatar"><User size={28} /></div>
+                                <div className="enc-avatar">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} /></div>
                                 <h3 className="enc-card-titulo">ENCOMENDA #{enc.idEncomenda}</h3>
                             </div>
 

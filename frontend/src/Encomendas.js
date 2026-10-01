@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './Encomendas.css';
-import EncomendasPorteiro from './EncomendasPorteiro';
+import { supabase } from './supabaseClient';
 import { ArrowLeft, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
+const BUCKET = 'avatars';
+
 
 function Encomendas({ usuario, aoNavegar }) {
     const [encomendas, setEncomendas] = useState([]);
@@ -14,7 +16,23 @@ function Encomendas({ usuario, aoNavegar }) {
     const [idApartamento, setIdApartamento] = useState('');
     const [apartamentoInfo, setApartamentoInfo] = useState(null);
     const [buscandoApto, setBuscandoApto] = useState(false);
+    const [foto, setFoto] = useState(null);
+    useEffect(() => {
+        carregarFoto();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
+    const carregarFoto = async () => {
+        try {
+            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+            if (res.ok && res.status !== 204) {
+                const dados = await res.json();
+                setFoto(dados.foto || null);
+            }
+        } catch {
+            // sem foto ou backend indisponível: mantém o ícone padrão
+        }
+    };
     const ehGerenciador = usuario.tipo === 'PORTEIRO' || usuario.tipo === 'SINDICO';
 
     useEffect(() => { carregarEncomendas(); }, []);
@@ -158,7 +176,7 @@ function Encomendas({ usuario, aoNavegar }) {
             </button>
 
             <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="Encomendas_Titulo">ENCOMENDAS</h1>
@@ -200,13 +218,13 @@ function Encomendas({ usuario, aoNavegar }) {
                             <div className="enc-info-grid">
                                 {apartamentoInfo.inquilino ? (
                                     <div className="enc-info-item">
-                                        <span className="enc-info-label"><User size={12} /> Inquilino</span>
+                                        <span className="enc-info-label">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={12} /> Inquilino</span>
                                         <span className="enc-info-valor">{apartamentoInfo.inquilino.nome}</span>
                                         <span className="enc-info-id">ID: {apartamentoInfo.inquilino.idInquilino}</span>
                                     </div>
                                 ) : (
                                     <div className="enc-info-item vazio">
-                                        <span className="enc-info-label"><User size={12} /> Inquilino</span>
+                                        <span className="enc-info-label">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={12} /> Inquilino</span>
                                         <span className="enc-info-valor">Sem inquilino</span>
                                     </div>
                                 )}
@@ -244,7 +262,7 @@ function Encomendas({ usuario, aoNavegar }) {
                     {itens.map((enc) => (
                         <div key={enc.idEncomenda} className="enc-card Green_Box_Full">
                             <div className="enc-card-topo">
-                                <div className="enc-avatar"><User size={28} /></div>
+                                <div className="enc-avatar">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} /></div>
                                 <h3 className="enc-card-titulo">ENCOMENDA #{enc.idEncomenda}</h3>
                             </div>
 

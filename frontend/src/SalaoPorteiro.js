@@ -25,7 +25,25 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
     const [sucesso, setSucesso] = useState('');
     const [mostrarForm, setMostrarForm] = useState(false);
     const [formData, setFormData] = useState({ nome: '' });
-
+    const [foto, setFoto] = useState(null);
+    
+        useEffect(() => {
+                carregarFoto();
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, []);
+        
+            const carregarFoto = async () => {
+                try {
+                    const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
+                    if (res.ok && res.status !== 204) {
+                        const dados = await res.json();
+                        setFoto(dados.foto || null);
+                    }
+                } catch {
+                    // sem foto ou backend indisponível: mantém o ícone padrão
+                }
+            };
+            
     useEffect(() => {
         carregarDados();
     }, []);
@@ -205,7 +223,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
             </button>
 
             <button id="SalaoPorteiro_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                <User size={28} />
+                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
             </button>
 
             <h1 id="SalaoPorteiro_Titulo">SALÃO</h1>
