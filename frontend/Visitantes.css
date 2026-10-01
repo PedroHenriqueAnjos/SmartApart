@@ -1,0 +1,428 @@
+/* Cores, cantos e fontes vêm das classes padrão (Empty_Box, Green_Box_Full,
+   Green_Input, Green_Button_Full, Green_Button_Empty). Aqui fica o layout. */
+
+#Visitantes_Pagina {
+  position: relative;
+  width: 100%;
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 24px 20px 130px; /* espaço embaixo para os botões flutuantes */
+  box-sizing: border-box;
+}
+
+#Visitantes_Titulo {
+  text-align: center;
+  font-size: 44px;
+  margin: 0 0 24px;
+}
+
+/* Seta (esquerda) e perfil (direita), nos cantos da tela */
+#Visitantes_Voltar {
+  position: fixed;
+  top: 34px;
+  left: 40px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--cor-preto);
+  display: flex;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#Visitantes_Voltar:hover {
+  transform: translateX(-4px);
+}
+
+#Visitantes_Perfil {
+  position: fixed;
+  top: 30px;
+  right: 40px;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: var(--cor-preto);
+  color: var(--cor-bege);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s;
+}
+
+#Visitantes_Perfil:hover {
+  transform: scale(1.08);
+}
+
+/* ================= LISTA ================= */
+#Visitantes_Lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.vis-linha {
+  display: grid;
+  grid-template-columns: 52px 1.3fr 1fr 1fr auto;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 22px 30px;
+  border-bottom: 1px solid var(--cor-preto);
+  font-size: 1.5rem;
+}
+
+.vis-linha:last-child {
+  border-bottom: none;
+}
+
+.vis-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--cor-preto);
+  color: var(--cor-bege);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vis-nome-bloco {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.vis-nome {
+  overflow-wrap: anywhere;
+}
+
+.vis-sub {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.vis-detalhe {
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.vis-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vis-status-ponto {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 12px;
+}
+
+.vis-acoes {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.vis-acao {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ================= BOTÕES FLUTUANTES ================= */
+#Visitantes_Botoes {
+  position: fixed;
+  right: 40px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 20;
+}
+
+#Visitantes_Novo,
+#Visitantes_Atualizar {
+  height: 56px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+#Visitantes_Novo {
+  width: 76px;
+}
+
+#Visitantes_Atualizar {
+  width: 56px;
+}
+
+/* ================= FORMULÁRIO (janela) ================= */
+#Visitantes_Modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  padding: 20px;
+  background: rgba(55, 49, 8, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+#Visitantes_Form {
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 32px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#Visitantes_Form_Titulo {
+  margin: 0;
+  text-align: center;
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.8rem;
+  color: var(--cor-preto);
+}
+
+.vis-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vis-campo label {
+  font-family: "Energy";
+  font-weight: normal;
+  font-size: 1.05rem;
+}
+
+#Visitantes_Form input.Green_Input {
+  height: 46px;
+  font-size: 1rem;
+}
+
+.vis-dica {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.vis-buscando {
+  margin: 0;
+  text-align: center;
+}
+
+.vis-apto-info {
+  padding: 16px 20px;
+  border-radius: 24px;
+}
+
+.vis-apto-titulo {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+}
+
+.vis-apto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.vis-apto-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.vis-apto-valor {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.vis-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.vis-checkbox input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--cor-verde-escuro);
+}
+
+#Visitantes_Form_Botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+#Visitantes_Form_Botoes button {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+#Visitantes_Form_Botoes button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vis-linha-apto {
+    display: flex;
+    gap: 12px;
+}
+
+.vis-linha-apto .vis-campo {
+    flex: 1;
+}
+
+/* ================= CELULAR ================= */
+@media (max-width: 768px) {
+  #Visitantes_Pagina {
+    padding: 76px 14px 120px;
+  }
+
+  #Visitantes_Titulo {
+    font-size: 30px;
+  }
+
+  #Visitantes_Voltar {
+    top: 20px;
+    left: 16px;
+  }
+
+  #Visitantes_Voltar svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  #Visitantes_Perfil {
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .vis-linha {
+    grid-template-columns: 44px 1fr auto;
+    padding: 18px 8px;
+    font-size: 1.2rem;
+  }
+
+  .vis-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .vis-detalhe,
+  .vis-status {
+    grid-column: 2 / -1;
+  }
+
+  #Visitantes_Botoes {
+    right: 16px;
+    bottom: 20px;
+  }
+
+  .vis-apto-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #Visitantes_Form {
+    padding: 24px 20px;
+  }
+}
+
+/* ===== Regras compartilhadas com outras telas (mantidas como estavam) ===== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cor-preto);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border: 2px solid var(--cor-verde-principal);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--cor-preto);
+    outline: none;
+    transition: border-color 0.3s;
+    font-family: 'Poppins', sans-serif;
+    background: white;
+}
+
+.form-group input:focus {
+    border-color: var(--cor-verde-escuro);
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.mensagem-info {
+    text-align: center;
+    padding: 30px;
+    color: var(--cor-verde-principal);
+    font-size: 14px;
+    background: rgba(168, 230, 215, 0.1);
+    border-radius: 10px;
+    border: 2px dashed var(--cor-verde-claro);
+}
+
+.mensagem-erro {
+    text-align: center;
+    padding: 15px;
+    color: #d32f2f;
+    font-size: 14px;
+    background: rgba(211, 47, 47, 0.1);
+    border-radius: 10px;
+    border: 2px dashed #d32f2f;
+    margin-bottom: 15px;
+}
+
+.mensagem-sucesso {
+    text-align: center;
+    padding: 15px;
+    color: var(--cor-verde-principal);
+    font-size: 14px;
+    background: rgba(91, 169, 137, 0.1);
+    border-radius: 10px;
+    border: 1px solid var(--cor-verde-principal);
+    margin-bottom: 15px;
+}
