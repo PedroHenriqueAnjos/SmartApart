@@ -172,7 +172,7 @@ function Enquetes({ usuario, aoNavegar }) {
                                         {op.texto} · {porcentagem(op.votos, total)}% ({op.votos || 0})
                                     </span>
                                     {!ehSindico && (
-                                        <button className="opcao-votar Green_Button_Full"
+                                        <button className="opcao-votar Green_Button_Empty"
                                             onClick={() => handleVotar(enq.idEnquete, op.num)}>
                                             VOTAR
                                         </button>
@@ -185,7 +185,7 @@ function Enquetes({ usuario, aoNavegar }) {
             </div>
 
             {ehSindico && (
-                <button id="Enquetes_Novo" className="Green_Button_Full" onClick={abrirForm}
+                <button id="Enquetes_Novo" className="Green_Button_Empty" onClick={abrirForm}
                     title="Nova enquete" aria-label="Nova enquete">
                     <Plus size={30} strokeWidth={3} />
                 </button>

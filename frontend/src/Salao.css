@@ -127,7 +127,7 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  font-family: "Energy";
+  font-family: "Bree Serif";
   font-weight: normal;
   font-size: 1.8rem;
   text-transform: uppercase;
@@ -155,9 +155,8 @@
   background: #d32f2f;
 }
 
-.status-pendente {
   /* mantém o degradê dourado da classe Gold_Pill_Full */
-}
+
 
 .status-cancelada {
   background: #999;
@@ -198,7 +197,7 @@
 
 .reserva-titulo {
   margin: 0;
-  font-family: "Energy";
+  font-family: "Bree Serif";
   font-weight: normal;
   font-size: 1.6rem;
   text-transform: uppercase;
@@ -267,7 +266,7 @@
 #Salao_Form_Titulo {
   margin: 0 0 18px;
   text-align: center;
-  font-family: "Energy";
+  font-family: "Bree Serif";
   font-weight: normal;
   font-size: 1.8rem;
   color: var(--cor-preto);

@@ -176,7 +176,7 @@ function Salao({ usuario, aoNavegar }) {
                 ))}
             </div>
 
-            <button id="Salao_Novo" className="Green_Button_Full" onClick={abrirForm}
+            <button id="Salao_Novo" className="Green_Button_Empty" onClick={abrirForm}
                 title="Fazer reserva" aria-label="Fazer reserva">
                 <Plus size={30} strokeWidth={3} />
             </button>

@@ -73,7 +73,7 @@ function Login({ setUsuarioLogado }) {
 
                     <div id="button_container">
                         <a>esqueceu a senha?</a>
-                        <button type="submit" disabled={carregando} className='Green_Button_Full' id="Botao_Login">
+                        <button type="submit" disabled={carregando} className='Green_Button_Empty' id="Botao_Login">
                             {carregando ? 'ENTRANDO...' : 'ENTRAR'}
                         </button>
                     </div>

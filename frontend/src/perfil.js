@@ -1,11 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { atualizarPerfilInquilino } from './api';
+import { supabase } from './supabaseClient';
 import './perfil.css';
 import { ArrowLeft, User, Pencil, Check, X, Camera, Trash2, LogOut } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
+const BUCKET = 'avatars';
 
-function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
+// Extrai o caminho do arquivo a partir da URL pública (ignora fotos antigas em base64)
+const caminhoDaUrl = (url) => {
+    if (!url || url.startsWith('data:')) return null;
+    const marcador = `/object/public/${BUCKET}/`;
+    const i = url.indexOf(marcador);
+    return i === -1 ? null : decodeURIComponent(url.slice(i + marcador.length).split('?')[0]);
+};
+
+function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
     const [nomeEditado, setNomeEditado] = useState(usuario.nome);
     const [editando, setEditando] = useState(false);
     const [carregando, setCarregando] = useState(false);
@@ -17,17 +27,31 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
 
     useEffect(() => {
         carregarFoto();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const carregarFoto = async () => {
         try {
             const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
-            if (res.ok) {
+            if (res.ok && res.status !== 204) {
                 const dados = await res.json();
                 setFoto(dados.foto || null);
             }
         } catch {
+            // sem foto ou backend indisponível: mantém o ícone padrão
+        }
+    };
 
+    // Salva (ou limpa) a URL da foto no backend
+    const salvarFotoNoBackend = async (fotoUrl) => {
+        const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fotoUrl })
+        });
+        if (!res.ok) {
+            const erro = await res.json().catch(() => ({}));
+            throw new Error(erro.erro || 'Erro ao salvar foto');
         }
     };
 
@@ -52,8 +76,9 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
         }
     };
 
-    const handleSelecionarFoto = (e) => {
+    const handleSelecionarFoto = async (e) => {
         const arquivo = e.target.files[0];
+        e.target.value = ''; // permite escolher o mesmo arquivo de novo
         if (!arquivo) return;
 
         const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
@@ -69,31 +94,41 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = async (ev) => {
-            const base64 = ev.target.result;
-            await enviarFoto(base64);
-        };
-        reader.readAsDataURL(arquivo);
+        await enviarFoto(arquivo);
     };
 
-    const enviarFoto = async (base64) => {
+    const enviarFoto = async (arquivo) => {
         setCarregandoFoto(true);
         setMensagem('');
+        let novoCaminho = null;
         try {
-            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fotoBase64: base64 })
-            });
-            if (!res.ok) {
-                const erro = await res.json();
-                throw new Error(erro.erro || 'Erro ao enviar foto');
+            const ext = arquivo.type.split('/')[1];
+            novoCaminho = `${usuario.tipo}/${usuario.id}/${crypto.randomUUID()}.${ext}`;
+
+            // 1. Sobe a nova imagem
+            const { error } = await supabase.storage
+                .from(BUCKET)
+                .upload(novoCaminho, arquivo, { contentType: arquivo.type, cacheControl: '3600' });
+            if (error) {
+                console.error('Erro do Supabase:', error);
+                throw new Error('Erro ao enviar foto');
             }
-            setFoto(base64);
+
+            const { data } = supabase.storage.from(BUCKET).getPublicUrl(novoCaminho);
+
+            // 2. Salva a URL no backend
+            await salvarFotoNoBackend(data.publicUrl);
+
+            // 3. Só agora apaga a foto anterior (se houver)
+            const antigo = caminhoDaUrl(foto);
+            if (antigo) await supabase.storage.from(BUCKET).remove([antigo]);
+
+            setFoto(data.publicUrl);
             setMensagem('Foto atualizada com sucesso!');
             setMensagemTipo('sucesso');
         } catch (err) {
+            // Se algo falhou, não deixa arquivo órfão no bucket
+            if (novoCaminho) await supabase.storage.from(BUCKET).remove([novoCaminho]);
             setMensagem(err.message || 'Erro ao enviar foto');
             setMensagemTipo('erro');
         } finally {
@@ -104,12 +139,11 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
     const handleRemoverFoto = async () => {
         setCarregandoFoto(true);
         try {
-            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fotoBase64: null })
-            });
-            if (!res.ok) throw new Error();
+            await salvarFotoNoBackend(null);
+
+            const antigo = caminhoDaUrl(foto);
+            if (antigo) await supabase.storage.from(BUCKET).remove([antigo]);
+
             setFoto(null);
             setMensagem('Foto removida!');
             setMensagemTipo('sucesso');
@@ -148,7 +182,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
                     <div id="Perfil_Foto_Botoes">
                         <button
                             id="Perfil_Camera"
-                            className="Green_Button_Full perfil-botao-icone"
+                            className="Green_Button_Empty perfil-botao-icone"
                             onClick={() => inputFotoRef.current.click()}
                             disabled={carregandoFoto}
                             title="Alterar foto"
@@ -193,7 +227,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
                                     value={nomeEditado}
                                     onChange={(e) => setNomeEditado(e.target.value)}
                                 />
-                                <button className="Green_Button_Full perfil-botao-icone" onClick={handleSalvarNome}
+                                <button className="Green_Button_Empty perfil-botao-icone" onClick={handleSalvarNome}
                                     disabled={carregando} title="Salvar" aria-label="Salvar nome">
                                     <Check size={18} />
                                 </button>
@@ -222,7 +256,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario}) {
                 </div>
             </div>
 
-            <button id="Perfil_Sair" className="Green_Button_Full" onClick={aoSair}>
+            <button id="Perfil_Sair" className="Green_Button_Empty" onClick={aoSair}>
                 <LogOut size={20} /> SAIR
             </button>
         </div>

@@ -249,7 +249,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                         />
                     </div>
 
-                    <button type="submit" className="Green_Button_Full" disabled={carregando}>
+                    <button type="submit" className="Green_Button_Empty" disabled={carregando}>
                         <Check size={16} /> {carregando ? 'CADASTRANDO...' : 'CADASTRAR USUÁRIO'}
                     </button>
                 </form>
@@ -269,7 +269,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                         />
                     </div>
 
-                    <button type="submit" className="Green_Button_Full" disabled={carregando}>
+                    <button type="submit" className="Green_Button_Empty" disabled={carregando}>
                         <Check size={16} /> {carregando ? 'CADASTRANDO...' : 'CADASTRAR BLOCO'}
                     </button>
                 </form>
@@ -328,7 +328,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                         </select>
                     </div>
 
-                    <button type="submit" className="Green_Button_Full" disabled={carregando}>
+                    <button type="submit" className="Green_Button_Empty" disabled={carregando}>
                         <Check size={16} /> {carregando ? 'CADASTRANDO...' : 'CADASTRAR APARTAMENTO'}
                     </button>
                 </form>
@@ -359,7 +359,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                         </select>
                     </div>
 
-                    <button type="submit" className="Green_Button_Full" disabled={carregando}>
+                    <button type="submit" className="Green_Button_Empty" disabled={carregando}>
                         <Check size={16} /> {carregando ? 'CADASTRANDO...' : 'CADASTRAR SALÃO'}
                     </button>
                 </form>

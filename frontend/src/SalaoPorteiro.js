@@ -278,7 +278,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
                 ))}
             </div>
 
-            <button id="SalaoPorteiro_Novo" className="Green_Button_Full" onClick={abrirForm}
+            <button id="SalaoPorteiro_Novo" className="Green_Button_Empty" onClick={abrirForm}
                 title="Cadastrar salão" aria-label="Cadastrar salão">
                 <Plus size={30} strokeWidth={3} />
             </button>

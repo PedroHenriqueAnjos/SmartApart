@@ -121,7 +121,7 @@ function PrimeiroCadastro({ aoCadastrar }) {
                         />
 
                         <div id="button_container">
-                            <button type="submit" disabled={carregando} className='Green_Button_Full' id="Botao_Login">
+                            <button type="submit" disabled={carregando} className='Green_Button_Empty' id="Botao_Login">
                                 {carregando ? 'CADASTRANDO...' : 'CADASTRAR'}
                             </button>
                         </div>

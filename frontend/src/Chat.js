@@ -98,7 +98,7 @@ function Chat({ usuario, aoNavegar }) {
                         value={novaMsg}
                         onChange={(e) => setNovaMsg(e.target.value)}
                     />
-                    <button type="submit" id="Chat_Botao" className="Green_Button_Full" title="Enviar">
+                    <button type="submit" id="Chat_Botao" className="Green_Button_Empty" title="Enviar">
                         <Send size={20} />
                     </button>
                 </form>

@@ -28,7 +28,7 @@ function Carrossel({ id, itens, renderItem, rotulo }) {
     return (
         <div id={id} className="carrossel-inicio">
             {itens.length > 1 && (
-                <button className="Green_Button_Full carrossel-seta esquerda"
+                <button className="Green_Button_Empty carrossel-seta esquerda"
                     onClick={() => irPara(indice - 1)} disabled={indice === 0}
                     aria-label={`${rotulo} anterior`}>
                     <ChevronLeft size={22} />
@@ -44,7 +44,7 @@ function Carrossel({ id, itens, renderItem, rotulo }) {
             </div>
 
             {itens.length > 1 && (
-                <button className="Green_Button_Full carrossel-seta direita"
+                <button className="Green_Button_Empty carrossel-seta direita"
                     onClick={() => irPara(indice + 1)} disabled={indice === itens.length - 1}
                     aria-label={`próximo ${rotulo}`}>
                     <ChevronRight size={22} />

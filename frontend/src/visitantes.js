@@ -240,7 +240,7 @@ function Visitantes({ usuario, aoNavegar }) {
 
                         <div className="vis-acoes">
                             {ehGerenciador && v.status === 'Pendente' && (
-                                <button className="vis-acao Green_Button_Full" onClick={() => handleConfirmar(v.idVisitante)}
+                                <button className="vis-acao Green_Button_Empty" onClick={() => handleConfirmar(v.idVisitante)}
                                     title="Liberar entrada" aria-label="Liberar entrada">
                                     <Check size={20} />
                                 </button>
@@ -262,7 +262,7 @@ function Visitantes({ usuario, aoNavegar }) {
                     <RefreshCw size={22} />
                 </button>
                 {(ehGerenciador || ehMorador) && (
-                    <button id="Visitantes_Novo" className="Green_Button_Full" onClick={abrirForm}
+                    <button id="Visitantes_Novo" className="Green_Button_Empty" onClick={abrirForm}
                         title="Novo visitante" aria-label="Novo visitante">
                         <Plus size={30} strokeWidth={3} />
                     </button>
@@ -377,7 +377,7 @@ function Visitantes({ usuario, aoNavegar }) {
                             </button>
                             <button
                                 type="submit"
-                                className="Green_Button_Full"
+                                className="Green_Button_Empty"
                                 disabled={ehGerenciador && (!apartamentoInfo || buscandoApto)}
                             >
                                 SOLICITAR
