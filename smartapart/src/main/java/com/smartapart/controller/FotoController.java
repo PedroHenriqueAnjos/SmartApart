@@ -21,8 +21,8 @@ public class FotoController {
             @RequestParam String tipoUsuario,
             @RequestBody AlterarFotoRequest request) {
         try {
-            Object resultado = fotoService.atualizarFoto(id, tipoUsuario, request.getFotoBase64());
-            return ResponseEntity.ok(resultado);
+            fotoService.atualizarFoto(id, tipoUsuario, request.getFotoUrl());
+            return ResponseEntity.ok(Map.of("mensagem", "Foto atualizada"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("erro", e.getMessage()));
         }
