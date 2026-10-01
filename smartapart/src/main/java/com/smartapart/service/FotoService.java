@@ -3,15 +3,18 @@ package com.smartapart.service;
 import com.smartapart.model.*;
 import com.smartapart.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.Base64;
-import java.util.Arrays;
 
 @Service
 public class FotoService {
 
-    private static final long TAMANHO_MAXIMO = 2 * 1024 * 1024;
-    private static final String[] TIPOS_PERMITIDOS = { "image/jpeg", "image/png", "image/webp" };
+    private static final int TAMANHO_MAXIMO_URL = 500;
+    private static final String BUCKET = "avatars";
+
+    // Ex.: https://abcdefgh.supabase.co (sem barra no final)
+    @Value("${supabase.url}")
+    private String supabaseUrl;
 
     @Autowired
     private InquilinoRepository inquilinoRepository;
@@ -22,68 +25,40 @@ public class FotoService {
     @Autowired
     private SindicoRepository sindicoRepository;
 
-    public String validarEProcessar(String fotoBase64) {
-        if (fotoBase64 == null || fotoBase64.isBlank()) {
-            throw new IllegalArgumentException("Foto invalida");
+    /** Valida a URL da foto. Retorna null quando a foto deve ser removida. */
+    public String validarUrl(int id, String tipoUsuario, String fotoUrl) {
+        if (fotoUrl == null || fotoUrl.isBlank()) {
+            return null;
         }
 
-        if (!fotoBase64.startsWith("data:")) {
-            throw new IllegalArgumentException("Formato invalido");
+        if (fotoUrl.length() > TAMANHO_MAXIMO_URL) {
+            throw new IllegalArgumentException("URL muito longa");
         }
 
-        int separador = fotoBase64.indexOf(",");
-        if (separador == -1) {
-            throw new IllegalArgumentException("Formato invalido");
+        // Só aceita arquivos do seu próprio bucket
+        String prefixo = supabaseUrl + "/storage/v1/object/public/" + BUCKET + "/";
+        if (!fotoUrl.startsWith(prefixo)) {
+            throw new IllegalArgumentException("URL de foto invalida");
         }
 
-        String header = fotoBase64.substring(0, separador);
-        String tipo = header.replace("data:", "").replace(";base64", "");
-
-        boolean tipoPermitido = Arrays.asList(TIPOS_PERMITIDOS).contains(tipo);
-        if (!tipoPermitido) {
-            throw new IllegalArgumentException("Tipo de arquivo nao permitido. Use JPEG, PNG ou WebP");
+        // O arquivo precisa estar na pasta do próprio usuário: avatars/TIPO/ID/arquivo
+        String caminho = fotoUrl.substring(prefixo.length());
+        String pastaEsperada = tipoUsuario + "/" + id + "/";
+        if (!caminho.startsWith(pastaEsperada)) {
+            throw new IllegalArgumentException("A foto nao pertence a este usuario");
         }
 
-        String dadosBase64 = fotoBase64.substring(separador + 1);
-
-        byte[] bytes;
-        try {
-            bytes = Base64.getDecoder().decode(dadosBase64);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Arquivo corrompido");
+        // Só o nome do arquivo depois da pasta, sem subpastas ou ".."
+        String arquivo = caminho.substring(pastaEsperada.length());
+        if (!arquivo.matches("[A-Za-z0-9\\-]+\\.(jpeg|jpg|png|webp)")) {
+            throw new IllegalArgumentException("Nome de arquivo invalido");
         }
 
-        if (bytes.length > TAMANHO_MAXIMO) {
-            throw new IllegalArgumentException("Arquivo muito grande. Maximo 2MB");
-        }
-
-        if (!validarAssinaturaMagica(bytes, tipo)) {
-            throw new IllegalArgumentException("Arquivo invalido ou corrompido");
-        }
-
-        return fotoBase64;
+        return fotoUrl;
     }
 
-    private boolean validarAssinaturaMagica(byte[] bytes, String tipo) {
-        if (bytes.length < 4)
-            return false;
-
-        switch (tipo) {
-            case "image/jpeg":
-                return bytes[0] == (byte) 0xFF && bytes[1] == (byte) 0xD8;
-            case "image/png":
-                return bytes[0] == (byte) 0x89 && bytes[1] == (byte) 0x50
-                        && bytes[2] == (byte) 0x4E && bytes[3] == (byte) 0x47;
-            case "image/webp":
-                return bytes[0] == (byte) 0x52 && bytes[1] == (byte) 0x49
-                        && bytes[2] == (byte) 0x46 && bytes[3] == (byte) 0x46;
-            default:
-                return false;
-        }
-    }
-
-    public Object atualizarFoto(int id, String tipoUsuario, String fotoBase64) {
-        String fotoValidada = validarEProcessar(fotoBase64);
+    public Object atualizarFoto(int id, String tipoUsuario, String fotoUrl) {
+        String fotoValidada = validarUrl(id, tipoUsuario, fotoUrl);
 
         switch (tipoUsuario.toUpperCase()) {
             case "MORADOR": {
