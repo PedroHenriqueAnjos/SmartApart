@@ -1,15 +1,15 @@
 package com.smartapart.model;
 
 public class AlterarFotoRequest {
-    private String fotoBase64;
+    private String fotoUrl;
     private String tipoUsuario;
 
-    public String getFotoBase64() {
-        return fotoBase64;
+    public String getFotoUrl() {
+        return fotoUrl;
     }
 
-    public void setFotoBase64(String fotoBase64) {
-        this.fotoBase64 = fotoBase64;
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 
     public String getTipoUsuario() {
