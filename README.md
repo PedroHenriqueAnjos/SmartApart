@@ -1,1 +1,6 @@
 # SmartApart
+
+#Env archive
+
+REACT_APP_SUPABASE_URL=https://cznmmrchdjlljmcznutn.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=sb_publishable_uOng5gBY0c3aK4i1Gaa53g_BQ2bL_CZ
