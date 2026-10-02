@@ -31,6 +31,7 @@
 
 /* Metade esquerda: logo */
 #Login_Logo {
+  border-radius: 0;
   flex: 1;
 
   display: flex;
@@ -41,6 +42,7 @@
 }
 
 #Login_Logo img {
+  border-radius: 0;
   width: 100%;
   max-width: 380px;
   max-height: 55vh;
@@ -172,11 +174,13 @@
 
   /* Logo */
   #Login_Logo {
+    border-radius: 0;
     flex: 0 0 26vh;
     padding: 20px;
   }
 
   #Login_Logo img {
+    border-radius: 0;
     max-height: 50vh;
     max-width: 200px;
   }

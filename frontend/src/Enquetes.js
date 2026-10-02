@@ -15,6 +15,13 @@ function Enquetes({ usuario, aoNavegar }) {
     const [formData, setFormData] = useState({ assunto: '', op1: '', op2: '', op3: '', op4: '' });
     const [foto, setFoto] = useState(null);
 
+    // ---------- Mini-menu do botão "+" ----------
+    const [mostrarMenu, setMostrarMenu] = useState(false);
+
+    // ---------- Novo aviso ----------
+    const [mostrarFormAviso, setMostrarFormAviso] = useState(false);
+    const [formAviso, setFormAviso] = useState({ assunto: '', texto: '' });
+
     useEffect(() => {
         carregarFoto();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,6 +56,22 @@ function Enquetes({ usuario, aoNavegar }) {
         }
     };
 
+    // ---------- Mini-menu ----------
+    const alternarMenu = () => {
+        setMostrarMenu((atual) => !atual);
+    };
+
+    const escolherEnquete = () => {
+        setMostrarMenu(false);
+        abrirForm();
+    };
+
+    const escolherAviso = () => {
+        setMostrarMenu(false);
+        abrirFormAviso();
+    };
+
+    // ---------- Formulário de enquete (já existente) ----------
     const abrirForm = () => {
         setMostrarForm(true);
         setErro('');
@@ -89,6 +112,44 @@ function Enquetes({ usuario, aoNavegar }) {
             setTimeout(() => setSucesso(''), 3000);
         } catch {
             setErro('Erro ao criar enquete');
+        }
+    };
+
+    // ---------- Formulário de aviso (novo) ----------
+    const abrirFormAviso = () => {
+        setMostrarFormAviso(true);
+        setErro('');
+        setFormAviso({ assunto: '', texto: '' });
+    };
+
+    const fecharFormAviso = () => {
+        setMostrarFormAviso(false);
+        setErro('');
+    };
+
+    const handleCriarAviso = async (e) => {
+        e.preventDefault();
+        if (!formAviso.assunto.trim() || !formAviso.texto.trim()) {
+            setErro('Assunto e texto são obrigatórios');
+            return;
+        }
+        try {
+            setErro('');
+            const res = await fetch(`${API_URL}/avisos?nomeSindico=${encodeURIComponent(usuario.nome)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    assunto: formAviso.assunto,
+                    texto: formAviso.texto
+                })
+            });
+            if (!res.ok) throw new Error();
+            setSucesso('Aviso criado!');
+            setFormAviso({ assunto: '', texto: '' });
+            setMostrarFormAviso(false);
+            setTimeout(() => setSucesso(''), 3000);
+        } catch {
+            setErro('Erro ao criar aviso');
         }
     };
 
@@ -140,13 +201,13 @@ function Enquetes({ usuario, aoNavegar }) {
             </button>
 
             <button id="Enquetes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
+                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="Enquetes_Titulo">ENQUETES</h1>
 
             {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
+            {!mostrarForm && !mostrarFormAviso && erro && <p className="mensagem-erro">{erro}</p>}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
             {!carregando && enquetes.length === 0 && !erro && (
@@ -166,7 +227,9 @@ function Enquetes({ usuario, aoNavegar }) {
                     return (
                         <div key={enq.idEnquete} className="enquete-card Green_Box_Full">
                             <div className="enquete-cabecalho">
-                                <div className="card-avatar">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} /></div>
+                               <div className="card-avatar">
+                                    {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
+                                </div>
                                 <div className="card-corpo">
                                     <h2 className="card-titulo">{enq.assunto}</h2>
                                     <p className="enquete-info">
@@ -204,10 +267,23 @@ function Enquetes({ usuario, aoNavegar }) {
             </div>
 
             {ehSindico && (
-                <button id="Enquetes_Novo" className="Green_Button_Empty" onClick={abrirForm}
-                    title="Nova enquete" aria-label="Nova enquete">
-                    <Plus size={30} strokeWidth={3} />
-                </button>
+                <div id="Enquetes_Novo_Wrapper">
+                    {mostrarMenu && (
+                        <nav id="Enquetes_MiniMenu" className="Green_Box_Full">
+                            <button type="button" className="mini-menu-item" onClick={escolherAviso}>
+                                avisos
+                            </button>
+                            <button type="button" className="mini-menu-item" onClick={escolherEnquete}>
+                                enquetes
+                            </button>
+                        </nav>
+                    )}
+
+                    <button id="Enquetes_Novo" className="Green_Button_Empty" onClick={alternarMenu}
+                        title={mostrarMenu ? "Fechar menu" : "Novo"} aria-label={mostrarMenu ? "Fechar menu" : "Novo"}>
+                        {mostrarMenu ? <X size={30} strokeWidth={3} /> : <Plus size={30} strokeWidth={3} />}
+                    </button>
+                </div>
             )}
 
             {mostrarForm && (
@@ -281,6 +357,51 @@ function Enquetes({ usuario, aoNavegar }) {
 
                         <div id="Enquetes_Form_Botoes">
                             <button type="button" className="Gold_Button_Empty" onClick={fecharForm}>
+                                CANCELAR
+                            </button>
+                            <button type="submit" className="Gold_Button_Full">
+                                <Check size={16} /> CRIAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            {mostrarFormAviso && (
+                <div id="Enquetes_Modal" role="dialog" aria-modal="true">
+                    <form id="Enquetes_Form" className="Empty_Box" onSubmit={handleCriarAviso}>
+                        <h2 id="Enquetes_Form_Titulo">NOVO AVISO</h2>
+
+                        {erro && <p className="mensagem-erro">{erro}</p>}
+
+                        <div className="enq-campo">
+                            <label htmlFor="Aviso_Assunto">Assunto *</label>
+                            <input
+                                id="Aviso_Assunto"
+                                className="Green_Input"
+                                type="text"
+                                placeholder="Ex: Assembleia geral"
+                                value={formAviso.assunto}
+                                onChange={(e) => setFormAviso({ ...formAviso, assunto: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <div className="enq-campo">
+                            <label htmlFor="Aviso_Texto">Texto *</label>
+                            <input
+                                id="Aviso_Texto"
+                                className="Green_Input"
+                                type="text"
+                                placeholder="Ex: Assembleia marcada para o dia 15/10 às 19h"
+                                value={formAviso.texto}
+                                onChange={(e) => setFormAviso({ ...formAviso, texto: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <div id="Enquetes_Form_Botoes">
+                            <button type="button" className="Gold_Button_Empty" onClick={fecharFormAviso}>
                                 CANCELAR
                             </button>
                             <button type="submit" className="Gold_Button_Full">

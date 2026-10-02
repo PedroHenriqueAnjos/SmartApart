@@ -6,12 +6,6 @@ import { ArrowLeft, RefreshCw, X, Plus, Search, CheckCircle, User, Home, Check }
 const API_URL = "http://localhost:8080";
 const BUCKET = 'avatars';
 
-
-const CAMPO_BLOCO = 'bloco';
-const CAMPO_NUMERO = 'numero';
-
-const normalizar = (v) => String(v ?? '').trim().toLowerCase();
-
 function Visitantes({ usuario, aoNavegar }) {
     const [visitantes, setVisitantes] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -21,7 +15,8 @@ function Visitantes({ usuario, aoNavegar }) {
     const [formData, setFormData] = useState({ nome: '', cpf: '', prestador: false });
 
     const [apartamentos, setApartamentos] = useState([]);
-    const [bloco, setBloco] = useState('');
+    const [blocos, setBlocos] = useState([]);
+    const [idBloco, setIdBloco] = useState('');
     const [numero, setNumero] = useState('');
     const [apartamentoInfo, setApartamentoInfo] = useState(null);
     const [buscandoApto, setBuscandoApto] = useState(false);
@@ -47,7 +42,13 @@ function Visitantes({ usuario, aoNavegar }) {
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
 
     useEffect(() => { carregarVisitantes(); }, []);
-    useEffect(() => { if (ehGerenciador) carregarApartamentos(); }, [ehGerenciador]);
+    useEffect(() => { if (ehGerenciador) carregarDadosBusca(); }, [ehGerenciador]);
+
+    // Ao trocar de bloco, limpa número para não arrastar dados de outro bloco
+    useEffect(() => {
+        setNumero('');
+        setApartamentoInfo(null);
+    }, [idBloco]);
 
     const carregarVisitantes = async () => {
         try {
@@ -71,19 +72,31 @@ function Visitantes({ usuario, aoNavegar }) {
         }
     };
 
-    const carregarApartamentos = async () => {
+    const carregarDadosBusca = async () => {
         try {
-            const res = await fetch(`${API_URL}/apartamentos`);
-            if (!res.ok) throw new Error();
-            const dados = await res.json();
-            setApartamentos(Array.isArray(dados) ? dados : []);
+            const [resApt, resBloco] = await Promise.all([
+                fetch(`${API_URL}/apartamentos`),
+                fetch(`${API_URL}/blocos`)
+            ]);
+            if (!resApt.ok || !resBloco.ok) throw new Error();
+            setApartamentos(await resApt.json());
+            setBlocos(await resBloco.json());
         } catch {
             setErro('Erro ao carregar apartamentos');
         }
     };
 
+    // ---------- Apartamentos do bloco selecionado ----------
+    const apartamentosDoBloco = idBloco
+        ? apartamentos.filter((apt) => apt.idBloco === parseInt(idBloco))
+        : [];
+
+    // ---------- Números restritos ao bloco selecionado ----------
+    const numerosDoBloco = [...new Set(apartamentosDoBloco.map((apt) => apt.numero))]
+        .sort((a, b) => a - b);
+
     // ---------- Busca de apartamento por bloco + número ----------
-    const apartamentoPreenchido = bloco.trim() && numero.trim();
+    const apartamentoPreenchido = idBloco && numero.trim();
 
     const buscarApartamento = async () => {
         if (!apartamentoPreenchido) { setApartamentoInfo(null); return; }
@@ -92,9 +105,7 @@ function Visitantes({ usuario, aoNavegar }) {
             setApartamentoInfo(null);
             setErro('');
 
-            const apto = apartamentos.find((a) =>
-                normalizar(a[CAMPO_BLOCO]) === normalizar(bloco) &&
-                normalizar(a[CAMPO_NUMERO]) === normalizar(numero));
+            const apto = apartamentosDoBloco.find((a) => a.numero === parseInt(numero));
 
             if (!apto) { setErro('Apartamento não encontrado'); return; }
 
@@ -124,7 +135,7 @@ function Visitantes({ usuario, aoNavegar }) {
         setErro('');
         setSucesso('');
         setApartamentoInfo(null);
-        setBloco('');
+        setIdBloco('');
         setNumero('');
         setFormData({ nome: '', cpf: '', prestador: false });
     };
@@ -167,7 +178,7 @@ function Visitantes({ usuario, aoNavegar }) {
             if (!res.ok) throw new Error();
             setSucesso('Visitante solicitado com sucesso!');
             setFormData({ nome: '', cpf: '', prestador: false });
-            setBloco('');
+            setIdBloco('');
             setNumero('');
             setApartamentoInfo(null);
             setMostrarForm(false);
@@ -226,7 +237,7 @@ function Visitantes({ usuario, aoNavegar }) {
             </button>
 
             <button id="Visitantes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
+                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="Visitantes_Titulo">{ehGerenciador ? 'VISITANTES PENDENTES' : 'SEUS VISITANTES'}</h1>
@@ -303,15 +314,17 @@ function Visitantes({ usuario, aoNavegar }) {
                                 <div className="vis-linha-apto">
                                     <div className="vis-campo">
                                         <label htmlFor="Visitantes_Bloco">Bloco *</label>
-                                        <input
+                                        <select
                                             id="Visitantes_Bloco"
                                             className="Green_Input"
-                                            type="text"
-                                            placeholder="Ex: A"
-                                            value={bloco}
-                                            onChange={(e) => { setBloco(e.target.value); setApartamentoInfo(null); setErro(''); }}
-                                            onBlur={buscarApartamento}
-                                        />
+                                            value={idBloco}
+                                            onChange={(e) => { setIdBloco(e.target.value); setErro(''); }}
+                                        >
+                                            <option value="">Selecione o bloco</option>
+                                            {blocos.map((b) => (
+                                                <option key={b.idBloco} value={b.idBloco}>{b.nome}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="vis-campo">
                                         <label htmlFor="Visitantes_Numero">Número *</label>
@@ -319,25 +332,34 @@ function Visitantes({ usuario, aoNavegar }) {
                                             id="Visitantes_Numero"
                                             className="Green_Input"
                                             type="text"
-                                            placeholder="Ex: 101"
+                                            inputMode="numeric"
+                                            list="lista-numeros-visitante"
+                                            placeholder={idBloco ? "Ex: 101" : "Selecione o bloco primeiro"}
                                             value={numero}
-                                            onChange={(e) => { setNumero(e.target.value); setApartamentoInfo(null); setErro(''); }}
+                                            onChange={(e) => { setNumero(e.target.value.replace(/\D/g, '')); setApartamentoInfo(null); setErro(''); }}
                                             onBlur={buscarApartamento}
+                                            disabled={!idBloco}
+                                            autoComplete="off"
                                         />
+                                        <datalist id="lista-numeros-visitante">
+                                            {numerosDoBloco.map((n) => (
+                                                <option key={n} value={n} />
+                                            ))}
+                                        </datalist>
                                     </div>
                                 </div>
-                                <span className="vis-dica">Saia dos campos para buscar automaticamente</span>
+                                <span className="vis-dica">Saia do campo de número para buscar automaticamente</span>
 
                                 {buscandoApto && <p className="vis-buscando"><Search size={14} /> Buscando apartamento...</p>}
 
                                 {apartamentoInfo && (
                                     <div className="vis-apto-info Green_Box_Full">
                                         <h4 className="vis-apto-titulo">
-                                            <CheckCircle size={16} /> Bloco {apartamentoInfo.apto[CAMPO_BLOCO]} · Apto {apartamentoInfo.apto[CAMPO_NUMERO]} encontrado
+                                            <CheckCircle size={16} /> Apto {apartamentoInfo.apto.numero} encontrado
                                         </h4>
                                         <div className="vis-apto-grid">
                                             <div>
-                                                <span className="vis-apto-label">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={12} /> Inquilino</span>
+                                                <span className="vis-apto-label"><User size={12} /> Inquilino</span>
                                                 <span className="vis-apto-valor">
                                                     {apartamentoInfo.inquilino
                                                         ? `${apartamentoInfo.inquilino.nome} (ID ${apartamentoInfo.inquilino.idInquilino})`
@@ -394,7 +416,7 @@ function Visitantes({ usuario, aoNavegar }) {
                         </label>
 
                         <div id="Visitantes_Form_Botoes">
-                            <button type="button" className="Green_Button_Empty" onClick={fecharForm}>
+                            <button type="button" className="Gold_Button_Empty" onClick={fecharForm}>
                                 CANCELAR
                             </button>
                             <button

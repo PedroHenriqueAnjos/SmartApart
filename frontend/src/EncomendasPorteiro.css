@@ -31,11 +31,6 @@
   padding: 12px 34px;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: transform 0.15s;
-}
-
-#EncomendasPorteiro_Registrar:hover {
-  transform: translateY(-2px);
 }
 
 .enc-card .enc-botao-acao {

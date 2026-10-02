@@ -218,7 +218,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
             <h1 id="Encomendas_Titulo">ENCOMENDAS</h1>
 
             <div id="Encomendas_Acoes">
-                <button id="EncomendasPorteiro_Registrar" className="Gold_Button_Full" onClick={abrirForm}>
+                <button id="EncomendasPorteiro_Registrar" className="Green_Button_Empty" onClick={abrirForm}>
                     REGISTRAR ENCOMENDA
                 </button>
             </div>
@@ -252,7 +252,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                             </div>
 
                             {enc.status !== 'Retirada' && (
-                                <button className="enc-botao-acao Gold_Button_Full"
+                                <button className="enc-botao-acao Gold_Button_Empty"
                                     onClick={() => handleAtualizarStatus(enc.idEncomenda, 'Retirada')}>
                                     <Check size={16} /> MARCAR COMO RETIRADA
                                 </button>
@@ -356,7 +356,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                             <button type="button" className="Gold_Button_Empty" onClick={fecharForm}>
                                 CANCELAR
                             </button>
-                            <button type="submit" className="Gold_Button_Full">
+                            <button type="submit" className="Gold_Button_Empty">
                                 <Check size={16} /> REGISTRAR
                             </button>
                         </div>

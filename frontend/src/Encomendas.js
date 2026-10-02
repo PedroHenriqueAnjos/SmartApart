@@ -1,41 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import './Encomendas.css';
-import { supabase } from './supabaseClient';
-import { ArrowLeft, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
+import { ArrowLeft, Plus, Check, User } from 'lucide-react';
 
 const API_URL = "http://localhost:8080";
-const BUCKET = 'avatars';
 
+const normalizar = (v) => String(v ?? '').trim().toLowerCase();
 
 function Encomendas({ usuario, aoNavegar }) {
     const [encomendas, setEncomendas] = useState([]);
+    const [apartamentos, setApartamentos] = useState([]);
+    const [blocos, setBlocos] = useState([]);
+    const [inquilinos, setInquilinos] = useState([]);
+    const [donos, setDonos] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
     const [sucesso, setSucesso] = useState('');
     const [mostrarForm, setMostrarForm] = useState(false);
-    const [idApartamento, setIdApartamento] = useState('');
-    const [apartamentoInfo, setApartamentoInfo] = useState(null);
-    const [buscandoApto, setBuscandoApto] = useState(false);
-    const [foto, setFoto] = useState(null);
-    useEffect(() => {
-        carregarFoto();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    const carregarFoto = async () => {
-        try {
-            const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`);
-            if (res.ok && res.status !== 204) {
-                const dados = await res.json();
-                setFoto(dados.foto || null);
-            }
-        } catch {
-            // sem foto ou backend indisponível: mantém o ícone padrão
-        }
-    };
+    const [idBloco, setIdBloco] = useState('');
+    const [numeroApto, setNumeroApto] = useState('');
+    const [nomeMorador, setNomeMorador] = useState('');
+
     const ehGerenciador = usuario.tipo === 'PORTEIRO' || usuario.tipo === 'SINDICO';
 
     useEffect(() => { carregarEncomendas(); }, []);
+    useEffect(() => { if (ehGerenciador) carregarDadosBusca(); }, [ehGerenciador]);
+
+    // Ao trocar de bloco, limpa número e nome para não arrastar dados de outro bloco
+    useEffect(() => {
+        setNumeroApto('');
+        setNomeMorador('');
+    }, [idBloco]);
 
     const carregarEncomendas = async () => {
         try {
@@ -59,51 +54,112 @@ function Encomendas({ usuario, aoNavegar }) {
         }
     };
 
-    const buscarApartamento = async (id) => {
-        if (!id) { setApartamentoInfo(null); return; }
+    const carregarDadosBusca = async () => {
         try {
-            setBuscandoApto(true);
-            setApartamentoInfo(null);
-            setErro('');
+            const [resApt, resBloco, resInq, resDono] = await Promise.all([
+                fetch(`${API_URL}/apartamentos`),
+                fetch(`${API_URL}/blocos`),
+                fetch(`${API_URL}/inquilinos`),
+                fetch(`${API_URL}/donos`)
+            ]);
+            if (!resApt.ok || !resBloco.ok || !resInq.ok || !resDono.ok) throw new Error();
 
-            const resApto = await fetch(`${API_URL}/apartamentos/${id}`);
-            if (!resApto.ok) { setErro('Apartamento não encontrado'); return; }
-            const apto = await resApto.json();
-
-            let inquilino = null;
-            let dono = null;
-
-            if (apto.idInquilino) {
-                const resInq = await fetch(`${API_URL}/inquilinos/${apto.idInquilino}`);
-                if (resInq.ok) inquilino = await resInq.json();
-            }
-
-            if (apto.idDono) {
-                const resDono = await fetch(`${API_URL}/donos/${apto.idDono}`);
-                if (resDono.ok) dono = await resDono.json();
-            }
-
-            setApartamentoInfo({ apto, inquilino, dono });
+            setApartamentos(await resApt.json());
+            setBlocos(await resBloco.json());
+            setInquilinos(await resInq.json());
+            setDonos(await resDono.json());
         } catch {
-            setErro('Erro ao buscar apartamento');
-        } finally {
-            setBuscandoApto(false);
+            setErro('Erro ao carregar dados para busca');
         }
     };
 
-    const handleApartamentoBlur = () => {
-        if (idApartamento) buscarApartamento(idApartamento);
+    // ---------- Apartamentos do bloco selecionado ----------
+    const apartamentosDoBloco = idBloco
+        ? apartamentos.filter((apt) => apt.idBloco === parseInt(idBloco))
+        : [];
+
+    // ---------- Números de apartamento restritos ao bloco selecionado ----------
+    const numerosDoBloco = [...new Set(apartamentosDoBloco.map((apt) => apt.numero))]
+        .sort((a, b) => a - b);
+
+    // ---------- Moradores (inquilinos/donos) restritos ao bloco selecionado ----------
+    const moradoresDoBloco = apartamentosDoBloco.flatMap((apt) => {
+        const nomes = [];
+        if (apt.idInquilino) {
+            const inquilino = inquilinos.find((i) => i.idInquilino === apt.idInquilino);
+            if (inquilino) nomes.push(inquilino.nome);
+        }
+        if (apt.idDono) {
+            const dono = donos.find((d) => d.idDono === apt.idDono);
+            if (dono) nomes.push(dono.nome);
+        }
+        return nomes;
+    });
+
+    // ---------- Busca de apartamento por bloco + número e/ou nome do morador ----------
+    const buscaPreenchida = idBloco && (numeroApto.trim() || nomeMorador.trim());
+
+    const apartamentoEncontrado = buscaPreenchida
+        ? apartamentosDoBloco.find((apt) => {
+            if (numeroApto.trim() && apt.numero !== parseInt(numeroApto)) return false;
+
+            if (nomeMorador.trim()) {
+                const inquilino = apt.idInquilino
+                    ? inquilinos.find((i) => i.idInquilino === apt.idInquilino)
+                    : null;
+                const dono = apt.idDono
+                    ? donos.find((d) => d.idDono === apt.idDono)
+                    : null;
+
+                const bateNome = (inquilino && normalizar(inquilino.nome) === normalizar(nomeMorador))
+                    || (dono && normalizar(dono.nome) === normalizar(nomeMorador));
+
+                if (!bateNome) return false;
+            }
+
+            return true;
+        })
+        : null;
+
+    const infoApartamentoEncontrado = () => {
+        if (!apartamentoEncontrado) return null;
+        const bloco = blocos.find((b) => b.idBloco === apartamentoEncontrado.idBloco);
+        const inquilino = apartamentoEncontrado.idInquilino
+            ? inquilinos.find((i) => i.idInquilino === apartamentoEncontrado.idInquilino)
+            : null;
+        const dono = apartamentoEncontrado.idDono
+            ? donos.find((d) => d.idDono === apartamentoEncontrado.idDono)
+            : null;
+        return { bloco, inquilino, dono };
+    };
+
+    const abrirForm = () => {
+        setMostrarForm(true);
+        setErro('');
+        setSucesso('');
+        setIdBloco('');
+        setNumeroApto('');
+        setNomeMorador('');
+    };
+
+    const fecharForm = () => {
+        setMostrarForm(false);
+        setErro('');
     };
 
     const handleRegistrar = async (e) => {
         e.preventDefault();
-        if (!idApartamento) { setErro('ID do apartamento é obrigatório'); return; }
-        if (!apartamentoInfo) { setErro('Busque o apartamento primeiro'); return; }
+        if (!idBloco) { setErro('Selecione o bloco'); return; }
+        if (!numeroApto.trim() && !nomeMorador.trim()) {
+            setErro('Informe o número do apartamento ou o nome do morador');
+            return;
+        }
+        if (!apartamentoEncontrado) { setErro('Nenhum apartamento encontrado com esses dados'); return; }
 
         const body = {
-            idApartamento: parseInt(idApartamento),
-            idInquilino: apartamentoInfo.inquilino ? apartamentoInfo.inquilino.idInquilino : null,
-            idDono: apartamentoInfo.dono ? apartamentoInfo.dono.idDono : null,
+            idApartamento: apartamentoEncontrado.idApartamento,
+            idInquilino: apartamentoEncontrado.idInquilino || null,
+            idDono: apartamentoEncontrado.idDono || null,
             status: 'Recebida'
         };
 
@@ -116,8 +172,9 @@ function Encomendas({ usuario, aoNavegar }) {
             });
             if (!res.ok) throw new Error();
             setSucesso('Encomenda registrada com sucesso!');
-            setIdApartamento('');
-            setApartamentoInfo(null);
+            setIdBloco('');
+            setNumeroApto('');
+            setNomeMorador('');
             setMostrarForm(false);
             carregarEncomendas();
             setTimeout(() => setSucesso(''), 3000);
@@ -149,6 +206,13 @@ function Encomendas({ usuario, aoNavegar }) {
         return new Date(data).toLocaleDateString('pt-BR');
     };
 
+    const getApartamentoLabel = (idApartamento) => {
+        const apt = apartamentos.find((a) => a.idApartamento === idApartamento);
+        if (!apt) return `Apto ${idApartamento}`;
+        const bloco = blocos.find((b) => b.idBloco === apt.idBloco);
+        return `Bloco ${bloco ? bloco.nome : apt.idBloco} · Apto ${apt.numero}`;
+    };
+
     // Agrupa as encomendas (mais recentes primeiro) em faixas de tempo
     const agruparPorSemana = (lista) => {
         const agora = Date.now();
@@ -176,79 +240,21 @@ function Encomendas({ usuario, aoNavegar }) {
             </button>
 
             <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
+                <User size={28} />
             </button>
 
             <h1 id="Encomendas_Titulo">ENCOMENDAS</h1>
 
             {ehGerenciador && (
                 <div id="Encomendas_Acoes">
-                    <button className="enc-botao-novo"
-                        onClick={() => { setMostrarForm(!mostrarForm); setErro(''); setSucesso(''); setApartamentoInfo(null); setIdApartamento(''); }}>
-                        {mostrarForm ? <><X size={14} /> Cancelar</> : <><Plus size={14} /> Registrar Encomenda</>}
+                    <button className="enc-botao-novo Green_Button_Empty" onClick={abrirForm}>
+                        <Plus size={16} /> Registrar Encomenda
                     </button>
                 </div>
             )}
 
-            {erro && <p className="mensagem-erro">{erro}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
             {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-
-            {ehGerenciador && mostrarForm && (
-                <form onSubmit={handleRegistrar} className="enc-form">
-                    <div className="enc-form-campos">
-                        <div className="form-group">
-                            <label>ID Apartamento *</label>
-                            <input
-                                type="number"
-                                placeholder="Ex: 1"
-                                value={idApartamento}
-                                onChange={(e) => { setIdApartamento(e.target.value); setApartamentoInfo(null); setErro(''); }}
-                                onBlur={handleApartamentoBlur}
-                                required
-                            />
-                            <span className="enc-campo-dica">Saia do campo para buscar automaticamente</span>
-                        </div>
-                    </div>
-
-                    {buscandoApto && <p className="enc-buscando"><Search size={14} /> Buscando apartamento...</p>}
-
-                    {apartamentoInfo && (
-                        <div className="enc-apartamento-info">
-                            <h4 className="enc-info-titulo"><CheckCircle size={14} /> Apartamento {apartamentoInfo.apto.idApartamento} encontrado</h4>
-                            <div className="enc-info-grid">
-                                {apartamentoInfo.inquilino ? (
-                                    <div className="enc-info-item">
-                                        <span className="enc-info-label">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={12} /> Inquilino</span>
-                                        <span className="enc-info-valor">{apartamentoInfo.inquilino.nome}</span>
-                                        <span className="enc-info-id">ID: {apartamentoInfo.inquilino.idInquilino}</span>
-                                    </div>
-                                ) : (
-                                    <div className="enc-info-item vazio">
-                                        <span className="enc-info-label">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={12} /> Inquilino</span>
-                                        <span className="enc-info-valor">Sem inquilino</span>
-                                    </div>
-                                )}
-                                {apartamentoInfo.dono ? (
-                                    <div className="enc-info-item">
-                                        <span className="enc-info-label"><Home size={12} /> Dono</span>
-                                        <span className="enc-info-valor">{apartamentoInfo.dono.nome}</span>
-                                        <span className="enc-info-id">ID: {apartamentoInfo.dono.idDono}</span>
-                                    </div>
-                                ) : (
-                                    <div className="enc-info-item vazio">
-                                        <span className="enc-info-label"><Home size={12} /> Dono</span>
-                                        <span className="enc-info-valor">Sem dono</span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    <button type="submit" className="enc-botao-submit" disabled={!apartamentoInfo || buscandoApto}>
-                        <Check size={14} /> Confirmar Registro
-                    </button>
-                </form>
-            )}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
             {!carregando && encomendas.length === 0 && !erro && (
@@ -262,13 +268,13 @@ function Encomendas({ usuario, aoNavegar }) {
                     {itens.map((enc) => (
                         <div key={enc.idEncomenda} className="enc-card Green_Box_Full">
                             <div className="enc-card-topo">
-                                <div className="enc-avatar">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} /></div>
+                                <div className="enc-avatar"><User size={28} /></div>
                                 <h3 className="enc-card-titulo">ENCOMENDA #{enc.idEncomenda}</h3>
                             </div>
 
                             <div className="enc-card-colunas">
                                 <span>{formatarData(enc.dataRecebimento)}</span>
-                                <span>Apto {enc.idApartamento}</span>
+                                <span>{getApartamentoLabel(enc.idApartamento)}</span>
                                 <span className="enc-status">
                                     <i className="enc-status-ponto" style={{ backgroundColor: getStatusCor(enc.status) }} />
                                     {enc.status}
@@ -284,6 +290,97 @@ function Encomendas({ usuario, aoNavegar }) {
                     ))}
                 </section>
             ))}
+
+            {ehGerenciador && mostrarForm && (
+                <div id="EncomendasPorteiro_Modal" role="dialog" aria-modal="true">
+                    <form id="EncomendasPorteiro_Form" className="Empty_Box" onSubmit={handleRegistrar}>
+                        <h2 id="EncomendasPorteiro_Form_Titulo">NOVA ENCOMENDA</h2>
+
+                        {erro && <p className="mensagem-erro">{erro}</p>}
+
+                        <div className="encp-campo">
+                            <label htmlFor="Encomendas_Bloco">Bloco *</label>
+                            <select
+                                id="Encomendas_Bloco"
+                                className="Green_Input"
+                                value={idBloco}
+                                onChange={(e) => setIdBloco(e.target.value)}
+                                required
+                            >
+                                <option value="">Selecione o bloco</option>
+                                {blocos.map((b) => (
+                                    <option key={b.idBloco} value={b.idBloco}>{b.nome}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="encp-campo">
+                            <label htmlFor="Encomendas_Numero">Número do apartamento</label>
+                            <input
+                                id="Encomendas_Numero"
+                                className="Green_Input"
+                                type="text"
+                                inputMode="numeric"
+                                list="lista-numeros"
+                                placeholder={idBloco ? "Ex: 101" : "Selecione o bloco primeiro"}
+                                value={numeroApto}
+                                onChange={(e) => setNumeroApto(e.target.value.replace(/\D/g, ''))}
+                                disabled={!idBloco}
+                                autoComplete="off"
+                            />
+                            <datalist id="lista-numeros">
+                                {numerosDoBloco.map((numero) => (
+                                    <option key={numero} value={numero} />
+                                ))}
+                            </datalist>
+                        </div>
+
+                        <div className="encp-campo">
+                            <label htmlFor="Encomendas_Morador">Nome do morador (inquilino ou dono)</label>
+                            <input
+                                id="Encomendas_Morador"
+                                className="Green_Input"
+                                type="text"
+                                list="lista-moradores"
+                                placeholder={idBloco ? "Ex: João Silva" : "Selecione o bloco primeiro"}
+                                value={nomeMorador}
+                                onChange={(e) => setNomeMorador(e.target.value)}
+                                disabled={!idBloco}
+                                autoComplete="off"
+                            />
+                            <datalist id="lista-moradores">
+                                {moradoresDoBloco.map((nome, i) => (
+                                    <option key={i} value={nome} />
+                                ))}
+                            </datalist>
+                        </div>
+
+                        <p className="encp-dica">Preencha o número do apartamento, o nome do morador, ou os dois para uma busca mais precisa.</p>
+
+                        {buscaPreenchida && (
+                            <p className={`encp-confirmacao ${apartamentoEncontrado ? 'ok' : 'erro'}`}>
+                                {apartamentoEncontrado
+                                    ? (() => {
+                                        const { bloco, inquilino, dono } = infoApartamentoEncontrado();
+                                        return `✓ Bloco ${bloco ? bloco.nome : idBloco} · Apto ${apartamentoEncontrado.numero}`
+                                            + (inquilino ? ` · Inquilino: ${inquilino.nome}` : '')
+                                            + (dono ? ` · Dono: ${dono.nome}` : '');
+                                    })()
+                                    : '✕ Apartamento não encontrado com esses dados'}
+                            </p>
+                        )}
+
+                        <div id="EncomendasPorteiro_Form_Botoes">
+                            <button type="button" className="Gold_Button_Empty" onClick={fecharForm}>
+                                CANCELAR
+                            </button>
+                            <button type="submit" className="Gold_Button_Full" disabled={!apartamentoEncontrado}>
+                                <Check size={14} /> Confirmar Registro
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }

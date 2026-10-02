@@ -1,5 +1,15 @@
 /* Cores, cantos e fontes vêm das classes padrão (Empty_Box, Green_Box_Full,
    Green_Input, Green_Button_Full, Green_Button_Empty). Aqui fica o layout. */
+.vis-campo select.Green_Input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 48px;
+  padding: 0 20px;
+  font-size: 1rem;
+  width: 100%;
+  cursor: pointer;
+}
 
 #Visitantes_Pagina {
   position: relative;
