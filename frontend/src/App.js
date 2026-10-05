@@ -67,7 +67,7 @@ function App() {
     }
 
     if (sindicoExiste === null) {
-        return null; // ou um spinner/loading, se quiser
+        return null; 
     }
 
     return sindicoExiste

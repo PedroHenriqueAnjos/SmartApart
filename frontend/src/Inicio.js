@@ -94,15 +94,6 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
         }
     };
 
-    // "Marcar como lido" fica salvo só neste navegador (não vai para o backend)
-    const chaveLidos = `avisosLidos_${usuario.id}`;
-    const [lidos, setLidos] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem(chaveLidos)) || [];
-        } catch {
-            return [];
-        }
-    });
 
     // ---------- Enquetes ----------
     const [enquetes, setEnquetes] = useState([]);
@@ -150,15 +141,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
         }
     };
 
-    const alternarLido = (idAviso) => {
-        const novo = lidos.includes(idAviso)
-            ? lidos.filter((id) => id !== idAviso)
-            : [...lidos, idAviso];
-        setLidos(novo);
-        try {
-            localStorage.setItem(chaveLidos, JSON.stringify(novo));
-        } catch { /* sem armazenamento disponível: ignora */ }
-    };
+
 
     const formatarData = (data) => {
         if (!data) return '-';
@@ -188,10 +171,9 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
 
     // ---------- Slides ----------
     const renderAviso = (aviso) => {
-        const lido = lidos.includes(aviso.idAvisos);
         return (
             <div className="aviso-bloco">
-                <div className={`aviso-card Green_Box_Full ${lido ? 'lido' : ''} ${podeVerEnquetes ? 'clicavel' : ''}`}
+                <div className={`aviso-card Green_Box_Full ${podeVerEnquetes ? 'clicavel' : ''}`}
                     {...propsClique}>
                     <div className="card-avatar">
                         {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
@@ -246,9 +228,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
 
     const ehSindico = usuario.tipo === 'SINDICO';
 
-    // ---------- Atalhos clicáveis (imagem em cima, texto embaixo) ----------
-    // Para usar imagem de verdade: coloque o arquivo em public/ e troque
-    // o <Icone /> por <img src={`${process.env.PUBLIC_URL}/arquivo.png`} alt="" />
+    
     const atalhos = [
         { aba: ehPorteiro ? 'encomendasPorteiro' : 'encomendas', rotulo: 'encomendas', Icone: Package },
         { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },

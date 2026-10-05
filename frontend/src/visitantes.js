@@ -35,16 +35,15 @@ function Visitantes({ usuario, aoNavegar }) {
                 setFoto(dados.foto || null);
             }
         } catch {
-            // sem foto ou backend indisponível: mantém o ícone padrão
         }
     };
-    const ehGerenciador = usuario.tipo === 'PORTEIRO' || usuario.tipo === 'SINDICO';
-    const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
+    const ehGerenciador = usuario.tipo === 'PORTEIRO';
+    const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO' || usuario.tipo === 'SINDICO';
 
     useEffect(() => { carregarVisitantes(); }, []);
     useEffect(() => { if (ehGerenciador) carregarDadosBusca(); }, [ehGerenciador]);
 
-    // Ao trocar de bloco, limpa número para não arrastar dados de outro bloco
+
     useEffect(() => {
         setNumero('');
         setApartamentoInfo(null);

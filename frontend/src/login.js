@@ -9,6 +9,18 @@ function Login({ setUsuarioLogado }) {
     const [erro, setErro] = useState('');
     const [carregando, setCarregando] = useState(false);
 
+    const formatarCPF = (valor) => {
+        const numeros = valor.replace(/\D/g, '').slice(0, 11);
+        return numeros
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    };
+
+    const handleCPF = (e) => {
+        setCpf(formatarCPF(e.target.value));
+    };
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setCarregando(true);
@@ -55,7 +67,7 @@ function Login({ setUsuarioLogado }) {
                         name="CPF"
                         type="text"
                         value={cpf}
-                        onChange={(e) => setCpf(e.target.value)}
+                        onChange={handleCPF}
                         disabled={carregando}
                         placeholder='000.000.000-00'
                         maxLength={14}

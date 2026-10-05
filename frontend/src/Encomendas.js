@@ -21,12 +21,12 @@ function Encomendas({ usuario, aoNavegar }) {
     const [numeroApto, setNumeroApto] = useState('');
     const [nomeMorador, setNomeMorador] = useState('');
 
-    const ehGerenciador = usuario.tipo === 'PORTEIRO' || usuario.tipo === 'SINDICO';
+    const ehGerenciador = usuario.tipo === 'PORTEIRO';
 
     useEffect(() => { carregarEncomendas(); }, []);
     useEffect(() => { if (ehGerenciador) carregarDadosBusca(); }, [ehGerenciador]);
 
-    // Ao trocar de bloco, limpa número e nome para não arrastar dados de outro bloco
+
     useEffect(() => {
         setNumeroApto('');
         setNomeMorador('');
