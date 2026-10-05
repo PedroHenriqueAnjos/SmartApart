@@ -136,7 +136,7 @@ export const cadastrarDono = async (dados) => {
 
 // SUPOSIÇÃO NÃO CONFIRMADA: endpoint /porteiros, campos nome/cpf/senha
 export const cadastrarPorteiro = async (dados) => {
-    const res = await fetch(`${API_URL}/porteiros`, {
+    const res = await fetch(`${API_URL}/funcionarios`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
