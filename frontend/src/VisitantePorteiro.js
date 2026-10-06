@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Visitantes.css';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 
 function VisitantesPorteiro({ usuario }) {
     const [visitantes, setVisitantes] = useState([]);

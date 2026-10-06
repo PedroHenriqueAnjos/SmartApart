@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Salao.css';
 import { ArrowLeft, User, Plus, Check, Calendar, Building2 } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 
 function Salao({ usuario, aoNavegar }) {
     const [saloes, setSaloes] = useState([]);

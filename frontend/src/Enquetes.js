@@ -3,7 +3,7 @@ import './Enquetes.css';
 import { ArrowLeft, User, X, Plus, Check, Trash2 } from 'lucide-react';
 import { supabase } from './supabaseClient';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 const BUCKET = 'avatars';
 
 function Enquetes({ usuario, aoNavegar }) {

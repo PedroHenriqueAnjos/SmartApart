@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SalaoPorteiro.css';
 import { ArrowLeft, User, Building2, Calendar, Plus, Check } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 
 // Ajuste aqui se as rotas do seu backend forem diferentes
 const rotaLiberar = (id, nomePorteiro) =>

@@ -3,7 +3,7 @@ import './Encomendas.css';
 import './EncomendasPorteiro.css';
 import { ArrowLeft, User, Check } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 
 // Nomes dos campos da entidade Apartamento (ajuste se forem diferentes)
 const CAMPO_BLOCO = 'bloco';

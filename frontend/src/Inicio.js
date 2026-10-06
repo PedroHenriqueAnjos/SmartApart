@@ -4,7 +4,7 @@ import './Inicio.css';
 import { supabase } from './supabaseClient';
 import { User, Package, MessageCircle, Users, BarChart2, CalendarDays, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 const BUCKET = 'avatars';
 
 

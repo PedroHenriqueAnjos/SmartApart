@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Encomendas.css';
 import { ArrowLeft, Plus, Check, User } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 
 const normalizar = (v) => String(v ?? '').trim().toLowerCase();
 

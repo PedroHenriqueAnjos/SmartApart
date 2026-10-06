@@ -3,7 +3,7 @@ import './Visitantes.css';
 import { supabase } from './supabaseClient';
 import { ArrowLeft, RefreshCw, X, Plus, Search, CheckCircle, User, Home, Check } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 const BUCKET = 'avatars';
 
 function Visitantes({ usuario, aoNavegar }) {

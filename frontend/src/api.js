@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 
 export const loginAPI = async (cpf, senha) => {
     const response = await fetch(`${API_URL}/login`, {

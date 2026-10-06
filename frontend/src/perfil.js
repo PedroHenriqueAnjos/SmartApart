@@ -4,7 +4,7 @@ import { supabase } from './supabaseClient';
 import './perfil.css';
 import { ArrowLeft, User, Pencil, Check, X, Camera, Trash2, LogOut } from 'lucide-react';
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 const BUCKET = 'avatars';
 
 // Extrai o caminho do arquivo a partir da URL pública (ignora fotos antigas em base64)

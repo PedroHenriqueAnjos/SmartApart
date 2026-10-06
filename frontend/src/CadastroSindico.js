@@ -7,7 +7,7 @@ import {
     cadastrarSalao
 } from './api';
 import { ArrowLeft, User, UserPlus, Building2, Home, CalendarDays, Check } from 'lucide-react';
-const API_URL = "http://localhost:8080";
+const API_URL = "https://smartapart-bra7.onrender.com";
 const ABAS = [
     { id: 'usuario', rotulo: 'usuário', Icone: UserPlus },
     { id: 'bloco', rotulo: 'bloco', Icone: Building2 },
