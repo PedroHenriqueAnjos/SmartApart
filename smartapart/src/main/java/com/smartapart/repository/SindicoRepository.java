@@ -1,9 +1,11 @@
 package com.smartapart.repository;
 
-import com.smartapart.model.Sindico;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+
+import com.smartapart.model.Sindico;
 
 public interface SindicoRepository extends JpaRepository<Sindico, Integer> {
-    Optional<Sindico> findByCpfAndSenha(String cpf, String senha);
+    List<Sindico> findByCpf(String cpf);
 }

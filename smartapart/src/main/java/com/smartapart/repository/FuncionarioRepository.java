@@ -1,9 +1,11 @@
 package com.smartapart.repository;
 
-import com.smartapart.model.Funcionario;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+
+import com.smartapart.model.Funcionario;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer> {
-    Optional<Funcionario> findByCpfAndSenha(String cpf, String senha);
+    List<Funcionario> findByCpf(String cpf);
 }

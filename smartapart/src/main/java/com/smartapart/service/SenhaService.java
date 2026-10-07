@@ -1,16 +1,6 @@
 package com.smartapart.service;
 
-import com.smartapart.model.Dono;
-import com.smartapart.model.Funcionario;
-import com.smartapart.model.Inquilino;
-import com.smartapart.model.Sindico;
-import com.smartapart.repository.DonoRepository;
-import com.smartapart.repository.FuncionarioRepository;
-import com.smartapart.repository.InquilinoRepository;
-import com.smartapart.repository.SindicoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -19,23 +9,32 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Troca de senha confirmada apenas pelo CPF.
- *   - "esqueci a senha": o CPF localiza a(s) conta(s) e a senha é trocada.
- *   - usuário logado: o CPF informado precisa ser o da conta (id + tipo).
- * Limite de 5 pedidos a cada 15 minutos por CPF (ou por usuário logado).
- */
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.smartapart.model.Dono;
+import com.smartapart.model.Funcionario;
+import com.smartapart.model.Inquilino;
+import com.smartapart.model.Sindico;
+import com.smartapart.repository.DonoRepository;
+import com.smartapart.repository.FuncionarioRepository;
+import com.smartapart.repository.InquilinoRepository;
+import com.smartapart.repository.SindicoRepository;
+
 @Service
 public class SenhaService {
 
     private static final int MAX_PEDIDOS = 5;
     private static final long JANELA_PEDIDOS_MS = 15 * 60 * 1000L;
+    private static final int MAX_BYTES_BCRYPT = 72;
 
     @Autowired private SindicoRepository sindicoRepository;
     @Autowired private InquilinoRepository inquilinoRepository;
     @Autowired private DonoRepository donoRepository;
     @Autowired private FuncionarioRepository funcionarioRepository;
 
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final Map<String, Deque<Long>> historico = new ConcurrentHashMap<>();
 
     public static class LimiteExcedidoException extends RuntimeException {
@@ -43,6 +42,30 @@ public class SenhaService {
     }
 
     private record Conta(String tipo, int id) {}
+
+    public String criptografar(String senhaDigitada) {
+        if (senhaDigitada == null || senhaDigitada.isEmpty()) {
+            return senhaDigitada;
+        }
+        if (senhaDigitada.getBytes(StandardCharsets.UTF_8).length > MAX_BYTES_BCRYPT) {
+            throw new IllegalArgumentException("A senha é muito longa.");
+        }
+        return encoder.encode(senhaDigitada);
+    }
+
+    public boolean estaCriptografada(String senhaArmazenada) {
+        return senhaArmazenada != null && senhaArmazenada.matches("^\\$2[aby]\\$\\d{2}\\$.{53}$");
+    }
+
+    public boolean confere(String senhaDigitada, String senhaArmazenada) {
+        if (senhaDigitada == null || senhaArmazenada == null) {
+            return false;
+        }
+        if (estaCriptografada(senhaArmazenada)) {
+            return encoder.matches(senhaDigitada, senhaArmazenada);
+        }
+        return senhaArmazenada.equals(senhaDigitada);
+    }
 
     public void redefinir(Map<String, Object> dados) {
         limparHistorico();
@@ -52,7 +75,9 @@ public class SenhaService {
 
         String nova = texto(dados, "novaSenha");
         if (nova.length() < 6) throw new IllegalArgumentException("A senha deve ter pelo menos 6 caracteres.");
-        if (nova.length() > 100) throw new IllegalArgumentException("A senha é muito longa.");
+        if (nova.getBytes(StandardCharsets.UTF_8).length > MAX_BYTES_BCRYPT) {
+            throw new IllegalArgumentException("A senha é muito longa.");
+        }
 
         List<Conta> contas;
         boolean logado = dados.get("id") != null && !texto(dados, "tipo").isBlank();
@@ -77,14 +102,15 @@ public class SenhaService {
         }
 
         for (Conta c : contas) {
-            if (nova.equals(senhaDe(c).orElse(null))) {
+            if (confere(nova, senhaDe(c).orElse(null))) {
                 throw new IllegalArgumentException("A nova senha deve ser diferente da atual.");
             }
         }
-        for (Conta c : contas) gravarSenha(c, nova);
+
+        String hash = criptografar(nova);
+        for (Conta c : contas) gravarSenha(c, hash);
     }
 
-    // ---------- acesso às contas ----------
     private List<Conta> buscarPorCpf(String cpf) {
         List<Conta> r = new ArrayList<>();
         for (Sindico s : sindicoRepository.findAll())
@@ -118,29 +144,28 @@ public class SenhaService {
         };
     }
 
-    private void gravarSenha(Conta c, String nova) {
+    private void gravarSenha(Conta c, String senhaHash) {
         switch (c.tipo()) {
             case "SINDICO" -> sindicoRepository.findById(c.id()).ifPresent(s -> {
-                s.setSenha(nova);
+                s.setSenha(senhaHash);
                 sindicoRepository.save(s);
             });
             case "MORADOR" -> inquilinoRepository.findById(c.id()).ifPresent(i -> {
-                i.setSenha(nova);
+                i.setSenha(senhaHash);
                 inquilinoRepository.save(i);
             });
             case "DONO" -> donoRepository.findById(c.id()).ifPresent(d -> {
-                d.setSenha(nova);
+                d.setSenha(senhaHash);
                 donoRepository.save(d);
             });
             case "PORTEIRO" -> funcionarioRepository.findById(c.id()).ifPresent(f -> {
-                f.setSenha(nova);
+                f.setSenha(senhaHash);
                 funcionarioRepository.save(f);
             });
             default -> { }
         }
     }
 
-    // ---------- utilitários ----------
     private void registrarPedido(String chave) {
         long agora = System.currentTimeMillis();
         Deque<Long> h = historico.computeIfAbsent(chave, k -> new ArrayDeque<>());

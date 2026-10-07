@@ -1,9 +1,11 @@
 package com.smartapart.repository;
 
-import com.smartapart.model.Dono;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+
+import com.smartapart.model.Dono;
 
 public interface DonoRepository extends JpaRepository<Dono, Integer> {
-    Optional<Dono> findByCpfAndSenha(String cpf, String senha);
+    List<Dono> findByCpf(String cpf);
 }

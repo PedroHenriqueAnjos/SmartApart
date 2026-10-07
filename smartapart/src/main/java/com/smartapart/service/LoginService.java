@@ -1,10 +1,17 @@
 package com.smartapart.service;
 
-import com.smartapart.model.*;
-import com.smartapart.repository.*;
+import com.smartapart.model.Dono;
+import com.smartapart.model.Funcionario;
+import com.smartapart.model.Inquilino;
+import com.smartapart.model.LoginRequest;
+import com.smartapart.model.LoginResponse;
+import com.smartapart.model.Sindico;
+import com.smartapart.repository.DonoRepository;
+import com.smartapart.repository.FuncionarioRepository;
+import com.smartapart.repository.InquilinoRepository;
+import com.smartapart.repository.SindicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -21,31 +28,52 @@ public class LoginService {
     @Autowired
     private SindicoRepository sindicoRepository;
 
+    @Autowired
+    private SenhaService senhaService;
+
     public LoginResponse login(LoginRequest request) {
-        Optional<Sindico> sindico = sindicoRepository.findByCpfAndSenha(request.getCpf(), request.getSenha());
-        if (sindico.isPresent()) {
-            Sindico s = sindico.get();
-            return new LoginResponse(s.getIdSindico(), s.getNome(), "SINDICO");
+        String cpf = request.getCpf();
+        String senha = request.getSenha();
+
+        for (Sindico s : sindicoRepository.findByCpf(cpf)) {
+            if (senhaService.confere(senha, s.getSenha())) {
+                if (!senhaService.estaCriptografada(s.getSenha())) {
+                    s.setSenha(senhaService.criptografar(senha));
+                    sindicoRepository.save(s);
+                }
+                return new LoginResponse(s.getIdSindico(), s.getNome(), "SINDICO");
+            }
         }
 
-        Optional<Inquilino> inquilino = inquilinoRepository.findByCpfAndSenha(request.getCpf(), request.getSenha());
-        if (inquilino.isPresent()) {
-            Inquilino i = inquilino.get();
-            return new LoginResponse(i.getIdInquilino(), i.getNome(), "MORADOR");
+        for (Inquilino i : inquilinoRepository.findByCpf(cpf)) {
+            if (senhaService.confere(senha, i.getSenha())) {
+                if (!senhaService.estaCriptografada(i.getSenha())) {
+                    i.setSenha(senhaService.criptografar(senha));
+                    inquilinoRepository.save(i);
+                }
+                return new LoginResponse(i.getIdInquilino(), i.getNome(), "MORADOR");
+            }
         }
 
-        Optional<Dono> dono = donoRepository.findByCpfAndSenha(request.getCpf(), request.getSenha());
-        if (dono.isPresent()) {
-            Dono d = dono.get();
-            return new LoginResponse(d.getIdDono(), d.getNome(), "DONO");
+        for (Dono d : donoRepository.findByCpf(cpf)) {
+            if (senhaService.confere(senha, d.getSenha())) {
+                if (!senhaService.estaCriptografada(d.getSenha())) {
+                    d.setSenha(senhaService.criptografar(senha));
+                    donoRepository.save(d);
+                }
+                return new LoginResponse(d.getIdDono(), d.getNome(), "DONO");
+            }
         }
 
-        Optional<Funcionario> funcionario = funcionarioRepository.findByCpfAndSenha(request.getCpf(),
-                request.getSenha());
-        if (funcionario.isPresent()) {
-            Funcionario f = funcionario.get();
-            String tipo = f.getFuncao().equalsIgnoreCase("Porteiro") ? "PORTEIRO" : "FUNCIONARIO";
-            return new LoginResponse(f.getIdFuncionario(), f.getNome(), tipo);
+        for (Funcionario f : funcionarioRepository.findByCpf(cpf)) {
+            if (senhaService.confere(senha, f.getSenha())) {
+                if (!senhaService.estaCriptografada(f.getSenha())) {
+                    f.setSenha(senhaService.criptografar(senha));
+                    funcionarioRepository.save(f);
+                }
+                String tipo = "Porteiro".equalsIgnoreCase(f.getFuncao()) ? "PORTEIRO" : "FUNCIONARIO";
+                return new LoginResponse(f.getIdFuncionario(), f.getNome(), tipo);
+            }
         }
 
         return null;

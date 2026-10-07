@@ -1,9 +1,11 @@
 package com.smartapart.repository;
 
-import com.smartapart.model.Inquilino;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+
+import com.smartapart.model.Inquilino;
 
 public interface InquilinoRepository extends JpaRepository<Inquilino, Integer> {
-    Optional<Inquilino> findByCpfAndSenha(String cpf, String senha);
+    List<Inquilino> findByCpf(String cpf);
 }
