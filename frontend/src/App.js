@@ -4,8 +4,9 @@ import Login from './login';
 import PrimeiroCadastro from './PrimeiroCadastro';
 import Dashboard from './DashBoard';
 import { verificarSindicoExiste } from './api';
+import Acessibilidade from './Acessibilidade';
 
-function App() {
+function AppConteudo() {
     const [usuarioLogado, setUsuarioLogado] = useState(null);
     const [sindicoExiste, setSindicoExiste] = useState(null); // null = ainda carregando
     const [erroVerificacao, setErroVerificacao] = useState('');
@@ -63,7 +64,7 @@ function App() {
     }
 
     if (erroVerificacao) {
-        return <p id="erro">{erroVerificacao}</p>;
+        return <p id="erro" role="alert">{erroVerificacao}</p>;
     }
 
     if (sindicoExiste === null) {
@@ -75,4 +76,14 @@ function App() {
         : <PrimeiroCadastro aoCadastrar={handleCadastroSindico} />;
 }
 
-export default App;
+// O painel de acessibilidade fica fora do conteúdo para aparecer em todas as telas
+function App() {
+    return (
+        <>
+            <AppConteudo />
+            <Acessibilidade />
+        </>
+    );
+}
+
+export default App;

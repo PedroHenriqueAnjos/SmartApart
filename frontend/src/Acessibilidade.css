@@ -1,0 +1,300 @@
+/* ================= FOCO VISÍVEL (todas as telas) ================= */
+:focus-visible {
+  outline: 3px solid var(--cor-preto);
+  outline-offset: 3px;
+}
+
+/* ================= TAMANHO DO TEXTO ================= */
+/* Tudo que está em rem acompanha o tamanho da raiz */
+html {
+  font-size: calc(100% * var(--escala-fonte, 1));
+}
+
+/* Trechos com tamanho fixo em px não acompanham o rem, então usam zoom */
+h1,
+.mensagem-info,
+.mensagem-erro,
+.mensagem-sucesso,
+.cs-campo label,
+.cs-campo input,
+.cs-campo select {
+  zoom: var(--escala-fonte, 1);
+}
+
+/* ================= ANIMAÇÕES ================= */
+:root[data-sem-animacao="sim"] *,
+:root[data-sem-animacao="sim"] *::before,
+:root[data-sem-animacao="sim"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* O App.css deixa toda <img> redonda; o VLibras precisa das imagens originais */
+[vw] img {
+  border-radius: 0;
+}
+
+/* ================= PAINEL ================= */
+#Acessibilidade_Botao {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+#Acessibilidade_Painel {
+  position: fixed;
+  left: 20px;
+  bottom: 88px;
+  width: min(340px, calc(100vw - 40px));
+  max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1000;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+#Acessibilidade_Cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#Acessibilidade_Titulo {
+  margin: 0;
+  font-family: "Bree Serif";
+  font-weight: normal;
+  font-size: 1.4rem;
+  color: var(--cor-preto);
+}
+
+#Acessibilidade_Fechar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.acess-opcao {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Opção ligada: preenchida, para não depender só da cor */
+.acess-opcao[aria-pressed="true"] {
+  border: 3px solid transparent;
+  background: linear-gradient(0deg, var(--cor-verde-escuro), var(--cor-verde-principal)) border-box;
+  color: var(--cor-bege);
+}
+
+#Acessibilidade_Tamanho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.acess-mini {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.acess-mini:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+#Acessibilidade_Escala {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--cor-preto);
+}
+
+/* ================= ALTO CONTRASTE =================
+   Amarelo e branco sobre preto. As cores do projeto são variáveis,
+   então só redefinimos as variáveis e corrigimos as cores fixas. */
+:root[data-contraste="alto"] {
+  --cor-bege: #000000;
+  --cor-preto: #ffffff;
+  --cor-verde-principal: #000000;
+  --cor-verde-claro: #ffff00;
+  --cor-verde-escuro: #ffff00;
+  --cor-dourado-principal: #ffff00;
+  --cor-dourado-claro: #ffff00;
+  --cor-dourado-escuro: #ffff00;
+  --cor-borda: #ffff00;
+}
+
+/* Cartões ficam pretos como o fundo, então ganham borda */
+:root[data-contraste="alto"] .Green_Box_Full {
+  border: 2px solid #ffff00;
+}
+
+/* Campos e botões vazados: borda amarela lisa em vez do degradê */
+:root[data-contraste="alto"] .Green_Input,
+:root[data-contraste="alto"] .Gold_Input,
+:root[data-contraste="alto"] .Green_Button_Empty,
+:root[data-contraste="alto"] .Gold_Button_Empty,
+:root[data-contraste="alto"] .aviso-lido input {
+  background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(#ffff00, #ffff00) border-box;
+}
+
+:root[data-contraste="alto"] .aviso-lido input:checked {
+  background: #ffff00;
+}
+
+/* Botões cheios e opções ligadas: amarelo sólido com texto preto */
+:root[data-contraste="alto"] .Green_Button_Full,
+:root[data-contraste="alto"] .Gold_Button_Full,
+:root[data-contraste="alto"] .acess-opcao[aria-pressed="true"] {
+  background: #ffff00;
+  color: #000000;
+  border: 3px solid #ffff00;
+}
+
+/* Avatares e ícones que tinham fundo branco */
+:root[data-contraste="alto"] .card-avatar,
+:root[data-contraste="alto"] .sp-avatar,
+:root[data-contraste="alto"] .salao-avatar,
+:root[data-contraste="alto"] .atalho-imagem {
+  background: #000000;
+  color: #ffff00;
+  border: 2px solid #ffff00;
+  box-sizing: border-box;
+}
+
+/* Botões de perfil usam id e cor fixa (#fff), por isso o !important */
+:root[data-contraste="alto"] button[id$="_Perfil"] {
+  background: #000000 !important;
+  color: #ffff00 !important;
+  border: 2px solid #ffff00 !important;
+}
+
+:root[data-contraste="alto"] #Login_Divisor,
+:root[data-contraste="alto"] #Cadastro_Divisor {
+  background: #ffff00 !important;
+}
+
+:root[data-contraste="alto"] .enc-grupo-titulo {
+  color: #000000;
+}
+
+/* Barras das enquetes: preenchimento amarelo e texto sobre fundo preto */
+:root[data-contraste="alto"] .opcao-trilho {
+  background: #333333;
+}
+
+:root[data-contraste="alto"] .opcao-preenchimento {
+  background: #ffff00;
+}
+
+:root[data-contraste="alto"] .opcao-texto {
+  background: #000000;
+  padding: 2px 12px;
+  border-radius: 999px;
+  text-shadow: none;
+}
+
+/* Status: além da cor, mudam o estilo da borda */
+:root[data-contraste="alto"] .status-ok,
+:root[data-contraste="alto"] .sp-status-ok {
+  background: #000000;
+  color: #ffff00;
+  border: 2px solid #ffff00;
+}
+
+:root[data-contraste="alto"] .status-ocupado,
+:root[data-contraste="alto"] .sp-status-ocupado {
+  background: #000000;
+  color: #ffffff;
+  border: 2px dashed #ffffff;
+}
+
+:root[data-contraste="alto"] .status-cancelada,
+:root[data-contraste="alto"] .sp-status-cancelada {
+  background: #000000;
+  color: #cccccc;
+  border: 2px dotted #cccccc;
+}
+
+/* Mensagens */
+:root[data-contraste="alto"] .mensagem-info {
+  background: #000000;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+:root[data-contraste="alto"] .mensagem-erro,
+:root[data-contraste="alto"] .vis-confirmacao.erro,
+:root[data-contraste="alto"] .encp-confirmacao.erro {
+  background: #000000;
+  color: #ff8a8a;
+  border-color: #ff8a8a;
+}
+
+:root[data-contraste="alto"] .mensagem-sucesso {
+  background: #000000;
+  color: #8dffa8;
+  border-color: #8dffa8;
+}
+
+:root[data-contraste="alto"] #erro {
+  color: #ff8a8a !important;
+}
+
+:root[data-contraste="alto"] .enquete-remover {
+  background: #000000;
+  color: #ff8a8a;
+  border: 2px solid #ff8a8a;
+}
+
+/* Regras antigas de Visitantes.css com fundo branco fixo */
+:root[data-contraste="alto"] .form-group input {
+  background: #000000;
+  border-color: #ffff00;
+}

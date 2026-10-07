@@ -127,7 +127,7 @@ function PrimeiroCadastro({ aoCadastrar }) {
                         </div>
                     </form>
 
-                    {erro && <p id='erro'>{erro}</p>}
+                    {erro && <p id='erro' role="alert">{erro}</p>}
                 </section>
 
             </main>
@@ -135,4 +135,4 @@ function PrimeiroCadastro({ aoCadastrar }) {
     );
 }
 
-export default PrimeiroCadastro;
+export default PrimeiroCadastro;

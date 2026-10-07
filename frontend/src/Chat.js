@@ -63,7 +63,7 @@ function Chat({ usuario, aoNavegar }) {
             <div id="Chat_Container" className="Empty_Box">
                 <div id="Chat_Mensagens">
                     {carregando && <p className="mensagem-info">Carregando mensagens...</p>}
-                    {erro && <p className="mensagem-erro">{erro}</p>}
+                    {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                     {mensagens.length === 0 && !carregando && (
                         <p className="mensagem-info">Nenhuma mensagem ainda</p>
@@ -107,4 +107,4 @@ function Chat({ usuario, aoNavegar }) {
     );
 }
 
-export default Chat;
+export default Chat;

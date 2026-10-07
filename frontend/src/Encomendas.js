@@ -239,7 +239,7 @@ function Encomendas({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
                 <User size={28} />
             </button>
 
@@ -253,8 +253,8 @@ function Encomendas({ usuario, aoNavegar }) {
                 </div>
             )}
 
-            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
             {!carregando && encomendas.length === 0 && !erro && (
@@ -282,7 +282,8 @@ function Encomendas({ usuario, aoNavegar }) {
                             </div>
 
                             {enc.status !== 'Retirada' && (
-                                <button className="enc-botao-acao verde" onClick={() => handleRetirar(enc.idEncomenda)}>
+                                <button className="enc-botao-acao verde" onClick={() => handleRetirar(enc.idEncomenda)}
+                                    aria-label={`Marcar encomenda ${enc.idEncomenda} como retirada`}>
                                     <Check size={14} /> Marcar como Retirada
                                 </button>
                             )}
@@ -296,7 +297,7 @@ function Encomendas({ usuario, aoNavegar }) {
                     <form id="EncomendasPorteiro_Form" className="Empty_Box" onSubmit={handleRegistrar}>
                         <h2 id="EncomendasPorteiro_Form_Titulo">NOVA ENCOMENDA</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         <div className="encp-campo">
                             <label htmlFor="Encomendas_Bloco">Bloco *</label>
@@ -385,4 +386,4 @@ function Encomendas({ usuario, aoNavegar }) {
     );
 }
 
-export default Encomendas;
+export default Encomendas;

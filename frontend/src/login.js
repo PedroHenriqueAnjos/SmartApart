@@ -84,14 +84,14 @@ function Login({ setUsuarioLogado }) {
                     />
 
                     <div id="button_container">
-                        <a>esqueceu a senha?</a>
+                        <a href="#esqueceu-senha" onClick={(e) => e.preventDefault()}>esqueceu a senha?</a>
                         <button type="submit" disabled={carregando} className='Green_Button_Empty' id="Botao_Login">
                             {carregando ? 'ENTRANDO...' : 'ENTRAR'}
                         </button>
                     </div>
                 </form>
 
-                {erro && <p id='erro'>{erro}</p>}
+                {erro && <p id='erro' role="alert">{erro}</p>}
             </section>
 
         </main>
@@ -99,4 +99,4 @@ function Login({ setUsuarioLogado }) {
     );
 }
 
-export default Login;
+export default Login;

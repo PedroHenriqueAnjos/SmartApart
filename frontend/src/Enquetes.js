@@ -200,14 +200,14 @@ function Enquetes({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="Enquetes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+            <button id="Enquetes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
                 {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="Enquetes_Titulo">ENQUETES</h1>
 
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-            {!mostrarForm && !mostrarFormAviso && erro && <p className="mensagem-erro">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
+            {!mostrarForm && !mostrarFormAviso && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
             {!carregando && enquetes.length === 0 && !erro && (
@@ -255,7 +255,8 @@ function Enquetes({ usuario, aoNavegar }) {
                                     </span>
                                     {!ehSindico && (
                                         <button className="opcao-votar Green_Button_Empty"
-                                            onClick={() => handleVotar(enq.idEnquete, op.num)}>
+                                            onClick={() => handleVotar(enq.idEnquete, op.num)}
+                                            aria-label={`Votar em ${op.texto}`}>
                                             VOTAR
                                         </button>
                                     )}
@@ -291,7 +292,7 @@ function Enquetes({ usuario, aoNavegar }) {
                     <form id="Enquetes_Form" className="Empty_Box" onSubmit={handleCriar}>
                         <h2 id="Enquetes_Form_Titulo">NOVA ENQUETE</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         <div className="enq-campo">
                             <label htmlFor="Enquetes_Assunto">Assunto *</label>
@@ -372,7 +373,7 @@ function Enquetes({ usuario, aoNavegar }) {
                     <form id="Enquetes_Form" className="Empty_Box" onSubmit={handleCriarAviso}>
                         <h2 id="Enquetes_Form_Titulo">NOVO AVISO</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         <div className="enq-campo">
                             <label htmlFor="Aviso_Assunto">Assunto *</label>
@@ -415,4 +416,4 @@ function Enquetes({ usuario, aoNavegar }) {
     );
 }
 
-export default Enquetes;
+export default Enquetes;

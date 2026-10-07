@@ -222,14 +222,14 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="SalaoPorteiro_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
+            <button id="SalaoPorteiro_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
+                {foto ? <img id="Perfil_Foto" src={foto} alt="" /> : <User size={28} />}
             </button>
 
             <h1 id="SalaoPorteiro_Titulo">SALÃO</h1>
 
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
             {carregando && <p className="mensagem-info">Carregando...</p>}
 
             {/* ---------- Salões ---------- */}
@@ -306,7 +306,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
                     <form id="SalaoPorteiro_Form" className="Empty_Box" onSubmit={handleCadastrarSalao}>
                         <h2 id="SalaoPorteiro_Form_Titulo">NOVO SALÃO</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         <div className="sp-campo">
                             <label htmlFor="SalaoPorteiro_Nome">Nome do salão *</label>
@@ -336,4 +336,4 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
     );
 }
 
-export default SalaoPorteiro;
+export default SalaoPorteiro;

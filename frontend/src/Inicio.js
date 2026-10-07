@@ -241,7 +241,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     return (
         <div id="Inicio_Pagina">
 
-            <button id="Inicio_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+            <button id="Inicio_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
                 {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
@@ -249,7 +249,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
                 <h1>AVISOS</h1>
 
                 {carregandoAvisos && <p className="mensagem-info">Carregando avisos...</p>}
-                {erroAvisos && <p className="mensagem-erro">{erroAvisos}</p>}
+                {erroAvisos && <p className="mensagem-erro" role="alert">{erroAvisos}</p>}
                 {!carregandoAvisos && !erroAvisos && avisos.length === 0 && (
                     <p className="mensagem-info">Nenhum aviso no momento</p>
                 )}
@@ -263,7 +263,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
                 <h1 id="h1_maldito">ENQUETES</h1>
 
                 {carregandoEnquetes && <p className="mensagem-info">Carregando enquetes...</p>}
-                {erroEnquetes && <p className="mensagem-erro">{erroEnquetes}</p>}
+                {erroEnquetes && <p className="mensagem-erro" role="alert">{erroEnquetes}</p>}
                 {!carregandoEnquetes && !erroEnquetes && enquetes.length === 0 && (
                     <p className="mensagem-info">Nenhuma enquete no momento</p>
                 )}
@@ -286,4 +286,4 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     );
 }
 
-export default Inicio;
+export default Inicio;

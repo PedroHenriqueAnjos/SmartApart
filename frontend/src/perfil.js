@@ -166,7 +166,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
             <h1 id="Perfil_Titulo">MEU PERFIL</h1>
 
             {mensagem && (
-                <p className={mensagemTipo === 'sucesso' ? 'mensagem-sucesso' : 'mensagem-erro'}>{mensagem}</p>
+                <p role={mensagemTipo === 'sucesso' ? 'status' : 'alert'} className={mensagemTipo === 'sucesso' ? 'mensagem-sucesso' : 'mensagem-erro'}>{mensagem}</p>
             )}
 
             <div id="Perfil_Card" className="Green_Box_Full">

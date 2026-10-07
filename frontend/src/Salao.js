@@ -135,14 +135,14 @@ function Salao({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="Salao_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
-                ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} />
+            <button id="Salao_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
+                {foto ? <img id="Perfil_Foto" src={foto} alt="" /> : <User size={28} />}
             </button>
 
             <h1 id="Salao_Titulo">SALÃO</h1>
 
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
             {/* ---------- Salões disponíveis ---------- */}
             <div id="Salao_Lista">
@@ -203,7 +203,7 @@ function Salao({ usuario, aoNavegar }) {
                     <form id="Salao_Form" className="Empty_Box" onSubmit={handleReservar}>
                         <h2 id="Salao_Form_Titulo">NOVA RESERVA</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         <div className="salao-campo">
                             <label htmlFor="Salao_Select">Salão *</label>
@@ -249,4 +249,4 @@ function Salao({ usuario, aoNavegar }) {
     );
 }
 
-export default Salao;
+export default Salao;

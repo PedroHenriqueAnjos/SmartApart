@@ -235,14 +235,14 @@ function Visitantes({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="Visitantes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+            <button id="Visitantes_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
                 {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
             <h1 id="Visitantes_Titulo">{ehGerenciador ? 'VISITANTES PENDENTES' : 'SEUS VISITANTES'}</h1>
 
-            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
             {!carregando && visitantes.length === 0 && !erro && (
@@ -306,7 +306,7 @@ function Visitantes({ usuario, aoNavegar }) {
                     <form id="Visitantes_Form" className="Empty_Box" onSubmit={handleSolicitar}>
                         <h2 id="Visitantes_Form_Titulo">NOVO VISITANTE</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         {ehGerenciador && (
                             <>
@@ -433,4 +433,4 @@ function Visitantes({ usuario, aoNavegar }) {
     );
 }
 
-export default Visitantes;
+export default Visitantes;

@@ -211,7 +211,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
                 {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
@@ -223,8 +223,8 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                 </button>
             </div>
 
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
-            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
             {carregando && <p className="mensagem-info">Carregando encomendas...</p>}
             {!carregando && encomendas.length === 0 && !erro && (
                 <p className="mensagem-info">Nenhuma encomenda registrada</p>
@@ -237,7 +237,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                     {grupo.itens.map((enc) => (
                         <div key={enc.idEncomenda} className="enc-card Green_Box_Full">
                             <div className="enc-card-topo">
-                                <div className="enc-avatar">? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" />:<User size={28} /></div>
+                                <div className="enc-avatar"><User size={28} /></div>
                                 <h3 className="enc-card-titulo">ENCOMENDA #{enc.idEncomenda}</h3>
                             </div>
 
@@ -253,7 +253,8 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
 
                             {enc.status !== 'Retirada' && (
                                 <button className="enc-botao-acao Gold_Button_Empty"
-                                    onClick={() => handleAtualizarStatus(enc.idEncomenda, 'Retirada')}>
+                                    onClick={() => handleAtualizarStatus(enc.idEncomenda, 'Retirada')}
+                                    aria-label={`Marcar encomenda ${enc.idEncomenda} como retirada`}>
                                     <Check size={16} /> MARCAR COMO RETIRADA
                                 </button>
                             )}
@@ -267,7 +268,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                     <form id="EncomendasPorteiro_Form" className="Empty_Box" onSubmit={handleRegistrar}>
                         <h2 id="EncomendasPorteiro_Form_Titulo">NOVA ENCOMENDA</h2>
 
-                        {erro && <p className="mensagem-erro">{erro}</p>}
+                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
                         <div id="EncomendasPorteiro_Linha_Apto">
                             <div className="encp-campo">
@@ -367,4 +368,4 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
     );
 }
 
-export default EncomendasPorteiro;
+export default EncomendasPorteiro;

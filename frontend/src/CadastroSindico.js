@@ -202,7 +202,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="CadastroSindico_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
+            <button id="CadastroSindico_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
                 {foto ? <img id="Perfil_Foto" src={foto} alt="Foto de perfil" /> : <User size={28} />}
             </button>
 
@@ -212,6 +212,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                 {ABAS.map(({ id, rotulo, Icone }) => (
                     <button key={id}
                         className={`cs-aba ${abaAtiva === id ? 'ativa' : ''}`}
+                        aria-pressed={abaAtiva === id}
                         onClick={() => { setAbaAtiva(id); setErro(''); }}>
                         <Icone size={22} />
                         <span>{rotulo}</span>
@@ -219,8 +220,8 @@ function CadastroSindico({ usuario, aoNavegar }) {
                 ))}
             </nav>
 
-            {erro && <p className="mensagem-erro">{erro}</p>}
-            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
+            {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
 
             {abaAtiva === 'usuario' && (
                 <form id="CadastroSindico_Form" className="Empty_Box" onSubmit={handleCadastrarUsuario}>
@@ -386,4 +387,4 @@ function CadastroSindico({ usuario, aoNavegar }) {
     );
 }
 
-export default CadastroSindico;
+export default CadastroSindico;

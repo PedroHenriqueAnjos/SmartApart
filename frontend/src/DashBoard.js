@@ -33,7 +33,7 @@ function Dashboard({ usuario, setUsuarioLogado, aoAtualizarUsuario }) {
             case 'salao': return <Salao usuario={usuario} aoNavegar={navegarPara} />;
             case 'perfil': return (<Perfil usuario={usuario} aoNavegar={navegarPara} aoSair={() => setUsuarioLogado(null)} aoAtualizarUsuario={aoAtualizarUsuario}/>);
             case 'salaoPorteiro': return <SalaoPorteiro usuario={usuario} aoNavegar={navegarPara} />;
-            case 'cadastroSindico': return <CadastroSindico aoNavegar={navegarPara} />;
+            case 'cadastroSindico': return <CadastroSindico usuario={usuario} aoNavegar={navegarPara} />;
             default: return <Inicio usuario={usuario} aoNavegar={navegarPara} ehPorteiro={ehPorteiro} />;
         }
     };
@@ -47,4 +47,4 @@ function Dashboard({ usuario, setUsuarioLogado, aoAtualizarUsuario }) {
     );
 }
 
-export default Dashboard;
+export default Dashboard;
