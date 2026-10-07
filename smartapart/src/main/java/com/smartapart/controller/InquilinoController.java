@@ -1,7 +1,7 @@
 package com.smartapart.controller;
 
-import com.smartapart.model.Inquilino;
-import com.smartapart.repository.InquilinoRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.smartapart.model.Inquilino;
+import com.smartapart.repository.InquilinoRepository;
+import com.smartapart.service.SenhaService;
 
 @RestController
 @RequestMapping("/inquilinos")
@@ -22,6 +24,9 @@ public class InquilinoController {
 
     @Autowired
     private InquilinoRepository inquilinoRepository;
+
+    @Autowired
+    private SenhaService senhaService;
 
     @GetMapping
     public List<Inquilino> listarTodos() {
@@ -35,12 +40,21 @@ public class InquilinoController {
 
     @PostMapping
     public Inquilino criar(@RequestBody Inquilino obj) {
+        obj.setSenha(senhaService.criptografar(obj.getSenha()));
         return inquilinoRepository.save(obj);
     }
 
     @PutMapping("/{id}")
     public Inquilino atualizar(@PathVariable int id, @RequestBody Inquilino obj) {
         obj.setIdInquilino(id);
+        if (obj.getSenha() == null || obj.getSenha().isBlank()) {
+            Inquilino atual = inquilinoRepository.findById(id).orElse(null);
+            if (atual != null) {
+                obj.setSenha(atual.getSenha());
+            }
+        } else {
+            obj.setSenha(senhaService.criptografar(obj.getSenha()));
+        }
         return inquilinoRepository.save(obj);
     }
 

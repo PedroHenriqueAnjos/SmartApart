@@ -1,5 +1,6 @@
 package com.smartapart.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,8 @@ public class Inquilino {
     @Column(name = "Proprietario_bool")
     private boolean proprietario;
 
-    @Column(name = "Senha")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "Senha", length = 100)
     private String senha;
 
     @Column(name = "foto", columnDefinition = "TEXT")

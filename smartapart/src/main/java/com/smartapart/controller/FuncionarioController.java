@@ -2,6 +2,7 @@ package com.smartapart.controller;
 
 import com.smartapart.model.Funcionario;
 import com.smartapart.repository.FuncionarioRepository;
+import com.smartapart.service.SenhaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,9 @@ public class FuncionarioController {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
+    @Autowired
+    private SenhaService senhaService;
+
     @GetMapping
     public List<Funcionario> listarTodos() {
         return funcionarioRepository.findAll();
@@ -35,12 +39,21 @@ public class FuncionarioController {
 
     @PostMapping
     public Funcionario criar(@RequestBody Funcionario obj) {
+        obj.setSenha(senhaService.criptografar(obj.getSenha()));
         return funcionarioRepository.save(obj);
     }
 
     @PutMapping("/{id}")
     public Funcionario atualizar(@PathVariable int id, @RequestBody Funcionario obj) {
         obj.setIdFuncionario(id);
+        if (obj.getSenha() == null || obj.getSenha().isBlank()) {
+            Funcionario atual = funcionarioRepository.findById(id).orElse(null);
+            if (atual != null) {
+                obj.setSenha(atual.getSenha());
+            }
+        } else {
+            obj.setSenha(senhaService.criptografar(obj.getSenha()));
+        }
         return funcionarioRepository.save(obj);
     }
 

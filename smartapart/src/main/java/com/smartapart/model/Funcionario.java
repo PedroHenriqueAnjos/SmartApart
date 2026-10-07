@@ -1,5 +1,6 @@
 package com.smartapart.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,8 @@ public class Funcionario {
     @Column(name = "Funcao")
     private String funcao;
 
-    @Column(name = "Senha")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "Senha", length = 100)
     private String senha;
 
     @Column(name = "foto", columnDefinition = "TEXT")

@@ -1,7 +1,7 @@
 package com.smartapart.controller;
 
-import com.smartapart.model.Sindico;
-import com.smartapart.repository.SindicoRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.smartapart.model.Sindico;
+import com.smartapart.repository.SindicoRepository;
+import com.smartapart.service.SenhaService;
 
 @RestController
 @RequestMapping("/sindicos")
@@ -22,6 +24,9 @@ public class SindicoController {
 
     @Autowired
     private SindicoRepository sindicoRepository;
+
+    @Autowired
+    private SenhaService senhaService;
 
     @GetMapping
     public List<Sindico> listarTodos() {
@@ -35,12 +40,21 @@ public class SindicoController {
 
     @PostMapping
     public Sindico criar(@RequestBody Sindico obj) {
+        obj.setSenha(senhaService.criptografar(obj.getSenha()));
         return sindicoRepository.save(obj);
     }
 
     @PutMapping("/{id}")
     public Sindico atualizar(@PathVariable int id, @RequestBody Sindico obj) {
         obj.setIdSindico(id);
+        if (obj.getSenha() == null || obj.getSenha().isBlank()) {
+            Sindico atual = sindicoRepository.findById(id).orElse(null);
+            if (atual != null) {
+                obj.setSenha(atual.getSenha());
+            }
+        } else {
+            obj.setSenha(senhaService.criptografar(obj.getSenha()));
+        }
         return sindicoRepository.save(obj);
     }
 

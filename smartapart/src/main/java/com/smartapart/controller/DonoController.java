@@ -2,6 +2,7 @@ package com.smartapart.controller;
 
 import com.smartapart.model.Dono;
 import com.smartapart.repository.DonoRepository;
+import com.smartapart.service.SenhaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,9 @@ public class DonoController {
     @Autowired
     private DonoRepository donoRepository;
 
+    @Autowired
+    private SenhaService senhaService;
+
     @GetMapping
     public List<Dono> listarTodos() {
         return donoRepository.findAll();
@@ -35,12 +39,21 @@ public class DonoController {
 
     @PostMapping
     public Dono criar(@RequestBody Dono obj) {
+        obj.setSenha(senhaService.criptografar(obj.getSenha()));
         return donoRepository.save(obj);
     }
 
     @PutMapping("/{id}")
     public Dono atualizar(@PathVariable int id, @RequestBody Dono obj) {
         obj.setIdDono(id);
+        if (obj.getSenha() == null || obj.getSenha().isBlank()) {
+            Dono atual = donoRepository.findById(id).orElse(null);
+            if (atual != null) {
+                obj.setSenha(atual.getSenha());
+            }
+        } else {
+            obj.setSenha(senhaService.criptografar(obj.getSenha()));
+        }
         return donoRepository.save(obj);
     }
 

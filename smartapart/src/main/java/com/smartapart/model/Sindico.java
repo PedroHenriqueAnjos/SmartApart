@@ -1,12 +1,12 @@
 package com.smartapart.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "Sindico")
@@ -23,17 +23,9 @@ public class Sindico {
     @Column(name = "CPF")
     private String cpf;
 
-    @Column(name = "Senha")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "Senha", length = 100)
     private String senha;
-
-    @Column(name = "Data_Posse")
-    private LocalDate dataPosse;
-
-    @Column(name = "Data_Final_Posse", nullable = true)
-    private LocalDate dataFinalPosse;
-
-    @Column(name = "Status")
-    private String status;
 
     @Column(name = "foto", columnDefinition = "TEXT")
     private String foto;
@@ -71,30 +63,6 @@ public class Sindico {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public LocalDate getDataPosse() {
-        return dataPosse;
-    }
-
-    public void setDataPosse(LocalDate dataPosse) {
-        this.dataPosse = dataPosse;
-    }
-
-    public LocalDate getDataFinalPosse() {
-        return dataFinalPosse;
-    }
-
-    public void setDataFinalPosse(LocalDate dataFinalPosse) {
-        this.dataFinalPosse = dataFinalPosse;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getFoto() {

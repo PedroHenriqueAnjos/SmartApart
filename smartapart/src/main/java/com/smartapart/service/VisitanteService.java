@@ -1,10 +1,12 @@
 package com.smartapart.service;
 
-import com.smartapart.model.Visitante;
-import com.smartapart.repository.VisitanteRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import com.smartapart.model.Visitante;
+import com.smartapart.repository.VisitanteRepository;
 
 @Service
 public class VisitanteService {
