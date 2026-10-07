@@ -17,6 +17,11 @@
   font-style: normal;
 }
 
+a {
+  color: var(--cor-bege);
+ height: 20px;
+}
+
 h1 {
   font-weight: normal;
   font-family: "Bree Serif";
