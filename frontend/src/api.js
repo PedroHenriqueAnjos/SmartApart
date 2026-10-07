@@ -215,3 +215,15 @@ export const cadastrarSindico = async (nome, cpf, senha) => {
     }
     return res.json();
 };
+
+// ---------- Alteração / recuperação de senha ----------
+export const redefinirSenha = async (dados) => {
+    const res = await fetch(`${API_URL}/senha/redefinir`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+    });
+    const resposta = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(resposta.erro || 'Erro ao conectar com o servidor');
+    return resposta;
+};

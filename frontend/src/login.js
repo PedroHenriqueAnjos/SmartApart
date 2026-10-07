@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./login.css"
 import { loginAPI } from './api';
+import AlterarSenha from './AlterarSenha';
 
 
 function Login({ setUsuarioLogado }) {
@@ -8,6 +9,7 @@ function Login({ setUsuarioLogado }) {
     const [senha, setSenha] = useState('');
     const [erro, setErro] = useState('');
     const [carregando, setCarregando] = useState(false);
+    const [recuperando, setRecuperando] = useState(false);
 
     const formatarCPF = (valor) => {
         const numeros = valor.replace(/\D/g, '').slice(0, 11);
@@ -20,6 +22,10 @@ function Login({ setUsuarioLogado }) {
     const handleCPF = (e) => {
         setCpf(formatarCPF(e.target.value));
     };
+
+    if (recuperando) {
+        return <AlterarSenha aoVoltar={() => setRecuperando(false)} />;
+    }
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -84,7 +90,7 @@ function Login({ setUsuarioLogado }) {
                     />
 
                     <div id="button_container">
-                        <a href="#esqueceu-senha" onClick={(e) => e.preventDefault()}>esqueceu a senha?</a>
+                        <a href="#esqueceu-senha" onClick={(e) => { e.preventDefault(); setRecuperando(true); }}>esqueceu a senha?</a>
                         <button type="submit" disabled={carregando} className='Green_Button_Empty' id="Botao_Login">
                             {carregando ? 'ENTRANDO...' : 'ENTRAR'}
                         </button>
@@ -99,4 +105,4 @@ function Login({ setUsuarioLogado }) {
     );
 }
 
-export default Login;
+export default Login;
