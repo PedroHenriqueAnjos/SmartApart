@@ -37,7 +37,7 @@ function Visitantes({ usuario, aoNavegar }) {
         } catch {
         }
     };
-    const ehGerenciador = usuario.tipo === 'PORTEIRO';
+    const ehGerenciador = usuario.tipo === 'FUNCIONARIO';
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO' || usuario.tipo === 'SINDICO';
 
     useEffect(() => { carregarVisitantes(); }, []);
@@ -433,4 +433,4 @@ function Visitantes({ usuario, aoNavegar }) {
     );
 }
 
-export default Visitantes;
+export default Visitantes;
