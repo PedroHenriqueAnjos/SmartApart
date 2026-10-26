@@ -4,7 +4,7 @@ import { ArrowLeft, User, Building2, Calendar, Plus, Check } from 'lucide-react'
 
 const API_URL = "https://smartapart-bra7.onrender.com";
 
-// Ajuste aqui se as rotas do seu backend forem diferentes
+
 const rotaLiberar = (id, nomePorteiro) =>
     `${API_URL}/reservas/${id}/confirmar?nomePorteiro=${encodeURIComponent(nomePorteiro)}`;
 const rotaRecusar = (id) => `${API_URL}/reservas/${id}/cancelar`;
@@ -29,7 +29,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
     
         useEffect(() => {
                 carregarFoto();
-                // eslint-disable-next-line react-hooks/exhaustive-deps
+
             }, []);
         
             const carregarFoto = async () => {
@@ -40,7 +40,6 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
                         setFoto(dados.foto || null);
                     }
                 } catch {
-                    // sem foto ou backend indisponível: mantém o ícone padrão
                 }
             };
             
@@ -72,7 +71,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
         }
     };
 
-    // Busca o nome de cada inquilino que aparece nas reservas (uma vez por id)
+
     const carregarNomesInquilinos = async (listaReservas) => {
         const ids = [...new Set(listaReservas.map((r) => r.idInquilino).filter(Boolean))];
         const pares = await Promise.all(
@@ -108,7 +107,6 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
         setErro('');
     };
 
-    // ---------- Cadastrar salão ----------
     const handleCadastrarSalao = async (e) => {
         e.preventDefault();
         if (!formData.nome.trim()) {
@@ -135,7 +133,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Alterar status do salão ----------
+
     const handleAlterarStatusSalao = async (salao) => {
         const disponivel = classeStatusSalao(salao.status) === 'sp-status-ok';
         const novoStatus = disponivel ? STATUS_INDISPONIVEL : STATUS_DISPONIVEL;
@@ -154,7 +152,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Liberar / recusar reserva ----------
+
     const handleLiberar = async (idReserva) => {
         try {
             setErro('');
@@ -206,7 +204,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
         return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
     };
 
-    // Pendentes primeiro; dentro de cada grupo, da data mais próxima para a mais distante
+
     const reservasOrdenadas = [...reservas].sort((a, b) => {
         const pa = a.status === 'PENDENTE' ? 0 : 1;
         const pb = b.status === 'PENDENTE' ? 0 : 1;
@@ -336,4 +334,4 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
     );
 }
 
-export default SalaoPorteiro;
+export default SalaoPorteiro;

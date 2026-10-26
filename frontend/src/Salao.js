@@ -16,7 +16,7 @@ function Salao({ usuario, aoNavegar }) {
         
             useEffect(() => {
                     carregarFoto();
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
+
                 }, []);
             
                 const carregarFoto = async () => {
@@ -27,7 +27,6 @@ function Salao({ usuario, aoNavegar }) {
                             setFoto(dados.foto || null);
                         }
                     } catch {
-                        // sem foto ou backend indisponível: mantém o ícone padrão
                     }
                 };
     useEffect(() => {
@@ -249,4 +248,4 @@ function Salao({ usuario, aoNavegar }) {
     );
 }
 
-export default Salao;
+export default Salao;

@@ -11,8 +11,7 @@ const formatarCPF = (valor) => {
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 };
 
-// usuario presente -> usuário logado (o CPF precisa ser o da própria conta)
-// usuario ausente  -> "esqueci a senha" na tela de login
+
 function AlterarSenha({ usuario, aoVoltar }) {
     const logado = !!usuario;
 

@@ -113,7 +113,6 @@ export const atualizarPerfilInquilino = async (idInquilino, novoNome) => {
     return response.json();
 };
 
-// ---------- Cadastro de usuários ----------
 export const cadastrarInquilino = async (dados) => {
     const res = await fetch(`${API_URL}/inquilinos`, {
         method: 'POST',
@@ -134,7 +133,6 @@ export const cadastrarDono = async (dados) => {
     return res.json();
 };
 
-// SUPOSIÇÃO NÃO CONFIRMADA: endpoint /porteiros, campos nome/cpf/senha
 export const cadastrarPorteiro = async (dados) => {
     const res = await fetch(`${API_URL}/funcionarios`, {
         method: 'POST',
@@ -157,7 +155,6 @@ export const listarInquilinos = async () => {
     return res.json();
 };
 
-// ---------- Cadastro de bloco ----------
 export const cadastrarBloco = async (dados) => {
     const res = await fetch(`${API_URL}/blocos`, {
         method: 'POST',
@@ -174,7 +171,6 @@ export const listarBlocos = async () => {
     return res.json();
 };
 
-// ---------- Cadastro de apartamento ----------
 export const cadastrarApartamento = async (dados) => {
     const res = await fetch(`${API_URL}/apartamentos`, {
         method: 'POST',
@@ -185,7 +181,7 @@ export const cadastrarApartamento = async (dados) => {
     return res.json();
 };
 
-// ---------- Cadastro de salão ----------
+
 export const cadastrarSalao = async (dados) => {
     const res = await fetch(`${API_URL}/salaos`, {
         method: 'POST',
@@ -216,7 +212,7 @@ export const cadastrarSindico = async (nome, cpf, senha) => {
     return res.json();
 };
 
-// ---------- Alteração / recuperação de senha ----------
+
 export const redefinirSenha = async (dados) => {
     const res = await fetch(`${API_URL}/senha/redefinir`, {
         method: 'POST',

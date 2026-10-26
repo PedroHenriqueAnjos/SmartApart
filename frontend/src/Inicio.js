@@ -8,7 +8,7 @@ const API_URL = "https://smartapart-bra7.onrender.com";
 const BUCKET = 'avatars';
 
 
-// Carrossel horizontal: um item por vez, com setas, pontos e arrastar/deslizar
+
 function Carrossel({ id, itens, renderItem, rotulo }) {
     const faixaRef = useRef(null);
     const [indice, setIndice] = useState(0);
@@ -71,7 +71,7 @@ function Carrossel({ id, itens, renderItem, rotulo }) {
 }
 
 function Inicio({ usuario, aoNavegar, ehPorteiro }) {
-    // ---------- Avisos ----------
+
     const [avisos, setAvisos] = useState([]);
     const [carregandoAvisos, setCarregandoAvisos] = useState(true);
     const [erroAvisos, setErroAvisos] = useState('');
@@ -79,7 +79,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
 
     useEffect(() => {
         carregarFoto();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
     const carregarFoto = async () => {
@@ -90,26 +90,25 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
                 setFoto(dados.foto || null);
             }
         } catch {
-            // sem foto ou backend indisponível: mantém o ícone padrão
+
         }
     };
 
 
-    // ---------- Enquetes ----------
+
     const [enquetes, setEnquetes] = useState([]);
     const [carregandoEnquetes, setCarregandoEnquetes] = useState(true);
     const [erroEnquetes, setErroEnquetes] = useState('');
 
-    // Só síndico e morador/dono acessam a tela de enquetes
+
     const podeVerEnquetes = ['SINDICO', 'MORADOR', 'DONO'].includes(usuario.tipo);
 
-    // Morador/dono reservam; porteiro só consulta
+
     const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO', 'SINDICO'].includes(usuario.tipo);
 
     useEffect(() => {
         carregarAvisos();
         carregarEnquetes();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const carregarAvisos = async () => {
@@ -155,7 +154,6 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
         return Math.round(((votos || 0) / total) * 100);
     };
 
-    // Clique (ou Enter/Espaço) no card de aviso ou de enquete abre a tela de enquetes
     const propsClique = podeVerEnquetes ? {
         role: 'button',
         tabIndex: 0,
@@ -169,7 +167,6 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
         }
     } : {};
 
-    // ---------- Slides ----------
     const renderAviso = (aviso) => {
         return (
             <div className="aviso-bloco">
@@ -286,4 +283,4 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     );
 }
 
-export default Inicio;
+export default Inicio;

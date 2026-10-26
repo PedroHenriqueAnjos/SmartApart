@@ -5,7 +5,7 @@ import { ArrowLeft, User, Check } from 'lucide-react';
 
 const API_URL = "https://smartapart-bra7.onrender.com";
 
-// Nomes dos campos da entidade Apartamento (ajuste se forem diferentes)
+
 const CAMPO_BLOCO = 'bloco';
 const CAMPO_NUMERO = 'numero';
 
@@ -27,7 +27,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
     
         useEffect(() => {
                 carregarFoto();
-                // eslint-disable-next-line react-hooks/exhaustive-deps
+
             }, []);
         
             const carregarFoto = async () => {
@@ -38,7 +38,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                         setFoto(dados.foto || null);
                     }
                 } catch {
-                    // sem foto ou backend indisponível: mantém o ícone padrão
+
                 }
             };
             
@@ -94,7 +94,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         setErro('');
     };
 
-    // ---------- Busca de apartamento por bloco + número ----------
+
     const apartamentoEncontrado = (formData.bloco.trim() && formData.numero.trim())
         ? apartamentos.find((a) =>
             normalizar(a[CAMPO_BLOCO]) === normalizar(formData.bloco) &&
@@ -103,7 +103,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
 
     const apartamentoPreenchido = formData.bloco.trim() && formData.numero.trim();
 
-    // ---------- Busca de inquilino e dono por nome ----------
+
     const inquilinoEncontrado = formData.nomeInquilino.trim()
         ? inquilinos.find((i) => normalizar(i.nome) === normalizar(formData.nomeInquilino))
         : null;
@@ -118,7 +118,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         return `Bloco ${apt[CAMPO_BLOCO]} · Apto ${apt[CAMPO_NUMERO]}`;
     };
 
-    // ---------- Registrar ----------
+
     const handleRegistrar = async (e) => {
         e.preventDefault();
         if (!apartamentoEncontrado) {
@@ -154,7 +154,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Atualizar status ----------
+
     const handleAtualizarStatus = async (idEncomenda, status) => {
         try {
             setErro('');
@@ -181,7 +181,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         return new Date(data).toLocaleDateString('pt-BR');
     };
 
-    // ---------- Agrupamento por semana ----------
+
     const rotuloSemana = (data) => {
         const inicioDia = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
         const dias = Math.floor((inicioDia(new Date()) - inicioDia(new Date(data))) / 86400000);
@@ -368,4 +368,4 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
     );
 }
 
-export default EncomendasPorteiro;
+export default EncomendasPorteiro;

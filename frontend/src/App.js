@@ -76,7 +76,6 @@ function AppConteudo() {
         : <PrimeiroCadastro aoCadastrar={handleCadastroSindico} />;
 }
 
-// O painel de acessibilidade fica fora do conteúdo para aparecer em todas as telas
 function App() {
     return (
         <>
@@ -86,4 +85,4 @@ function App() {
     );
 }
 
-export default App;
+export default App;

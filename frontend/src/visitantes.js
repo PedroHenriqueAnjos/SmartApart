@@ -24,7 +24,7 @@ function Visitantes({ usuario, aoNavegar }) {
 
     useEffect(() => {
         carregarFoto();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
     const carregarFoto = async () => {
@@ -85,16 +85,16 @@ function Visitantes({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Apartamentos do bloco selecionado ----------
+
     const apartamentosDoBloco = idBloco
         ? apartamentos.filter((apt) => apt.idBloco === parseInt(idBloco))
         : [];
 
-    // ---------- Números restritos ao bloco selecionado ----------
+
     const numerosDoBloco = [...new Set(apartamentosDoBloco.map((apt) => apt.numero))]
         .sort((a, b) => a - b);
 
-    // ---------- Busca de apartamento por bloco + número ----------
+
     const apartamentoPreenchido = idBloco && numero.trim();
 
     const buscarApartamento = async () => {

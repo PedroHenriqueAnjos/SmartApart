@@ -7,7 +7,7 @@ import { ArrowLeft, User, Pencil, Check, X, Camera, Trash2, LogOut } from 'lucid
 const API_URL = "https://smartapart-bra7.onrender.com";
 const BUCKET = 'avatars';
 
-// Extrai o caminho do arquivo a partir da URL pública (ignora fotos antigas em base64)
+
 const caminhoDaUrl = (url) => {
     if (!url || url.startsWith('data:')) return null;
     const marcador = `/object/public/${BUCKET}/`;
@@ -27,7 +27,6 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
 
     useEffect(() => {
         carregarFoto();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const carregarFoto = async () => {
@@ -38,11 +37,9 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
                 setFoto(dados.foto || null);
             }
         } catch {
-            // sem foto ou backend indisponível: mantém o ícone padrão
         }
     };
 
-    // Salva (ou limpa) a URL da foto no backend
     const salvarFotoNoBackend = async (fotoUrl) => {
         const res = await fetch(`${API_URL}/foto/${usuario.id}?tipoUsuario=${usuario.tipo}`, {
             method: 'PUT',
@@ -78,7 +75,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
 
     const handleSelecionarFoto = async (e) => {
         const arquivo = e.target.files[0];
-        e.target.value = ''; // permite escolher o mesmo arquivo de novo
+        e.target.value = '';
         if (!arquivo) return;
 
         const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
@@ -105,7 +102,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
             const ext = arquivo.type.split('/')[1];
             novoCaminho = `${usuario.tipo}/${usuario.id}/${crypto.randomUUID()}.${ext}`;
 
-            // 1. Sobe a nova imagem
+
             const { error } = await supabase.storage
                 .from(BUCKET)
                 .upload(novoCaminho, arquivo, { contentType: arquivo.type, cacheControl: '3600' });
@@ -116,10 +113,10 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
 
             const { data } = supabase.storage.from(BUCKET).getPublicUrl(novoCaminho);
 
-            // 2. Salva a URL no backend
+
             await salvarFotoNoBackend(data.publicUrl);
 
-            // 3. Só agora apaga a foto anterior (se houver)
+
             const antigo = caminhoDaUrl(foto);
             if (antigo) await supabase.storage.from(BUCKET).remove([antigo]);
 
@@ -127,7 +124,7 @@ function Perfil({ usuario, aoNavegar, aoSair, aoAtualizarUsuario }) {
             setMensagem('Foto atualizada com sucesso!');
             setMensagemTipo('sucesso');
         } catch (err) {
-            // Se algo falhou, não deixa arquivo órfão no bucket
+
             if (novoCaminho) await supabase.storage.from(BUCKET).remove([novoCaminho]);
             setMensagem(err.message || 'Erro ao enviar foto');
             setMensagemTipo('erro');

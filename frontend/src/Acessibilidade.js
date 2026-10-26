@@ -6,7 +6,7 @@ const CHAVE = 'acessibilidade';
 const ESCALAS = [1, 1.15, 1.3, 1.5];
 const URL_VLIBRAS = 'https://vlibras.gov.br/app';
 
-// ---------- Preferências (salvas no localStorage) ----------
+
 const consulta = (q) => !!(window.matchMedia && window.matchMedia(q).matches);
 
 const padrao = () => ({
@@ -20,12 +20,12 @@ const lerPreferencias = () => {
         const salvo = JSON.parse(localStorage.getItem(CHAVE));
         if (salvo) return { ...padrao(), ...salvo };
     } catch {
-        // localStorage indisponível ou JSON inválido: usa o padrão
+
     }
     return padrao();
 };
 
-// ---------- VLibras (script oficial do governo federal) ----------
+
 let vlibrasIniciado = false;
 
 const carregarVLibras = () => {
@@ -41,8 +41,6 @@ const carregarVLibras = () => {
     document.body.appendChild(script);
 };
 
-// ---------- Leitura em voz alta ----------
-// O Chrome corta falas muito longas, então o texto é quebrado em pedaços curtos
 const quebrarTexto = (texto) => {
     const frases = texto.replace(/\s*\n+\s*/g, '. ').replace(/\s+/g, ' ').match(/[^.!?]+[.!?]*/g) || [];
     const pedacos = [];
@@ -58,9 +56,6 @@ const quebrarTexto = (texto) => {
     return pedacos;
 };
 
-// ---------- Janelas (formulários com role="dialog" aria-modal="true") ----------
-// Ao abrir: dá nome à janela e leva o foco para dentro. Tab fica preso nela,
-// Esc aciona o botão CANCELAR e, ao fechar, o foco volta para onde estava.
 const SELETOR_JANELA = '[role="dialog"][aria-modal="true"]';
 const SELETOR_FOCAVEL = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -99,8 +94,6 @@ function useJanelasModais() {
                 return;
             }
 
-            // Só prende o Tab quando o foco está dentro da janela
-            // (o painel de acessibilidade continua alcançável)
             if (e.key !== 'Tab' || !atual.contains(document.activeElement)) return;
             const itens = Array.from(atual.querySelectorAll(SELETOR_FOCAVEL))
                 .filter((el) => el.offsetParent !== null);
@@ -137,7 +130,6 @@ function Acessibilidade() {
     const leituraId = useRef(0);
     const temVoz = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
-    // Aplica as preferências na página inteira e salva
     useEffect(() => {
         const raiz = document.documentElement;
         raiz.lang = 'pt-BR';
@@ -147,17 +139,16 @@ function Acessibilidade() {
         try {
             localStorage.setItem(CHAVE, JSON.stringify(prefs));
         } catch {
-            // sem localStorage: a preferência vale só nesta sessão
+
         }
     }, [prefs]);
 
     useEffect(() => {
         carregarVLibras();
         return () => { if (temVoz) window.speechSynthesis.cancel(); };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
-    // Esc fecha o painel e devolve o foco ao botão
     useEffect(() => {
         if (!aberto) return undefined;
         const aoTeclar = (e) => {
@@ -170,7 +161,6 @@ function Acessibilidade() {
         return () => document.removeEventListener('keydown', aoTeclar);
     }, [aberto]);
 
-    // Navegar para outra tela (clique fora do painel) interrompe a leitura
     useEffect(() => {
         if (!lendo) return undefined;
         const aoClicar = (e) => {
@@ -204,7 +194,6 @@ function Acessibilidade() {
         const sintese = window.speechSynthesis;
         sintese.cancel();
 
-        // Se houver uma janela aberta (formulário), lê só ela; senão lê a tela toda
         const alvo = document.querySelector('[role="dialog"][aria-modal="true"]')
             || document.querySelector('main')
             || document.body;

@@ -15,16 +15,15 @@ function Enquetes({ usuario, aoNavegar }) {
     const [formData, setFormData] = useState({ assunto: '', op1: '', op2: '', op3: '', op4: '' });
     const [foto, setFoto] = useState(null);
 
-    // ---------- Mini-menu do botão "+" ----------
+
     const [mostrarMenu, setMostrarMenu] = useState(false);
 
-    // ---------- Novo aviso ----------
+
     const [mostrarFormAviso, setMostrarFormAviso] = useState(false);
     const [formAviso, setFormAviso] = useState({ assunto: '', texto: '' });
 
     useEffect(() => {
         carregarFoto();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const carregarFoto = async () => {
@@ -35,7 +34,6 @@ function Enquetes({ usuario, aoNavegar }) {
                 setFoto(dados.foto || null);
             }
         } catch {
-            // sem foto ou backend indisponível: mantém o ícone padrão
         }
     };
     const ehSindico = usuario.tipo === 'SINDICO';
@@ -56,7 +54,7 @@ function Enquetes({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Mini-menu ----------
+
     const alternarMenu = () => {
         setMostrarMenu((atual) => !atual);
     };
@@ -71,7 +69,6 @@ function Enquetes({ usuario, aoNavegar }) {
         abrirFormAviso();
     };
 
-    // ---------- Formulário de enquete (já existente) ----------
     const abrirForm = () => {
         setMostrarForm(true);
         setErro('');
@@ -115,7 +112,7 @@ function Enquetes({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Formulário de aviso (novo) ----------
+
     const abrirFormAviso = () => {
         setMostrarFormAviso(true);
         setErro('');
@@ -416,4 +413,4 @@ function Enquetes({ usuario, aoNavegar }) {
     );
 }
 
-export default Enquetes;
+export default Enquetes;

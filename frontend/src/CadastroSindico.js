@@ -28,7 +28,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
 
     useEffect(() => {
             carregarFoto();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+
         }, []);
     
         const carregarFoto = async () => {
@@ -39,7 +39,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
                     setFoto(dados.foto || null);
                 }
             } catch {
-                // sem foto ou backend indisponível: mantém o ícone padrão
+
             }
         };
     
@@ -76,7 +76,6 @@ function CadastroSindico({ usuario, aoNavegar }) {
         setTimeout(() => setSucesso(''), 3000);
     };
 
-    // ---------- Cadastro de usuário ----------
     const [tipoUsuario, setTipoUsuario] = useState('INQUILINO');
     const [formUsuario, setFormUsuario] = useState({ nome: '', cpf: '', senha: '' });
 
@@ -120,7 +119,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Cadastro de bloco ----------
+
     const [nomeBloco, setNomeBloco] = useState('');
 
     const handleCadastrarBloco = async (e) => {
@@ -140,9 +139,8 @@ function CadastroSindico({ usuario, aoNavegar }) {
         } finally {
             setCarregando(false);
         }
-    };
+    };  
 
-    // ---------- Cadastro de apartamento ----------
     const [formApto, setFormApto] = useState({ idBloco: '', numero: '', idDono: '', idInquilino: '' });
 
     const handleCadastrarApartamento = async (e) => {
@@ -170,7 +168,6 @@ function CadastroSindico({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Cadastro de salão ----------
     const [formSalao, setFormSalao] = useState({ nome: '', status: 'Disponível' });
 
     const handleCadastrarSalao = async (e) => {
@@ -387,4 +384,4 @@ function CadastroSindico({ usuario, aoNavegar }) {
     );
 }
 
-export default CadastroSindico;
+export default CadastroSindico;

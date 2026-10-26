@@ -73,16 +73,16 @@ function Encomendas({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Apartamentos do bloco selecionado ----------
+
     const apartamentosDoBloco = idBloco
         ? apartamentos.filter((apt) => apt.idBloco === parseInt(idBloco))
         : [];
 
-    // ---------- Números de apartamento restritos ao bloco selecionado ----------
+
     const numerosDoBloco = [...new Set(apartamentosDoBloco.map((apt) => apt.numero))]
         .sort((a, b) => a - b);
 
-    // ---------- Moradores (inquilinos/donos) restritos ao bloco selecionado ----------
+
     const moradoresDoBloco = apartamentosDoBloco.flatMap((apt) => {
         const nomes = [];
         if (apt.idInquilino) {
@@ -96,7 +96,7 @@ function Encomendas({ usuario, aoNavegar }) {
         return nomes;
     });
 
-    // ---------- Busca de apartamento por bloco + número e/ou nome do morador ----------
+
     const buscaPreenchida = idBloco && (numeroApto.trim() || nomeMorador.trim());
 
     const apartamentoEncontrado = buscaPreenchida
@@ -213,7 +213,7 @@ function Encomendas({ usuario, aoNavegar }) {
         return `Bloco ${bloco ? bloco.nome : apt.idBloco} · Apto ${apt.numero}`;
     };
 
-    // Agrupa as encomendas (mais recentes primeiro) em faixas de tempo
+
     const agruparPorSemana = (lista) => {
         const agora = Date.now();
         const tempo = (e) => (e.dataRecebimento ? new Date(e.dataRecebimento).getTime() : 0);
@@ -386,4 +386,4 @@ function Encomendas({ usuario, aoNavegar }) {
     );
 }
 
-export default Encomendas;
+export default Encomendas;

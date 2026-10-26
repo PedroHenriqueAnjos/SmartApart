@@ -1,17 +1,15 @@
-/* ================= FOCO VISÍVEL (todas as telas) ================= */
+
 :focus-visible {
   outline: 3px solid var(--cor-preto);
   outline-offset: 3px;
 }
 
-/* ================= TAMANHO DO TEXTO ================= */
-/* Tudo que está em rem acompanha o tamanho da raiz */
+
 html {
   font-size: calc(100% * var(--escala-fonte, 1));
 }
 
-/* Trechos com tamanho fixo em px não acompanham o rem, então usam zoom */
-h1,
+
 .mensagem-info,
 .mensagem-erro,
 .mensagem-sucesso,
@@ -21,7 +19,7 @@ h1,
   zoom: var(--escala-fonte, 1);
 }
 
-/* ================= ANIMAÇÕES ================= */
+
 :root[data-sem-animacao="sim"] *,
 :root[data-sem-animacao="sim"] *::before,
 :root[data-sem-animacao="sim"] *::after {
@@ -40,12 +38,11 @@ h1,
   }
 }
 
-/* O App.css deixa toda <img> redonda; o VLibras precisa das imagens originais */
 [vw] img {
   border-radius: 0;
 }
 
-/* ================= PAINEL ================= */
+
 #Acessibilidade_Botao {
   position: fixed;
   left: 20px;
@@ -116,7 +113,7 @@ h1,
   cursor: pointer;
 }
 
-/* Opção ligada: preenchida, para não depender só da cor */
+
 .acess-opcao[aria-pressed="true"] {
   border: 3px solid transparent;
   background: linear-gradient(0deg, var(--cor-verde-escuro), var(--cor-verde-principal)) border-box;
@@ -153,9 +150,7 @@ h1,
   color: var(--cor-preto);
 }
 
-/* ================= ALTO CONTRASTE =================
-   Amarelo e branco sobre preto. As cores do projeto são variáveis,
-   então só redefinimos as variáveis e corrigimos as cores fixas. */
+
 :root[data-contraste="alto"] {
   --cor-bege: #000000;
   --cor-preto: #ffffff;
@@ -168,12 +163,10 @@ h1,
   --cor-borda: #ffff00;
 }
 
-/* Cartões ficam pretos como o fundo, então ganham borda */
 :root[data-contraste="alto"] .Green_Box_Full {
   border: 2px solid #ffff00;
 }
 
-/* Campos e botões vazados: borda amarela lisa em vez do degradê */
 :root[data-contraste="alto"] .Green_Input,
 :root[data-contraste="alto"] .Gold_Input,
 :root[data-contraste="alto"] .Green_Button_Empty,
@@ -188,7 +181,6 @@ h1,
   background: #ffff00;
 }
 
-/* Botões cheios e opções ligadas: amarelo sólido com texto preto */
 :root[data-contraste="alto"] .Green_Button_Full,
 :root[data-contraste="alto"] .Gold_Button_Full,
 :root[data-contraste="alto"] .acess-opcao[aria-pressed="true"] {
@@ -197,7 +189,7 @@ h1,
   border: 3px solid #ffff00;
 }
 
-/* Avatares e ícones que tinham fundo branco */
+
 :root[data-contraste="alto"] .card-avatar,
 :root[data-contraste="alto"] .sp-avatar,
 :root[data-contraste="alto"] .salao-avatar,
@@ -208,7 +200,6 @@ h1,
   box-sizing: border-box;
 }
 
-/* Botões de perfil usam id e cor fixa (#fff), por isso o !important */
 :root[data-contraste="alto"] button[id$="_Perfil"] {
   background: #000000 !important;
   color: #ffff00 !important;
@@ -224,7 +215,6 @@ h1,
   color: #000000;
 }
 
-/* Barras das enquetes: preenchimento amarelo e texto sobre fundo preto */
 :root[data-contraste="alto"] .opcao-trilho {
   background: #333333;
 }
@@ -240,7 +230,6 @@ h1,
   text-shadow: none;
 }
 
-/* Status: além da cor, mudam o estilo da borda */
 :root[data-contraste="alto"] .status-ok,
 :root[data-contraste="alto"] .sp-status-ok {
   background: #000000;
@@ -262,7 +251,7 @@ h1,
   border: 2px dotted #cccccc;
 }
 
-/* Mensagens */
+
 :root[data-contraste="alto"] .mensagem-info {
   background: #000000;
   color: #ffffff;
@@ -293,7 +282,6 @@ h1,
   border: 2px solid #ff8a8a;
 }
 
-/* Regras antigas de Visitantes.css com fundo branco fixo */
 :root[data-contraste="alto"] .form-group input {
   background: #000000;
   border-color: #ffff00;
