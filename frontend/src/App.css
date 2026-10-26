@@ -10,12 +10,6 @@
  --cor-borda: #C8B186;
 }
 
-@font-face {
-  font-family: "Energy";
-  src: url("assests/fonts/energy_3/Energy.ttf");
-  font-weight: normal;
-  font-style: normal;
-}
 
 a {
   color: var(--cor-bege);
@@ -51,7 +45,7 @@ body {
   background-color: var(--cor-bege);
   border: 2px solid var(--cor-borda);
   color: var(--cor-preto);
-  border-radius: 20px;
+  border-radius: 30px;
   font-family: 'Fredoka';
 }
 
