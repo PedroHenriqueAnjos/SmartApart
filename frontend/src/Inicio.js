@@ -104,7 +104,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
     const podeVerEnquetes = ['SINDICO', 'MORADOR', 'DONO'].includes(usuario.tipo);
 
 
-    const podeVerSalao = ['MORADOR', 'DONO', 'PORTEIRO', 'SINDICO'].includes(usuario.tipo);
+    const podeVerSalao = ['MORADOR', 'DONO', 'FUNCIONARIO', 'SINDICO'].includes(usuario.tipo);
 
     useEffect(() => {
         carregarAvisos();
@@ -231,7 +231,7 @@ function Inicio({ usuario, aoNavegar, ehPorteiro }) {
         { aba: 'chat', rotulo: 'chat', Icone: MessageCircle, oculto: ehPorteiro },
         { aba: 'visitantes', rotulo: 'visitantes', Icone: Users },
         { aba: 'enquetes', rotulo: 'enquetes', Icone: BarChart2, oculto: !podeVerEnquetes },
-        { aba: ehPorteiro ? 'salaoPorteiro' : 'salao', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
+        { aba: ehPorteiro ? 'salaoPorteiro' : 'salaoPorteiro', rotulo: 'salão', Icone: CalendarDays, oculto: !podeVerSalao },
         { aba: 'cadastroSindico', rotulo: 'Cadastrar', Icone: UserPlus, oculto: !ehSindico }
     ].filter((a) => !a.oculto);
 
