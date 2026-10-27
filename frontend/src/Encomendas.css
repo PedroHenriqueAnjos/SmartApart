@@ -1,5 +1,3 @@
-/* ===== Layout da tela de encomendas (adicione ao final do Encomendas.css) ===== */
-
 #Encomendas_Pagina {
   position: relative;
   width: 100%;
@@ -15,7 +13,7 @@
   margin: 0 0 14px;
 }
 
-/* Seta (esquerda) e perfil (direita), nos cantos da tela */
+
 #Encomendas_Voltar {
   position: fixed;
   top: 34px;
@@ -144,7 +142,6 @@
   margin: 16px auto 0;
 }
 
-/* Ajusta o <select> de Bloco para ter a mesma altura/padding dos <input> de texto */
 .encp-campo select.Green_Input {
   -webkit-appearance: none;
   -moz-appearance: none;

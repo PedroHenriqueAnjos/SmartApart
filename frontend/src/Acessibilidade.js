@@ -302,7 +302,7 @@ function Acessibilidade() {
                 )}
             </div>
 
-            {/* Estrutura exigida pelo plugin oficial VLibras */}
+            {}
             <div vw="true" className="enabled">
                 <div vw-access-button="true" className="active"></div>
                 <div vw-plugin-wrapper="true">

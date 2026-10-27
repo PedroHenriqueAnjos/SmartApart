@@ -73,16 +73,16 @@ function Encomendas({ usuario, aoNavegar }) {
         }
     };
 
-
+    // ---------- Apartamentos do bloco selecionado ----------
     const apartamentosDoBloco = idBloco
         ? apartamentos.filter((apt) => apt.idBloco === parseInt(idBloco))
         : [];
 
-
+    // ---------- Números de apartamento restritos ao bloco selecionado ----------
     const numerosDoBloco = [...new Set(apartamentosDoBloco.map((apt) => apt.numero))]
         .sort((a, b) => a - b);
 
-
+    // ---------- Moradores (inquilinos/donos) restritos ao bloco selecionado ----------
     const moradoresDoBloco = apartamentosDoBloco.flatMap((apt) => {
         const nomes = [];
         if (apt.idInquilino) {
@@ -96,7 +96,7 @@ function Encomendas({ usuario, aoNavegar }) {
         return nomes;
     });
 
-
+    // ---------- Busca de apartamento por bloco + número e/ou nome do morador ----------
     const buscaPreenchida = idBloco && (numeroApto.trim() || nomeMorador.trim());
 
     const apartamentoEncontrado = buscaPreenchida
@@ -213,7 +213,7 @@ function Encomendas({ usuario, aoNavegar }) {
         return `Bloco ${bloco ? bloco.nome : apt.idBloco} · Apto ${apt.numero}`;
     };
 
-
+    // Agrupa as encomendas (mais recentes primeiro) em faixas de tempo
     const agruparPorSemana = (lista) => {
         const agora = Date.now();
         const tempo = (e) => (e.dataRecebimento ? new Date(e.dataRecebimento).getTime() : 0);
@@ -239,7 +239,7 @@ function Encomendas({ usuario, aoNavegar }) {
                 <ArrowLeft size={44} strokeWidth={1.5} />
             </button>
 
-            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil" aria-label="Perfil">
+            <button id="Encomendas_Perfil" onClick={() => aoNavegar('perfil')} title="Perfil">
                 <User size={28} />
             </button>
 
@@ -253,8 +253,8 @@ function Encomendas({ usuario, aoNavegar }) {
                 </div>
             )}
 
-            {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
-            {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
+            {!mostrarForm && erro && <p className="mensagem-erro">{erro}</p>}
+            {sucesso && <p className="mensagem-sucesso">{sucesso}</p>}
 
             {carregando && <p className="mensagem-info">Carregando...</p>}
             {!carregando && encomendas.length === 0 && !erro && (
@@ -282,8 +282,7 @@ function Encomendas({ usuario, aoNavegar }) {
                             </div>
 
                             {enc.status !== 'Retirada' && (
-                                <button className="enc-botao-acao verde" onClick={() => handleRetirar(enc.idEncomenda)}
-                                    aria-label={`Marcar encomenda ${enc.idEncomenda} como retirada`}>
+                                <button className="enc-botao-acao verde" onClick={() => handleRetirar(enc.idEncomenda)}>
                                     <Check size={14} /> Marcar como Retirada
                                 </button>
                             )}
@@ -297,7 +296,7 @@ function Encomendas({ usuario, aoNavegar }) {
                     <form id="EncomendasPorteiro_Form" className="Empty_Box" onSubmit={handleRegistrar}>
                         <h2 id="EncomendasPorteiro_Form_Titulo">NOVA ENCOMENDA</h2>
 
-                        {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
+                        {erro && <p className="mensagem-erro">{erro}</p>}
 
                         <div className="encp-campo">
                             <label htmlFor="Encomendas_Bloco">Bloco *</label>

@@ -14,7 +14,7 @@ import CadastroSindico from './CadastroSindico';
 function Dashboard({ usuario, setUsuarioLogado, aoAtualizarUsuario }) {
     const [abaAtiva, setAbaAtiva] = useState('inicio');
 
-    const ehPorteiro = usuario.tipo === 'PORTEIRO';
+    const ehPorteiro = usuario.tipo === 'FUNCIONARIO';
     const ehSindico = usuario.tipo === 'SINDICO';
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
 
@@ -47,4 +47,4 @@ function Dashboard({ usuario, setUsuarioLogado, aoAtualizarUsuario }) {
     );
 }
 
-export default Dashboard;
+export default Dashboard;

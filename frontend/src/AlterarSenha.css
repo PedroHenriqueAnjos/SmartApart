@@ -1,6 +1,3 @@
-/* Cores, cantos e fontes vêm das classes padrão (Green_Box_Full, Gold_Input,
-   Green_Button_Empty). Aqui fica só o layout. */
-
 #AlterarSenha_Pagina {
   position: relative;
   width: 100%;
@@ -18,7 +15,7 @@
   margin: 0 0 24px;
 }
 
-/* Seta de voltar, canto superior esquerdo */
+
 #AlterarSenha_Voltar {
   position: fixed;
   top: 34px;
@@ -37,7 +34,6 @@
   transform: translateX(-4px);
 }
 
-/* Card principal */
 #AlterarSenha_Card {
   width: 100%;
   max-width: 560px;
@@ -85,8 +81,6 @@
 }
 
 
-
-/* Botões */
 .as-botoes {
   display: flex;
   justify-content: center;
@@ -112,7 +106,6 @@
 
 
 
-/* Mensagens (escopadas, para não depender de outras telas) */
 #AlterarSenha_Card .mensagem-erro {
   margin: 0;
   text-align: center;
@@ -138,7 +131,6 @@
   box-sizing: border-box;
 }
 
-/* ================= CELULAR ================= */
 @media (max-width: 768px) {
   #AlterarSenha_Pagina {
     padding: 76px 14px 40px;

@@ -53,21 +53,21 @@ function CadastroSindico({ usuario, aoNavegar }) {
         try {
             const dados = await listarBlocos();
             setBlocos(Array.isArray(dados) ? dados : []);
-        } catch { /* afeta só o select de apartamento */ }
+        } catch {  }
     };
 
     const carregarDonos = async () => {
         try {
             const dados = await listarDonos();
             setDonos(Array.isArray(dados) ? dados : []);
-        } catch { /* afeta só o select de apartamento */ }
+        } catch { }
     };
 
     const carregarInquilinos = async () => {
         try {
             const dados = await listarInquilinos();
             setInquilinos(Array.isArray(dados) ? dados : []);
-        } catch { /* afeta só o select de apartamento */ }
+        } catch {  }
     };
 
     const mostrarSucesso = (msg) => {
@@ -105,7 +105,7 @@ function CadastroSindico({ usuario, aoNavegar }) {
 
             if (tipoUsuario === 'INQUILINO') await cadastrarInquilino(dados);
             else if (tipoUsuario === 'DONO') await cadastrarDono(dados);
-            else if (tipoUsuario === 'PORTEIRO') await cadastrarPorteiro(dados);
+            else if (tipoUsuario === 'FUNCIONARIO') await cadastrarPorteiro(dados);
 
             setFormUsuario({ nome: '', cpf: '', senha: '' });
             mostrarSucesso('Usuário cadastrado com sucesso!');
