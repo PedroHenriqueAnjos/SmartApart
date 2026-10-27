@@ -143,7 +143,7 @@ function Salao({ usuario, aoNavegar }) {
             {sucesso && <p className="mensagem-sucesso" role="status">{sucesso}</p>}
             {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
-            {/* ---------- Salões disponíveis ---------- */}
+
             <div id="Salao_Lista">
                 {saloes.map((s) => (
                     <div key={s.idSalao} className="salao-card Green_Box_Full">
@@ -158,7 +158,7 @@ function Salao({ usuario, aoNavegar }) {
 
             <hr className="salao-divisor" />
 
-            {/* ---------- Minhas reservas ---------- */}
+            
             <h1 id="Salao_Subtitulo">MINHAS RESERVAS</h1>
 
             {carregando && <p className="mensagem-info">Carregando...</p>}

@@ -1,13 +1,11 @@
-/* Faz o container do React ocupar a largura toda */
+
 #root {
   flex: 1;
   width: 100%;
 }
 
 
-/* ================= DESKTOP ================= */
 
-/* Box principal */
 #Login_Box {
   width: 90vw;
   max-width: 1100px;
@@ -29,7 +27,6 @@
 }
 
 
-/* Metade esquerda: logo */
 #Login_Logo {
   border-radius: 0;
   flex: 1;
@@ -52,7 +49,7 @@
 }
 
 
-/* Barra preta separadora */
+
 #Cadastro_Divisor {
   width: 5px;
   align-self: stretch;
@@ -61,7 +58,7 @@
 }
 
 
-/* Metade direita: conteúdo */
+
 #Cadastro_Conteudo {
   flex: 1;
 
@@ -78,14 +75,14 @@
 
 
 
-/* Texto */
+
 #Cadastro_Conteudo p {
   margin: 0;
   font-size: 1.6rem;
 }
 
 
-/* Formulário */
+
 #Cadastro_Form {
   display: flex;
   flex-direction: column;
@@ -95,7 +92,7 @@
 }
 
 
-/* Labels */
+
 #Cadastro_Form label {
   font-family: "Bree Serif";
   font-weight: normal;
@@ -106,7 +103,7 @@
 }
 
 
-/* Inputs */
+
 #Cadastro_Form input {
   height: 52px;
 
@@ -116,7 +113,7 @@
 }
 
 
-/* Área do botão */
+
 #button_container {
   display: flex;
   align-items: center;
@@ -128,7 +125,7 @@
 }
 
 
-/* Botão */
+
 #Botao_Login {
   font-size: 1.7rem;
 
@@ -140,18 +137,17 @@
 }
 
 
-/* Erro */
+
 #erro {
   color: #8b1a1a;
   font-weight: 700;
 }
 
 
-/* ================= CELULAR ================= */
+
 
 @media screen and (max-width: 760px) {
 
-  /* Box principal */
   #Login_Box {
     background-color: transparent;
 
@@ -172,7 +168,7 @@
   }
 
 
-  /* Logo */
+
   #Login_Logo {
     border-radius: 0;
     flex: 0 0 26vh;
@@ -186,13 +182,13 @@
   }
 
 
-  /* Divisor */
+
   #Cadastro_Divisor {
     display: none;
   }
 
 
-  /* Conteúdo */
+
   #Cadastro_Conteudo {
     flex: 1;
 
@@ -210,7 +206,7 @@
   }
 
 
-  /* Título */
+
   #Cadastro_Titulo {
     display: block;
 
@@ -220,19 +216,18 @@
   }
 
 
-  /* Texto */
+
   #Cadastro_Conteudo p {
     font-size: 1.1rem;
   }
 
 
-  /* Formulário */
+
   #Cadastro_Form {
     gap: 6px;
   }
 
 
-  /* Labels */
   #Cadastro_Form label {
     font-family: "Fredoka";
 
@@ -245,13 +240,13 @@
   }
 
 
-  /* Espaço entre os campos */
+
   #Cadastro_Form input + label {
     margin-top: 30px;
   }
 
 
-  /* Inputs */
+
   #Cadastro_Form input {
     height: 48px;
 
@@ -259,7 +254,7 @@
   }
 
 
-  /* Botão */
+
   #button_container {
     flex-direction: column;
 

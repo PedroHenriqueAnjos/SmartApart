@@ -9,16 +9,6 @@ const FORM_VAZIO = { bloco: '', numero: '', nomeInquilino: '', nomeDono: '' };
 
 const normalizar = (v) => String(v ?? '').trim().toLowerCase();
 
-/*
- * Modelo do backend (confirmado pelas entidades Java):
- *   Bloco        { idBloco, nome }
- *   Apartamento  { idApartamento, idBloco, idInquilino (nullable), idDono, numero }
- *   Inquilino    { idInquilino, nome, ... }   (sem ligação com apartamento)
- *   Dono         { idDono, nome, ... }        (sem ligação com apartamento)
- *   Encomenda    { idEncomenda, idInquilino?, idDono?, idApartamento, dataRecebimento, status }
- *
- * O vínculo inquilino/dono -> apartamento está no próprio Apartamento.
- */
 
 function EncomendasPorteiro({ usuario, aoNavegar }) {
     const [encomendas, setEncomendas] = useState([]);

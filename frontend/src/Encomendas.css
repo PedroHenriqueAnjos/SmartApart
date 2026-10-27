@@ -60,7 +60,6 @@
   margin-bottom: 10px;
 }
 
-/* Grupos: "essa semana", "há uma semana"... */
 .enc-grupo {
   display: flex;
   flex-direction: column;
@@ -80,7 +79,6 @@
   font-size: 1.7rem;
 }
 
-/* Card de encomenda */
 .enc-card {
   width: 100%;
   box-sizing: border-box;

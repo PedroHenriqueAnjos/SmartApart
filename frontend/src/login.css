@@ -1,12 +1,9 @@
-/* Faz o container do React ocupar a largura toda (o body é flex-row) */
+
 #root {
   flex: 1;
   width: 100%;
 }
 
-/* ================= DESKTOP ================= */
-
-/* Box principal: cantos bem arredondados, dividida ao meio */
 #Login_Box {
   width: 90vw;
   max-width: 1100px;
@@ -19,11 +16,10 @@
   align-items: stretch;
   gap: 0;
   border-radius: 110px;
-  overflow: hidden; /* respeita o arredondamento nas pontas da barra */
+  overflow: hidden;
   font-size: 1.25rem;
 }
 
-/* Metade esquerda: logo */
 #Login_Logo {
   border-radius: 0;
   flex: 1;
@@ -42,14 +38,12 @@
   object-fit: contain;
 }
 
-/* Barra preta separadora, de ponta a ponta */
 #Login_Divisor {
   width: 5px;
   align-self: stretch;
   background: #000;
 }
 
-/* Metade direita: texto + formulário */
 #Login_Conteudo {
   flex: 1;
   display: flex;
@@ -60,7 +54,6 @@
   text-align: left;
 }
 
-/* O título LOGIN só aparece no celular */
 #Login_Titulo {
   display: none;
 }
@@ -115,11 +108,10 @@
   font-weight: 700;
 }
 
-/* ================= CELULAR ================= */
-/* Logo sobre o fundo bege; painel verde embaixo com o topo arredondado */
+
 @media screen and (max-width: 760px) {
   #Login_Box {
-    background-color: transparent; /* o verde passa a ser só do painel */
+    background-color: transparent; 
     width: 100%;
     max-width: none;
     min-height: 100vh;
@@ -179,7 +171,6 @@
     margin-top: 0;
   }
 
-  /* espaço maior entre o campo de cpf e o label de senha */
   #Login_Form input + label {
     margin-top: 30px;
   }

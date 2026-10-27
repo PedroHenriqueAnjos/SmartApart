@@ -230,7 +230,6 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
             {!mostrarForm && erro && <p className="mensagem-erro" role="alert">{erro}</p>}
             {carregando && <p className="mensagem-info">Carregando...</p>}
 
-            {/* ---------- Salões ---------- */}
             <div id="SalaoPorteiro_Lista">
                 {saloes.map((s) => (
                     <div key={s.idSalao} className="sp-card sp-card-reserva Green_Box_Full">
@@ -257,7 +256,7 @@ function SalaoPorteiro({ usuario, aoNavegar }) {
 
             <hr className="sp-divisor" />
 
-            {/* ---------- Reservas ---------- */}
+           
             <h1 id="SalaoPorteiro_Subtitulo">RESERVAS</h1>
 
             {!carregando && reservas.length === 0 && !erro && (

@@ -1,4 +1,4 @@
-/* ================= PÁGINA ================= */
+
 #Inicio_Pagina {
   position: relative;
   width: 100%;
@@ -31,7 +31,7 @@
   border: 2px dashed #d32f2f;
 }
 
-/* Ícone de perfil, canto superior direito */
+
 #Inicio_Perfil {
   position: fixed;
   top: 30px;
@@ -54,7 +54,6 @@
   transform: scale(1.08);
 }
 
-/* ================= CARDS (avisos e enquetes) ================= */
 .aviso-card,
 .enquete-card {
   border-radius: 45px;
@@ -119,7 +118,6 @@
   opacity: 0.8;
 }
 
-/* ================= CARROSSEL (avisos e enquetes) ================= */
 .carrossel-inicio {
   position: relative;
   display: flex;
@@ -198,7 +196,6 @@
   opacity: 0.7;
 }
 
-/* Cards de aviso/enquete que levam para a tela de enquetes */
 .aviso-card.clicavel,
 .enquete-card.clicavel {
   cursor: pointer;
@@ -215,7 +212,7 @@
 
 #Aviso_Container,
 #Enquentes {
-  padding-bottom: 26px; /* espaço para os pontos do carrossel */
+  padding-bottom: 26px; 
 }
 
 #Inicio_Avisos_Lista,
@@ -223,7 +220,6 @@
   margin-top: 4px;
 }
 
-/* ================= MARCAR COMO LIDO ================= */
 .aviso-lido {
   display: flex;
   align-items: center;
@@ -260,7 +256,6 @@
   font-weight: 700;
 }
 
-/* ================= DIVISOR ================= */
 .divisor-inicio {
   width: 52%;
   max-width: 410px;
@@ -269,7 +264,6 @@
   margin: 22px auto;
 }
 
-/* ================= ENQUETES ================= */
 .enquete-opcao {
   position: relative;
   margin-top: 12px;
@@ -298,7 +292,6 @@
   pointer-events: none;
 }
 
-/* ================= ATALHOS COM IMAGEM ================= */
 #Inicio_Atalhos {
   align-self: center;
   display: flex;
@@ -344,7 +337,7 @@
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* ================= CELULAR ================= */
+
 @media (max-width: 768px) {
   #Inicio_Pagina {
     padding: 72px 18px 40px;
