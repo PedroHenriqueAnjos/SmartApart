@@ -37,8 +37,8 @@ function Visitantes({ usuario, aoNavegar }) {
         } catch {
         }
     };
-    const ehGerenciador = usuario.tipo === 'FUNCIONARIO';
-    const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO' || usuario.tipo === 'SINDICO';
+    const ehGerenciador = usuario.tipo === 'FUNCIONARIO' || usuario.tipo === 'SINDICO' ;
+    const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO' ;
 
     useEffect(() => { carregarVisitantes(); }, []);
     useEffect(() => { if (ehGerenciador) carregarDadosBusca(); }, [ehGerenciador]);
@@ -369,7 +369,7 @@ function Visitantes({ usuario, aoNavegar }) {
                                                 <span className="vis-apto-label"><Home size={12} /> Dono</span>
                                                 <span className="vis-apto-valor">
                                                     {apartamentoInfo.dono
-                                                        ? `${apartamentoInfo.dono.nome} (ID ${apartamentoInfo.dono.idDono})`
+                                                        ? `${apartamentoInfo.dono.nome}`
                                                         : 'Sem dono'}
                                                 </span>
                                             </div>
