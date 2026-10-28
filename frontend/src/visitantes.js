@@ -13,7 +13,7 @@ function Visitantes({ usuario, aoNavegar }) {
     const [sucesso, setSucesso] = useState('');
     const [mostrarForm, setMostrarForm] = useState(false);
     const [formData, setFormData] = useState({ nome: '', cpf: '', prestador: false });
-
+    const [nomesPessoas, setNomesPessoas] = useState({ inquilinos: {}, donos: {} });
     const [apartamentos, setApartamentos] = useState([]);
     const [blocos, setBlocos] = useState([]);
     const [idBloco, setIdBloco] = useState('');
@@ -26,6 +26,34 @@ function Visitantes({ usuario, aoNavegar }) {
         carregarFoto();
 
     }, []);
+
+    const carregarNomes = async (lista) => {
+    const idsInquilinos = [...new Set(lista.map((v) => v.idInquilino).filter(Boolean))];
+    const idsDonos = [...new Set(lista.map((v) => v.idDono).filter(Boolean))];
+
+    const buscarNome = async (rota, id) => {
+        try {
+            const res = await fetch(`${API_URL}/${rota}/${id}`);
+            if (res.ok) {
+                const dados = await res.json();
+                return [id, dados.nome];
+            }
+        } catch {
+           
+        }
+        return [id, null];
+    };
+
+    const [inquilinos, donos] = await Promise.all([
+        Promise.all(idsInquilinos.map((id) => buscarNome('inquilinos', id))),
+        Promise.all(idsDonos.map((id) => buscarNome('donos', id)))
+    ]);
+
+    setNomesPessoas({
+        inquilinos: Object.fromEntries(inquilinos),
+        donos: Object.fromEntries(donos)
+    });
+};
 
     const carregarFoto = async () => {
         try {
@@ -63,7 +91,9 @@ function Visitantes({ usuario, aoNavegar }) {
             }
             const res = await fetch(url);
             if (!res.ok) throw new Error();
-            setVisitantes(await res.json());
+            const dados = await res.json();
+                setVisitantes(dados);
+            if (ehGerenciador) carregarNomes(dados);
         } catch {
             setErro('Erro ao carregar visitantes');
         } finally {
@@ -223,9 +253,12 @@ function Visitantes({ usuario, aoNavegar }) {
     };
 
     const apartamentoDoVisitante = (v) =>
-        [v.idInquilino && `Inquilino ID: ${v.idInquilino}`, v.idDono && `Dono ID: ${v.idDono}`]
-            .filter(Boolean)
-            .join(' · ');
+    [
+        v.idInquilino && nomesPessoas.inquilinos[v.idInquilino],
+        v.idDono && nomesPessoas.donos[v.idDono]
+    ]
+        .filter(Boolean)
+        .join(' · ');
 
     return (
         <div id="Visitantes_Pagina">
@@ -361,7 +394,7 @@ function Visitantes({ usuario, aoNavegar }) {
                                                 <span className="vis-apto-label"><User size={12} /> Inquilino</span>
                                                 <span className="vis-apto-valor">
                                                     {apartamentoInfo.inquilino
-                                                        ? `${apartamentoInfo.inquilino.nome} (ID ${apartamentoInfo.inquilino.idInquilino})`
+                                                        ? `${apartamentoInfo.inquilino.nome}`
                                                         : 'Sem inquilino'}
                                                 </span>
                                             </div>

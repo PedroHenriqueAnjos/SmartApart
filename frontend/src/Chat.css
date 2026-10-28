@@ -35,7 +35,7 @@
   transform: translateX(-4px);
 }
 
-/* Caixa do chat */
+
 #Chat_Container {
   flex: 1;
   min-height: 0;

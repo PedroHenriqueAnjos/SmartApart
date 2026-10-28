@@ -25,7 +25,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
 
     useEffect(() => {
         carregarFoto();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
     const carregarFoto = async () => {
@@ -36,7 +36,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
                 setFoto(dados.foto || null);
             }
         } catch {
-            // sem foto ou backend indisponível: mantém o ícone padrão
+
         }
     };
 
@@ -96,18 +96,18 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         setErro('');
     };
 
-    // ---------- Cascata: Bloco -> Número -> Inquilino -> Dono ----------
+
 
     const blocosOrdenados = [...blocos].sort((a, b) =>
         String(a.nome).localeCompare(String(b.nome), 'pt-BR', { numeric: true })
     );
 
-    // Bloco digitado precisa existir para liberar o Número
+
     const blocoEncontrado = formData.bloco.trim()
         ? blocos.find((b) => normalizar(b.nome) === normalizar(formData.bloco))
         : null;
 
-    // Apenas apartamentos do bloco escolhido
+
     const apartamentosDoBloco = blocoEncontrado
         ? apartamentos
             .filter((a) => a.idBloco === blocoEncontrado.idBloco)
@@ -120,7 +120,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
 
     const apartamentoPreenchido = blocoEncontrado && formData.numero.trim();
 
-    // Apenas o inquilino e o dono ligados ao apartamento escolhido
+
     const inquilinosDoApto = (apartamentoEncontrado && apartamentoEncontrado.idInquilino != null)
         ? inquilinos.filter((i) => i.idInquilino === apartamentoEncontrado.idInquilino)
         : [];
@@ -137,7 +137,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         ? donosDoApto.find((d) => normalizar(d.nome) === normalizar(formData.nomeDono))
         : null;
 
-    // Ao alterar um campo, limpa os seguintes (que dependem dele)
+
     const handleBloco = (valor) =>
         setFormData({ bloco: valor, numero: '', nomeInquilino: '', nomeDono: '' });
 
@@ -151,7 +151,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         return `Bloco ${bloco ? bloco.nome : apt.idBloco} · Apto ${apt.numero}`;
     };
 
-    // ---------- Registrar ----------
+
     const handleRegistrar = async (e) => {
         e.preventDefault();
         if (!apartamentoEncontrado) {
@@ -187,7 +187,7 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         }
     };
 
-    // ---------- Atualizar status ----------
+
     const handleAtualizarStatus = async (idEncomenda, status) => {
         try {
             setErro('');
@@ -214,7 +214,6 @@ function EncomendasPorteiro({ usuario, aoNavegar }) {
         return new Date(data).toLocaleDateString('pt-BR');
     };
 
-    // ---------- Agrupamento por semana ----------
     const rotuloSemana = (data) => {
         const inicioDia = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
         const dias = Math.floor((inicioDia(new Date()) - inicioDia(new Date(data))) / 86400000);

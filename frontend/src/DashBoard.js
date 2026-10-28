@@ -18,9 +18,25 @@ function Dashboard({ usuario, setUsuarioLogado, aoAtualizarUsuario }) {
     const ehSindico = usuario.tipo === 'SINDICO';
     const ehMorador = usuario.tipo === 'MORADOR' || usuario.tipo === 'DONO';
 
-    const navegarPara = (aba) => {
-        setAbaAtiva(aba);
-    };
+    const podeAcessar = (aba) => {
+    switch (aba) {
+        case 'encomendasPorteiro':
+        case 'salaoPorteiro':
+            return ehPorteiro;
+        case 'cadastroSindico':
+            return ehSindico;
+        case 'chat':
+            return !ehPorteiro;
+        case 'enquetes':
+            return ehSindico || ehMorador;
+        default:
+            return true;
+    }
+};
+
+const navegarPara = (aba) => {
+    setAbaAtiva(podeAcessar(aba) ? aba : 'inicio');
+};
 
     const renderizarAba = () => {
         switch (abaAtiva) {
